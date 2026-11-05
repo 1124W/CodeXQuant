@@ -11,9 +11,10 @@ CodeXQuant is a personal research project exploring rule-based and AI-assisted s
 The first browser prototype is now available as a dependency-free static site. It includes:
 
 - live BTC/USDT and ETH/USDT quotes from Binance public market streams;
-- 240 recent 30-minute candles with EMA 9/21 overlays;
-- a transparent research signal based on trend, RSI and volatility filters;
-- a lightweight in-browser crossover backtest summary;
+- the latest 90 days of 30-minute candles, loaded in paginated requests;
+- three transparent strategies: EMA trend continuation, Bollinger mean reversion and volume-confirmed breakout;
+- strict next-candle settlement with a configurable 0.80 event payout assumption;
+- signal count, daily frequency, win rate, profit factor, maximum drawdown and longest losing streak;
 - responsive desktop and mobile layouts, with demo data when Binance is unavailable.
 
 Open `index.html` directly, or serve the repository locally:

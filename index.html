@@ -27,7 +27,7 @@
         <div>
           <p class="eyebrow">BINANCE SPOT · 30 MINUTES</p>
           <h1>把行情噪音，压缩成<br /><em>可验证的决策。</em></h1>
-          <p class="hero-copy">实时追踪 BTC 与 ETH，用 EMA 趋势、RSI 动量和波动率过滤生成研究信号。所有结果仅用于策略研究。</p>
+          <p class="hero-copy">实时追踪 BTC 与 ETH，并用最近 90 天的 30 分钟行情验证趋势、反转与突破三套固定方案。所有结果仅用于策略研究。</p>
         </div>
         <div class="price-grid" id="priceGrid">
           <button class="price-card active" data-symbol="BTCUSDT">
@@ -72,12 +72,32 @@
         <article class="metric risk"><span>风险状态</span><strong id="riskState">计算中</strong><small id="riskDetail">等待波动率数据</small></article>
       </section>
 
+      <section class="backtest panel" id="backtest">
+        <div class="backtest-head">
+          <div><p class="label">90-DAY STRICT BACKTEST</p><h2>三套方案，放在同一段行情里比较</h2></div>
+          <div class="data-progress"><span class="status-dot" id="historyDot"></span><span id="historyStatus">正在获取三个月行情…</span></div>
+        </div>
+        <div class="assumptions">
+          <span>BTC + ETH</span><span>30m 收盘入场</span><span>下一根收盘结算</span><span>赢 +0.80 / 输 −1.00</span><span>平局按输处理</span>
+        </div>
+        <div class="strategy-grid" id="strategyGrid">
+          <article class="strategy-card skeleton"></article><article class="strategy-card skeleton"></article><article class="strategy-card skeleton"></article>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>方案</th><th>信号</th><th>日均机会</th><th>胜率</th><th>盈亏平衡</th><th>净结果</th><th>收益因子</th><th>最大回撤</th><th>最长连亏</th></tr></thead>
+            <tbody id="strategyRows"><tr><td colspan="9">等待完整历史数据</td></tr></tbody>
+          </table>
+        </div>
+        <p class="backtest-note">同一根 K 线只使用当时已经完成的数据，下一根 K 线才用于结算。结果未证明未来有效，也不代表真实成交。</p>
+      </section>
+
       <section class="method">
-        <div><p class="eyebrow">RESEARCH LOGIC</p><h2>这个原型怎样做判断</h2></div>
+        <div><p class="eyebrow">RESEARCH LOGIC</p><h2>三套方案怎样寻找机会</h2></div>
         <ol>
-          <li><span>01</span><div><strong>确认趋势</strong><p>EMA 9 穿越 EMA 21，并要求价格位于趋势同侧。</p></div></li>
-          <li><span>02</span><div><strong>过滤动量</strong><p>RSI 避开过热与过冷区域，减少追涨杀跌。</p></div></li>
-          <li><span>03</span><div><strong>限制波动</strong><p>用近期收益标准差识别异常市场，波动过高时暂停。</p></div></li>
+          <li><span>01</span><div><strong>趋势延续</strong><p>EMA 9/21 同向、价格站在趋势一侧，并用 RSI 过滤过热区。</p></div></li>
+          <li><span>02</span><div><strong>均值反转</strong><p>价格触及布林带外侧且 RSI 极端时，寻找下一周期回归。</p></div></li>
+          <li><span>03</span><div><strong>区间突破</strong><p>突破过去 20 根高低点，同时要求成交量明显放大。</p></div></li>
         </ol>
       </section>
     </main>
