@@ -17,6 +17,8 @@ The first browser prototype is now available as a dependency-free static site. I
 - signal count, daily frequency, win rate, profit factor, maximum drawdown and longest losing streak;
 - responsive desktop and mobile layouts, with demo data when Binance is unavailable.
 
+The Qimen experiment records your own chart interpretation, symbol, direction, and live entry quote in the current browser. After the next 30-minute close, it checks the actual Binance candle and reports whether the recorded direction matched. It does not calculate a traditional Qimen chart or turn the interpretation into a model probability. Records remain in browser local storage and are never included in the three quantitative backtests.
+
 Open `index.html` directly, or serve the repository locally:
 
 ```bash

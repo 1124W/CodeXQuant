@@ -92,6 +92,24 @@
         <p class="backtest-note">同一根 K 线只使用当时已经完成的数据，下一根 K 线才用于结算。结果未证明未来有效，也不代表真实成交。</p>
       </section>
 
+      <section class="qimen panel" id="qimen">
+        <div class="backtest-head">
+          <div><p class="label">QIMEN EXPERIMENT</p><h2>奇门判断记录</h2></div>
+          <span class="qimen-tag">本地实验 · 北京时间</span>
+        </div>
+        <p class="qimen-intro">在看结果前记下你的奇门判断。网页会锁定记录时间和当时报价，下一次 30 分钟收盘后用 Binance 价格核对；此处不会自动排盘，也不把奇门判断算进量化策略。</p>
+        <form id="qimenForm" class="qimen-form">
+          <label>观察币种<select id="qimenSymbol"><option value="BTCUSDT">BTC / USDT</option><option value="ETHUSDT">ETH / USDT</option></select></label>
+          <label>判断方向<select id="qimenDirection"><option value="up">看涨</option><option value="down">看跌</option></select></label>
+          <label class="qimen-reason">盘面依据（可选）<input id="qimenReason" maxlength="120" placeholder="例如：值符、门、星、宫位及你的解读" /></label>
+          <button type="submit" id="qimenSubmit">记录本次判断</button>
+        </form>
+        <p class="qimen-message" id="qimenMessage" role="status">需连接实时行情后才能记录，以免把演示价格当成实盘价格。</p>
+        <div class="qimen-summary"><span>已结算 <strong id="qimenTotal">0</strong> 次</span><span>命中率 <strong id="qimenAccuracy">—</strong></span><button type="button" id="qimenRefresh">刷新结算</button></div>
+        <div class="table-wrap"><table><thead><tr><th>记录时间（北京）</th><th>币种</th><th>判断</th><th>入场价</th><th>30m 收盘价</th><th>结果</th><th>盘面依据</th></tr></thead><tbody id="qimenRows"><tr><td colspan="7">还没有奇门判断记录</td></tr></tbody></table></div>
+        <p class="backtest-note">记录保存在当前浏览器；更换设备或清除浏览器数据会丢失。命中率仅用于检验判断，不等于事件合约的净收益。</p>
+      </section>
+
       <section class="method">
         <div><p class="eyebrow">RESEARCH LOGIC</p><h2>三套方案怎样寻找机会</h2></div>
         <ol>
@@ -104,5 +122,6 @@
 
     <footer><span>CodeXQuant © 2026</span><span>Research only · Not financial advice</span></footer>
     <script src="app.js"></script>
+    <script src="qimen.js"></script>
   </body>
 </html>
