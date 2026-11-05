@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#07090f" />
+    <meta name="description" content="CodeXQuant — BTC 与 ETH 30 分钟量化研究面板" />
+    <title>CodeXQuant · 30m Research Desk</title>
+    <link rel="preconnect" href="https://api.binance.com" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="ambient ambient-one"></div>
+    <div class="ambient ambient-two"></div>
+
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="CodeXQuant 首页">
+        <span class="brand-mark">CX</span>
+        <span><strong>CodeXQuant</strong><small>30m research desk</small></span>
+      </a>
+      <div class="market-state"><span class="status-dot" id="statusDot"></span><span id="connectionText">正在连接行情</span></div>
+      <div class="clock"><span>UTC+8</span><strong id="clock">--:--:--</strong></div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div>
+          <p class="eyebrow">BINANCE SPOT · 30 MINUTES</p>
+          <h1>把行情噪音，压缩成<br /><em>可验证的决策。</em></h1>
+          <p class="hero-copy">实时追踪 BTC 与 ETH，用 EMA 趋势、RSI 动量和波动率过滤生成研究信号。所有结果仅用于策略研究。</p>
+        </div>
+        <div class="price-grid" id="priceGrid">
+          <button class="price-card active" data-symbol="BTCUSDT">
+            <span class="asset"><i class="coin btc">₿</i><span><strong>Bitcoin</strong><small>BTC / USDT</small></span></span>
+            <span class="quote"><strong id="BTCUSDT-price">—</strong><small id="BTCUSDT-change">等待行情</small></span>
+          </button>
+          <button class="price-card" data-symbol="ETHUSDT">
+            <span class="asset"><i class="coin eth">Ξ</i><span><strong>Ethereum</strong><small>ETH / USDT</small></span></span>
+            <span class="quote"><strong id="ETHUSDT-price">—</strong><small id="ETHUSDT-change">等待行情</small></span>
+          </button>
+        </div>
+      </section>
+
+      <section class="desk">
+        <div class="panel chart-panel">
+          <div class="panel-head">
+            <div><p class="label">30 MINUTE STRUCTURE</p><h2 id="chartTitle">BTC / USDT</h2></div>
+            <div class="legend"><span><i class="ema-fast"></i>EMA 9</span><span><i class="ema-slow"></i>EMA 21</span></div>
+          </div>
+          <div class="chart-wrap"><canvas id="chart" aria-label="30 分钟价格走势图"></canvas><div class="chart-loading" id="chartLoading">载入 30m K 线…</div></div>
+          <div class="chart-stats">
+            <span>高点<strong id="periodHigh">—</strong></span><span>低点<strong id="periodLow">—</strong></span><span>30m 波动<strong id="volatility">—</strong></span><span>数据<strong id="dataMode">LIVE</strong></span>
+          </div>
+        </div>
+
+        <aside class="panel signal-panel">
+          <div class="panel-head"><div><p class="label">MODEL OUTPUT</p><h2>当前研究信号</h2></div><span class="timeframe">30m</span></div>
+          <div class="signal-orbit" id="signalOrbit"><div><small>综合判断</small><strong id="signal">等待</strong><span id="confidence">置信度 —</span></div></div>
+          <div class="factor-list">
+            <div><span>趋势结构</span><strong id="trendFactor">—</strong></div>
+            <div><span>RSI 动量</span><strong id="rsiFactor">—</strong></div>
+            <div><span>波动过滤</span><strong id="volFactor">—</strong></div>
+          </div>
+          <p class="signal-note" id="signalNote">正在获取足够的市场数据。</p>
+        </aside>
+      </section>
+
+      <section class="metrics">
+        <article class="metric"><span>样本内胜率</span><strong id="winRate">—</strong><small id="sampleCount">最近 0 次信号</small></article>
+        <article class="metric"><span>收益因子</span><strong id="profitFactor">—</strong><small>未计手续费与滑点</small></article>
+        <article class="metric"><span>最大回撤</span><strong id="maxDrawdown">—</strong><small>等权单周期模型</small></article>
+        <article class="metric risk"><span>风险状态</span><strong id="riskState">计算中</strong><small id="riskDetail">等待波动率数据</small></article>
+      </section>
+
+      <section class="method">
+        <div><p class="eyebrow">RESEARCH LOGIC</p><h2>这个原型怎样做判断</h2></div>
+        <ol>
+          <li><span>01</span><div><strong>确认趋势</strong><p>EMA 9 穿越 EMA 21，并要求价格位于趋势同侧。</p></div></li>
+          <li><span>02</span><div><strong>过滤动量</strong><p>RSI 避开过热与过冷区域，减少追涨杀跌。</p></div></li>
+          <li><span>03</span><div><strong>限制波动</strong><p>用近期收益标准差识别异常市场，波动过高时暂停。</p></div></li>
+        </ol>
+      </section>
+    </main>
+
+    <footer><span>CodeXQuant © 2026</span><span>Research only · Not financial advice</span></footer>
+    <script src="app.js"></script>
+  </body>
+</html>

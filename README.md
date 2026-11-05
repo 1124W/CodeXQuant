@@ -6,6 +6,24 @@ CodeXQuant is a personal research project exploring rule-based and AI-assisted s
 
 > Status: **Planning** — no production code yet. This repository will be built out step by step.
 
+## Live 30m research dashboard
+
+The first browser prototype is now available as a dependency-free static site. It includes:
+
+- live BTC/USDT and ETH/USDT quotes from Binance public market streams;
+- 240 recent 30-minute candles with EMA 9/21 overlays;
+- a transparent research signal based on trend, RSI and volatility filters;
+- a lightweight in-browser crossover backtest summary;
+- responsive desktop and mobile layouts, with demo data when Binance is unavailable.
+
+Open `index.html` directly, or serve the repository locally:
+
+```bash
+python3 -m http.server 4173
+```
+
+Then visit `http://localhost:4173`. No API key is required. The model output and backtest are research examples; fees, slippage and execution constraints are not included.
+
 ---
 
 ## Motivation
