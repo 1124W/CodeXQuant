@@ -152,6 +152,7 @@ def run(days):
     return {"source": BASE, "symbols": SYMBOLS, "interval": "30m", "start_utc": str(start), "end_exclusive_utc": str(end),
             "cutoff_utc": str(cutoff), "payout": PAYOUT, "break_even_win_rate": round(BREAK_EVEN, 4),
             "bars": {s: len(v) for s, v in candles.items()}, "selection": "highest train net units per signal, at least 100 train signals",
+            "settlement_boundary": "training outcomes close before the holdout begins",
             "publishable": passed, "chosen": chosen, "all_candidates": candidates}
 
 
