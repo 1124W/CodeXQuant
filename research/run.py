@@ -142,7 +142,7 @@ def run(days):
                 trades = []
                 for series in candles.values():
                     trades += signal_rows(series, streak, z_limit, rsi_limit)
-                train = [t for t in trades if t[0] < cutoff_ms]
+                train = [t for t in trades if t[0] + STEP_MS < cutoff_ms]
                 test = [t for t in trades if t[0] >= cutoff_ms]
                 candidates.append({"parameters": {"streak": streak, "z_limit": z_limit, "rsi_limit": rsi_limit},
                                    "train": stats(train, days - 30), "test": stats(test, 30)})
