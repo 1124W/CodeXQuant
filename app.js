@@ -1,27 +1,105 @@
-const API="https://api.binance.com/api/v3",STREAM="wss://stream.binance.com:9443/stream?streams=btcusdt@miniTicker/ethusdt@miniTicker",STEP=1800000,DAYS=90,PAYOUT=.8;
-const state={symbol:"BTCUSDT",candles:{},quotes:{},socket:null,retries:0},$=id=>document.getElementById(id);
-window.quantMarket={getQuote:symbol=>state.quotes[symbol]};
-const money=v=>new Intl.NumberFormat("en-US",{style:"currency",currency:"USD",maximumFractionDigits:v>=1000?0:2}).format(v),pct=(v,d=2)=>`${v>=0?"+":""}${v.toFixed(d)}%`;
-function tickClock(){$("clock").textContent=new Intl.DateTimeFormat("zh-CN",{timeZone:"Asia/Shanghai",hour12:false,hour:"2-digit",minute:"2-digit",second:"2-digit"}).format(new Date())}
-async function fetchHistory(symbol){const end=Date.now();let cursor=end-DAYS*86400000,all=[];while(cursor<end){const r=await fetch(`${API}/klines?symbol=${symbol}&interval=30m&startTime=${cursor}&endTime=${end}&limit=1000`);if(!r.ok)throw Error(`Binance HTTP ${r.status}`);const rows=await r.json();if(!rows.length)break;all.push(...rows);const next=rows.at(-1)[0]+STEP;if(next<=cursor||rows.length<1000)break;cursor=next}return[...new Map(all.map(r=>[r[0],r])).values()].map(r=>({time:r[0],open:+r[1],high:+r[2],low:+r[3],close:+r[4],volume:+r[5]}))}
-async function loadMarket(symbol){try{state.candles[symbol]=await fetchHistory(symbol);if(state.candles[symbol].length<500)throw Error("历史样本不足");$("dataMode").textContent="LIVE"}catch(e){console.warn(`${symbol}: demo data`,e);state.candles[symbol]=demoCandles(symbol);$("dataMode").textContent="DEMO"}if(symbol===state.symbol)renderMarket(symbol)}
-function demoCandles(symbol){let price=symbol==="BTCUSDT"?68200:3650,seed=symbol==="BTCUSDT"?1124:2048;const random=()=>((seed=seed*1664525+1013904223>>>0)/4294967296);return Array.from({length:DAYS*48},(_,i)=>{const open=price;price*=1+Math.sin(i/37)*.00035+(random()-.496)*.009;const close=price,spread=close*(.001+random()*.004);return{time:Date.now()-(DAYS*48-1-i)*STEP,open,close,high:Math.max(open,close)+spread,low:Math.min(open,close)-spread,volume:800+random()*2200}})}
-function ema(values,period){const k=2/(period+1);let current=values[0];return values.map((v,i)=>current=i?v*k+current*(1-k):v)}
-function rollingMean(values,period){let sum=0;return values.map((v,i)=>{sum+=v;if(i>=period)sum-=values[i-period];return i>=period-1?sum/period:null})}
-function rollingStd(values,period,means){return values.map((_,i)=>{if(i<period-1)return null;let sum=0;for(let j=i-period+1;j<=i;j++)sum+=(values[j]-means[i])**2;return Math.sqrt(sum/period)})}
-function rsiSeries(values,period=14){const out=Array(values.length).fill(null);let gain=0,loss=0;for(let i=1;i<values.length;i++){const d=values[i]-values[i-1],up=Math.max(d,0),down=Math.max(-d,0);if(i<=period){gain+=up;loss+=down;if(i===period){gain/=period;loss/=period;out[i]=loss?100-100/(1+gain/loss):100}}else{gain=(gain*(period-1)+up)/period;loss=(loss*(period-1)+down)/period;out[i]=loss?100-100/(1+gain/loss):100}}return out}
-function volatility(values,period=20){const r=values.slice(-period-1).map((v,i,a)=>i?(v/a[i-1]-1)*100:0).slice(1),avg=r.reduce((a,b)=>a+b,0)/r.length;return Math.sqrt(r.reduce((s,v)=>s+(v-avg)**2,0)/r.length)}
-function indicators(c){const closes=c.map(v=>v.close),volumes=c.map(v=>v.volume),fast=ema(closes,9),slow=ema(closes,21),rsi=rsiSeries(closes),mean=rollingMean(closes,20),std=rollingStd(closes,20,mean),volumeMean=rollingMean(volumes,20);return{closes,fast,slow,rsi,mean,std,volumeMean}}
-const STRATEGIES=[
-{id:"trend",name:"趋势延续",badge:"EMA + RSI",description:"EMA 发生新交叉且动量不过热时，只触发一次下一周期机会。",signal:(i,c,x)=>x.fast[i]>x.slow[i]&&x.fast[i-1]<=x.slow[i-1]&&x.rsi[i]>=52&&x.rsi[i]<=68?1:x.fast[i]<x.slow[i]&&x.fast[i-1]>=x.slow[i-1]&&x.rsi[i]>=32&&x.rsi[i]<=48?-1:0},
-{id:"reversion",name:"均值反转",badge:"BOLL + RSI",description:"价格偏离 20 周期均值且动量极端时，寻找短线回归。",signal:(i,c,x)=>c[i].close<x.mean[i]-2*x.std[i]&&x.rsi[i]<30?1:c[i].close>x.mean[i]+2*x.std[i]&&x.rsi[i]>70?-1:0},
-{id:"breakout",name:"放量突破",badge:"20 BAR + VOL",description:"突破前 20 根 K 线区间，并要求成交量超过均值 35%。",signal:(i,c,x)=>{const prior=c.slice(i-20,i),high=Math.max(...prior.map(v=>v.high)),low=Math.min(...prior.map(v=>v.low));return c[i].volume>x.volumeMean[i]*1.35?(c[i].close>high?1:c[i].close<low?-1:0):0}}
-];
-function runStrategy(strategy,datasets){const trades=[];Object.entries(datasets).forEach(([symbol,c])=>{const x=indicators(c);for(let i=30;i<c.length-1;i++){const direction=strategy.signal(i,c,x);if(!direction)continue;const won=(c[i+1].close-c[i].close)*direction>0;trades.push({symbol,time:c[i].time,won,pnl:won?PAYOUT:-1})}});trades.sort((a,b)=>a.time-b.time);let equity=0,peak=0,maxDD=0,streak=0,maxLossStreak=0,wins=0;for(const t of trades){equity+=t.pnl;peak=Math.max(peak,equity);maxDD=Math.max(maxDD,peak-equity);if(t.won){wins++;streak=0}else{streak++;maxLossStreak=Math.max(maxLossStreak,streak)}}const losses=trades.length-wins;return{...strategy,trades:trades.length,wins,losses,winRate:trades.length?wins/trades.length*100:0,daily:trades.length/DAYS,pnl:equity,pf:losses?wins*PAYOUT/losses:0,maxDD,maxLossStreak}}
-function renderBacktests(){const results=STRATEGIES.map(s=>runStrategy(s,state.candles)),best=[...results].sort((a,b)=>b.pnl-a.pnl)[0];$("historyDot").className="status-dot live";$("historyStatus").textContent=`已载入 ${(state.candles.BTCUSDT.length+state.candles.ETHUSDT.length).toLocaleString()} 根 K 线`;$("strategyGrid").innerHTML=results.map(r=>`<article class="strategy-card"><div class="strategy-title"><strong>${r.name}</strong><span class="strategy-badge">${r.badge}</span></div><div class="strategy-result ${r.pnl>=0?"positive":"negative"}">${r.pnl>=0?"+":""}${r.pnl.toFixed(1)} 单位</div><small>${r.trades} 次信号 · 日均 ${r.daily.toFixed(1)} 次</small><p>${r.description}</p></article>`).join("");$("strategyRows").innerHTML=results.map(r=>`<tr><td>${r.name}</td><td>${r.trades}</td><td>${r.daily.toFixed(2)}</td><td>${r.winRate.toFixed(1)}%</td><td>55.6%</td><td class="${r.pnl>=0?"good":"bad"}">${r.pnl>=0?"+":""}${r.pnl.toFixed(1)}</td><td>${r.pf.toFixed(2)}</td><td>${r.maxDD.toFixed(1)}</td><td>${r.maxLossStreak}</td></tr>`).join("");$("winRate").textContent=`${best.winRate.toFixed(1)}%`;$("sampleCount").textContent=`${best.name} · ${best.trades} 次信号`;$("profitFactor").textContent=best.pf.toFixed(2);$("maxDrawdown").textContent=`${best.maxDD.toFixed(1)} 单位`}
-function analyze(c){const x=indicators(c),i=c.length-1,vol=volatility(x.closes),last=x.closes[i],bullish=x.fast[i]>x.slow[i]&&last>x.fast[i],bearish=x.fast[i]<x.slow[i]&&last<x.fast[i],volSafe=vol<1.15,currentRsi=x.rsi[i];let signal="观望",confidence=48;if(bullish&&currentRsi>48&&currentRsi<70&&volSafe){signal="偏多";confidence=72+Math.min(18,Math.abs(x.fast[i]/x.slow[i]-1)*3500)}if(bearish&&currentRsi<52&&currentRsi>30&&volSafe){signal="偏空";confidence=72+Math.min(18,Math.abs(x.fast[i]/x.slow[i]-1)*3500)}return{...x,rsi:currentRsi,vol,bullish,bearish,volSafe,signal,confidence:Math.round(confidence)}}
-function renderMarket(symbol){const c=state.candles[symbol];if(!c?.length)return;const r=analyze(c),latest=c.at(-1),recent=c.slice(-48);$("chartTitle").textContent=`${symbol.slice(0,3)} / USDT`;$("periodHigh").textContent=money(Math.max(...recent.map(v=>v.high)));$("periodLow").textContent=money(Math.min(...recent.map(v=>v.low)));$("volatility").textContent=`${r.vol.toFixed(2)}%`;$("signal").textContent=r.signal;$("confidence").textContent=`规则强度 ${r.confidence}%`;$("signalOrbit").className=`signal-orbit ${r.signal==="偏空"?"sell":r.signal==="观望"?"neutral":""}`;$("trendFactor").textContent=r.bullish?"多头排列":r.bearish?"空头排列":"结构混合";$("rsiFactor").textContent=`${r.rsi.toFixed(1)} · ${r.rsi>70?"过热":r.rsi<30?"过冷":"正常"}`;$("volFactor").textContent=r.volSafe?"通过":"暂停";$("signalNote").textContent=r.signal==="观望"?"趋势与动量尚未形成一致方向，等待下一根 30m K 线。":`${r.signal}只代表规则条件成立，不构成未来价格保证。`;$("riskState").textContent=r.volSafe?"允许研究":"高波动暂停";$("riskDetail").textContent=`30m 波动率 ${r.vol.toFixed(2)}%`;if(!state.quotes[symbol])updateQuote(symbol,latest.close,(latest.close/latest.open-1)*100,"demo");drawChart(c,r.fast,r.slow);$("chartLoading").style.display="none"}
-function drawChart(c,fast,slow){const canvas=$("chart"),rect=canvas.getBoundingClientRect(),dpr=window.devicePixelRatio||1;canvas.width=rect.width*dpr;canvas.height=rect.height*dpr;const ctx=canvas.getContext("2d");ctx.scale(dpr,dpr);const w=rect.width,h=rect.height,p={t:12,r:12,b:22,l:8},slice=c.slice(-80),f=fast.slice(-80),s=slow.slice(-80),all=[...slice.map(v=>v.high),...slice.map(v=>v.low)],min=Math.min(...all),max=Math.max(...all),range=max-min||1,x=i=>p.l+i*(w-p.l-p.r)/(slice.length-1),y=v=>p.t+(max-v)/range*(h-p.t-p.b);ctx.strokeStyle="rgba(255,255,255,.055)";for(let i=0;i<5;i++){const yy=p.t+i*(h-p.t-p.b)/4;ctx.beginPath();ctx.moveTo(0,yy);ctx.lineTo(w,yy);ctx.stroke()}const g=ctx.createLinearGradient(0,0,0,h);g.addColorStop(0,"rgba(184,243,72,.16)");g.addColorStop(1,"rgba(184,243,72,0)");ctx.beginPath();slice.forEach((v,i)=>i?ctx.lineTo(x(i),y(v.close)):ctx.moveTo(x(i),y(v.close)));ctx.lineTo(x(slice.length-1),h);ctx.lineTo(x(0),h);ctx.closePath();ctx.fillStyle=g;ctx.fill();[[f,"#b8f348",2],[s,"#57d8ff",1.4]].forEach(([series,color,width])=>{ctx.beginPath();series.forEach((v,i)=>i?ctx.lineTo(x(i),y(v)):ctx.moveTo(x(i),y(v)));ctx.strokeStyle=color;ctx.lineWidth=width;ctx.stroke()});ctx.fillStyle="#8991a3";ctx.font="10px ui-monospace,monospace";ctx.fillText(money(min),8,h-5);ctx.textAlign="right";ctx.fillText(money(max),w-8,12)}
-function updateQuote(symbol,price,change,source="live"){state.quotes[symbol]={price,change,source,observedAt:Date.now()};$(`${symbol}-price`).textContent=money(price);const el=$(`${symbol}-change`);el.textContent=`24h ${pct(change)}`;el.className=change>=0?"up":"down"}
-function connectStream(){if(state.socket)state.socket.close();const socket=new WebSocket(STREAM);state.socket=socket;socket.onopen=()=>{state.retries=0;$("statusDot").className="status-dot live";$("connectionText").textContent="实时行情已连接"};socket.onmessage=e=>{const m=JSON.parse(e.data).data;updateQuote(m.s,+m.c,(+m.c/+m.o-1)*100)};socket.onerror=()=>socket.close();socket.onclose=()=>{$("statusDot").className="status-dot offline";$("connectionText").textContent="行情重连中";setTimeout(connectStream,Math.min(30000,1000*2**state.retries++))}}
-document.querySelectorAll(".price-card").forEach(card=>card.addEventListener("click",()=>{document.querySelectorAll(".price-card").forEach(c=>c.classList.remove("active"));card.classList.add("active");state.symbol=card.dataset.symbol;if(state.candles[state.symbol])renderMarket(state.symbol)}));window.addEventListener("resize",()=>state.candles[state.symbol]&&renderMarket(state.symbol));setInterval(tickClock,1000);tickClock();connectStream();Promise.all([loadMarket("BTCUSDT"),loadMarket("ETHUSDT")]).then(()=>{renderBacktests();renderMarket(state.symbol)});
+const API = "https://api.binance.com/api/v3";
+const STREAM = "wss://stream.binance.com:9443/stream?streams=btcusdt@miniTicker/ethusdt@miniTicker";
+const state = { symbol: "BTCUSDT", candles: {}, socket: null, retries: 0 };
+const el = id => document.getElementById(id);
+const money = value => new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: value >= 1000 ? 0 : 2 }).format(value);
+
+function tickClock() {
+  el("clock").textContent = new Intl.DateTimeFormat("zh-CN", { timeZone: "Asia/Shanghai", hour12: false, hour: "2-digit", minute: "2-digit", second: "2-digit" }).format(new Date());
+}
+
+function demoCandles(symbol) {
+  let price = symbol === "BTCUSDT" ? 68000 : 3500;
+  let seed = symbol === "BTCUSDT" ? 1124 : 2048;
+  const random = () => ((seed = seed * 1664525 + 1013904223 >>> 0) / 4294967296);
+  return Array.from({ length: 240 }, (_, index) => {
+    const open = price;
+    price *= 1 + (random() - .5) * .009;
+    const close = price;
+    const spread = price * .002;
+    return { time: Date.now() - (239 - index) * 1800000, open, close, high: Math.max(open, close) + spread, low: Math.min(open, close) - spread };
+  });
+}
+
+async function loadCandles(symbol) {
+  try {
+    const response = await fetch(`${API}/klines?symbol=${symbol}&interval=30m&limit=240`);
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const rows = await response.json();
+    state.candles[symbol] = rows.map(row => ({ time: row[0], open: +row[1], high: +row[2], low: +row[3], close: +row[4] }));
+    if (!state.candles[symbol].length) throw new Error("No candles");
+    if (symbol === state.symbol) el("dataMode").textContent = "LIVE";
+  } catch (error) {
+    console.warn(`${symbol} candles unavailable`, error);
+    state.candles[symbol] = demoCandles(symbol);
+    if (symbol === state.symbol) el("dataMode").textContent = "DEMO";
+  }
+  if (symbol === state.symbol) render(symbol);
+}
+
+function ema(values, period) {
+  const factor = 2 / (period + 1);
+  let current = values[0];
+  return values.map((value, index) => current = index ? value * factor + current * (1 - factor) : value);
+}
+
+function drawChart(candles) {
+  const canvas = el("chart"), bounds = canvas.getBoundingClientRect(), scale = devicePixelRatio || 1;
+  canvas.width = bounds.width * scale;
+  canvas.height = bounds.height * scale;
+  const ctx = canvas.getContext("2d");
+  ctx.scale(scale, scale);
+  const data = candles.slice(-80), closes = candles.map(c => c.close), fast = ema(closes, 9).slice(-80), slow = ema(closes, 21).slice(-80);
+  const width = bounds.width, height = bounds.height;
+  const min = Math.min(...data.map(c => c.low)), max = Math.max(...data.map(c => c.high)), range = max - min || 1;
+  const x = index => 8 + index * (width - 20) / (data.length - 1);
+  const y = value => 12 + (max - value) / range * (height - 36);
+  ctx.strokeStyle = "rgba(255,255,255,.055)";
+  for (let i = 0; i < 5; i++) { const level = 12 + i * (height - 36) / 4; ctx.beginPath(); ctx.moveTo(0, level); ctx.lineTo(width, level); ctx.stroke(); }
+  const gradient = ctx.createLinearGradient(0, 0, 0, height);
+  gradient.addColorStop(0, "rgba(184,243,72,.16)"); gradient.addColorStop(1, "rgba(184,243,72,0)");
+  ctx.beginPath(); data.forEach((c, i) => i ? ctx.lineTo(x(i), y(c.close)) : ctx.moveTo(x(i), y(c.close)));
+  ctx.lineTo(x(data.length - 1), height); ctx.lineTo(x(0), height); ctx.closePath(); ctx.fillStyle = gradient; ctx.fill();
+  for (const [series, color, lineWidth] of [[fast, "#b8f348", 2], [slow, "#57d8ff", 1.4]]) {
+    ctx.beginPath(); series.forEach((value, i) => i ? ctx.lineTo(x(i), y(value)) : ctx.moveTo(x(i), y(value)));
+    ctx.strokeStyle = color; ctx.lineWidth = lineWidth; ctx.stroke();
+  }
+  ctx.fillStyle = "#8991a3"; ctx.font = "10px ui-monospace,monospace";
+  ctx.fillText(money(min), 8, height - 5); ctx.textAlign = "right"; ctx.fillText(money(max), width - 8, 12);
+}
+
+function render(symbol) {
+  const candles = state.candles[symbol]; if (!candles?.length) return;
+  const recent = candles.slice(-48);
+  el("chartTitle").textContent = `${symbol.slice(0, 3)} / USDT`;
+  el("periodHigh").textContent = money(Math.max(...recent.map(c => c.high)));
+  el("periodLow").textContent = money(Math.min(...recent.map(c => c.low)));
+  const last = candles.at(-1), previous = candles.at(-2);
+  el("volatility").textContent = `${Math.abs((last.close / previous.close - 1) * 100).toFixed(2)}%`;
+  el("chartLoading").style.display = "none";
+  drawChart(candles);
+}
+
+function updateQuote(symbol, price, change) {
+  el(`${symbol}-price`).textContent = money(price);
+  const changeEl = el(`${symbol}-change`);
+  changeEl.textContent = `24h ${change >= 0 ? "+" : ""}${change.toFixed(2)}%`;
+  changeEl.className = change >= 0 ? "up" : "down";
+}
+
+function connectStream() {
+  const socket = new WebSocket(STREAM); state.socket = socket;
+  socket.onopen = () => { state.retries = 0; el("statusDot").className = "status-dot live"; el("connectionText").textContent = "实时行情已连接"; };
+  socket.onmessage = event => { const ticker = JSON.parse(event.data).data; updateQuote(ticker.s, +ticker.c, (+ticker.c / +ticker.o - 1) * 100); };
+  socket.onerror = () => socket.close();
+  socket.onclose = () => { el("statusDot").className = "status-dot offline"; el("connectionText").textContent = "行情重连中"; setTimeout(connectStream, Math.min(30000, 1000 * 2 ** state.retries++)); };
+}
+
+document.querySelectorAll(".price-card").forEach(card => card.addEventListener("click", () => {
+  document.querySelectorAll(".price-card").forEach(item => item.classList.remove("active"));
+  card.classList.add("active"); state.symbol = card.dataset.symbol;
+  if (state.candles[state.symbol]) render(state.symbol);
+}));
+window.addEventListener("resize", () => state.candles[state.symbol] && render(state.symbol));
+setInterval(tickClock, 1000); tickClock();
+loadCandles("BTCUSDT"); loadCandles("ETHUSDT"); connectStream();

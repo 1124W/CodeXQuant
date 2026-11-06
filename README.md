@@ -1,23 +1,21 @@
 # CodeXQuant
 
-**An AI-driven quantitative trading research platform.**
+**A transparent quantitative trading research project.**
 
 CodeXQuant is a personal research project exploring rule-based and AI-assisted systematic trading across multiple markets. The goal: build a transparent, fully backtestable pipeline — from market data ingestion to signal generation, risk gating, and performance analytics.
 
-> Status: **Planning** — no production code yet. This repository will be built out step by step.
+> Status: **Research prototype** — no strategy is currently approved for live use.
 
 ## Live 30m research dashboard
 
-The first browser prototype is now available as a dependency-free static site. It includes:
+The browser prototype is a dependency-free static site. It includes:
 
 - live BTC/USDT and ETH/USDT quotes from Binance public market streams;
-- the latest 90 days of 30-minute candles, loaded in paginated requests;
-- three transparent strategies: EMA trend continuation, Bollinger mean reversion and volume-confirmed breakout;
-- strict next-candle settlement with a configurable 0.80 event payout assumption;
-- signal count, daily frequency, win rate, profit factor, maximum drawdown and longest losing streak;
-- responsive desktop and mobile layouts, with demo data when Binance is unavailable.
+- recent 30-minute candles with EMA overlays;
+- a published research result with separate training and held-out periods;
+- responsive desktop and mobile layouts, with clearly labeled demo charts when Binance is unavailable.
 
-The Qimen experiment records your own chart interpretation, symbol, direction, and live entry quote in the current browser. After the next 30-minute close, it checks the actual Binance candle and reports whether the recorded direction matched. It does not calculate a traditional Qimen chart or turn the interpretation into a model probability. Records remain in browser local storage and are never included in the three quantitative backtests.
+The research script in `research/run.py` downloads official Binance public ZIP files, verifies their SHA-256 checksums, and tests a fixed family of contrarian rules. It selects a rule using the first 60 days, then evaluates it once on the latest 30 days. The machine-readable report is `research/results.json`.
 
 Open `index.html` directly, or serve the repository locally:
 
@@ -25,7 +23,7 @@ Open `index.html` directly, or serve the repository locally:
 python3 -m http.server 4173
 ```
 
-Then visit `http://localhost:4173`. No API key is required. The model output and backtest are research examples; fees, slippage and execution constraints are not included.
+Then visit `http://localhost:4173`. No API key is required. Research assumes +0.80 for a win and −1.00 for a loss; actual contract terms and execution constraints may differ.
 
 ---
 
