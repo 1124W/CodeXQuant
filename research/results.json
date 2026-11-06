@@ -15,6 +15,7 @@
     "ETHUSDT": 4320
   },
   "selection": "highest train net units per signal, at least 100 train signals",
+  "settlement_boundary": "training outcomes close before the holdout begins",
   "publishable": false,
   "chosen": {
     "parameters": {
