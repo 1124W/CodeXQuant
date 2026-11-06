@@ -1,0 +1,264 @@
+{
+  "source": "https://data.binance.vision/data/spot",
+  "symbols": [
+    "BTCUSDT",
+    "ETHUSDT"
+  ],
+  "interval": "30m",
+  "start_utc": "2026-08-08",
+  "end_exclusive_utc": "2026-11-06",
+  "cutoff_utc": "2026-10-07",
+  "payout": 0.8,
+  "break_even_win_rate": 0.5556,
+  "bars": {
+    "BTCUSDT": 4320,
+    "ETHUSDT": 4320
+  },
+  "selection": "highest train net units per signal, at least 100 train signals",
+  "publishable": false,
+  "chosen": {
+    "parameters": {
+      "streak": 3,
+      "z_limit": 1.0,
+      "rsi_limit": 65
+    },
+    "train": {
+      "signals": 177,
+      "per_day": 2.95,
+      "wins": 108,
+      "win_rate": 0.6102,
+      "win_rate_lower_95": 0.5367,
+      "net_units": 17.4,
+      "max_drawdown_units": 8.8,
+      "profit_factor": 1.252
+    },
+    "test": {
+      "signals": 105,
+      "per_day": 3.5,
+      "wins": 57,
+      "win_rate": 0.5429,
+      "win_rate_lower_95": 0.4477,
+      "net_units": -2.4,
+      "max_drawdown_units": 13.4,
+      "profit_factor": 0.95
+    }
+  },
+  "all_candidates": [
+    {
+      "parameters": {
+        "streak": 2,
+        "z_limit": 1.0,
+        "rsi_limit": 60
+      },
+      "train": {
+        "signals": 465,
+        "per_day": 7.75,
+        "wins": 267,
+        "win_rate": 0.5742,
+        "win_rate_lower_95": 0.5288,
+        "net_units": 15.6,
+        "max_drawdown_units": 20.8,
+        "profit_factor": 1.079
+      },
+      "test": {
+        "signals": 262,
+        "per_day": 8.73,
+        "wins": 148,
+        "win_rate": 0.5649,
+        "win_rate_lower_95": 0.5043,
+        "net_units": 4.4,
+        "max_drawdown_units": 23.6,
+        "profit_factor": 1.039
+      }
+    },
+    {
+      "parameters": {
+        "streak": 2,
+        "z_limit": 1.0,
+        "rsi_limit": 65
+      },
+      "train": {
+        "signals": 278,
+        "per_day": 4.63,
+        "wins": 155,
+        "win_rate": 0.5576,
+        "win_rate_lower_95": 0.4988,
+        "net_units": 1.0,
+        "max_drawdown_units": 17.4,
+        "profit_factor": 1.008
+      },
+      "test": {
+        "signals": 167,
+        "per_day": 5.57,
+        "wins": 92,
+        "win_rate": 0.5509,
+        "win_rate_lower_95": 0.4752,
+        "net_units": -1.4,
+        "max_drawdown_units": 15.0,
+        "profit_factor": 0.981
+      }
+    },
+    {
+      "parameters": {
+        "streak": 2,
+        "z_limit": 1.5,
+        "rsi_limit": 60
+      },
+      "train": {
+        "signals": 371,
+        "per_day": 6.18,
+        "wins": 214,
+        "win_rate": 0.5768,
+        "win_rate_lower_95": 0.526,
+        "net_units": 14.2,
+        "max_drawdown_units": 18.8,
+        "profit_factor": 1.09
+      },
+      "test": {
+        "signals": 195,
+        "per_day": 6.5,
+        "wins": 103,
+        "win_rate": 0.5282,
+        "win_rate_lower_95": 0.4583,
+        "net_units": -9.6,
+        "max_drawdown_units": 25.4,
+        "profit_factor": 0.896
+      }
+    },
+    {
+      "parameters": {
+        "streak": 2,
+        "z_limit": 1.5,
+        "rsi_limit": 65
+      },
+      "train": {
+        "signals": 239,
+        "per_day": 3.98,
+        "wins": 136,
+        "win_rate": 0.569,
+        "win_rate_lower_95": 0.5057,
+        "net_units": 5.8,
+        "max_drawdown_units": 17.8,
+        "profit_factor": 1.056
+      },
+      "test": {
+        "signals": 133,
+        "per_day": 4.43,
+        "wins": 71,
+        "win_rate": 0.5338,
+        "win_rate_lower_95": 0.4493,
+        "net_units": -5.2,
+        "max_drawdown_units": 15.8,
+        "profit_factor": 0.916
+      }
+    },
+    {
+      "parameters": {
+        "streak": 3,
+        "z_limit": 1.0,
+        "rsi_limit": 60
+      },
+      "train": {
+        "signals": 280,
+        "per_day": 4.67,
+        "wins": 167,
+        "win_rate": 0.5964,
+        "win_rate_lower_95": 0.538,
+        "net_units": 20.6,
+        "max_drawdown_units": 11.0,
+        "profit_factor": 1.182
+      },
+      "test": {
+        "signals": 150,
+        "per_day": 5.0,
+        "wins": 76,
+        "win_rate": 0.5067,
+        "win_rate_lower_95": 0.4275,
+        "net_units": -13.2,
+        "max_drawdown_units": 19.0,
+        "profit_factor": 0.822
+      }
+    },
+    {
+      "parameters": {
+        "streak": 3,
+        "z_limit": 1.0,
+        "rsi_limit": 65
+      },
+      "train": {
+        "signals": 177,
+        "per_day": 2.95,
+        "wins": 108,
+        "win_rate": 0.6102,
+        "win_rate_lower_95": 0.5367,
+        "net_units": 17.4,
+        "max_drawdown_units": 8.8,
+        "profit_factor": 1.252
+      },
+      "test": {
+        "signals": 105,
+        "per_day": 3.5,
+        "wins": 57,
+        "win_rate": 0.5429,
+        "win_rate_lower_95": 0.4477,
+        "net_units": -2.4,
+        "max_drawdown_units": 13.4,
+        "profit_factor": 0.95
+      }
+    },
+    {
+      "parameters": {
+        "streak": 3,
+        "z_limit": 1.5,
+        "rsi_limit": 60
+      },
+      "train": {
+        "signals": 231,
+        "per_day": 3.85,
+        "wins": 130,
+        "win_rate": 0.5628,
+        "win_rate_lower_95": 0.4983,
+        "net_units": 3.0,
+        "max_drawdown_units": 17.2,
+        "profit_factor": 1.03
+      },
+      "test": {
+        "signals": 124,
+        "per_day": 4.13,
+        "wins": 62,
+        "win_rate": 0.5,
+        "win_rate_lower_95": 0.4133,
+        "net_units": -12.4,
+        "max_drawdown_units": 19.8,
+        "profit_factor": 0.8
+      }
+    },
+    {
+      "parameters": {
+        "streak": 3,
+        "z_limit": 1.5,
+        "rsi_limit": 65
+      },
+      "train": {
+        "signals": 155,
+        "per_day": 2.58,
+        "wins": 91,
+        "win_rate": 0.5871,
+        "win_rate_lower_95": 0.5084,
+        "net_units": 8.8,
+        "max_drawdown_units": 10.8,
+        "profit_factor": 1.137
+      },
+      "test": {
+        "signals": 90,
+        "per_day": 3.0,
+        "wins": 47,
+        "win_rate": 0.5222,
+        "win_rate_lower_95": 0.4202,
+        "net_units": -5.4,
+        "max_drawdown_units": 12.8,
+        "profit_factor": 0.874
+      }
+    }
+  ]
+}
