@@ -1,6 +1,6 @@
 const API = "https://api.binance.com/api/v3";
 const STREAM = "wss://stream.binance.com:9443/stream?streams=btcusdt@miniTicker/ethusdt@miniTicker";
-const state = { symbol: "BTCUSDT", candles: {}, socket: null, retries: 0 };
+const state = { symbol: "BTCUSDT", candles: {}, modes: {}, socket: null, retries: 0 };
 const el = id => document.getElementById(id);
 const money = value => new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: value >= 1000 ? 0 : 2 }).format(value);
 
@@ -28,11 +28,11 @@ async function loadCandles(symbol) {
     const rows = await response.json();
     state.candles[symbol] = rows.map(row => ({ time: row[0], open: +row[1], high: +row[2], low: +row[3], close: +row[4] }));
     if (!state.candles[symbol].length) throw new Error("No candles");
-    if (symbol === state.symbol) el("dataMode").textContent = "LIVE";
+    state.modes[symbol] = "LIVE";
   } catch (error) {
     console.warn(`${symbol} candles unavailable`, error);
     state.candles[symbol] = demoCandles(symbol);
-    if (symbol === state.symbol) el("dataMode").textContent = "DEMO";
+    state.modes[symbol] = "DEMO";
   }
   if (symbol === state.symbol) render(symbol);
 }
@@ -72,6 +72,7 @@ function render(symbol) {
   const candles = state.candles[symbol]; if (!candles?.length) return;
   const recent = candles.slice(-48);
   el("chartTitle").textContent = `${symbol.slice(0, 3)} / USDT`;
+  el("dataMode").textContent = state.modes[symbol];
   el("periodHigh").textContent = money(Math.max(...recent.map(c => c.high)));
   el("periodLow").textContent = money(Math.min(...recent.map(c => c.low)));
   const last = candles.at(-1), previous = candles.at(-2);
