@@ -1,74 +1,183 @@
 # CodeXQuant
 
-**A transparent quantitative trading research project.**
+一个面向 BTC/ETH 30 分钟事件合约的透明量化研究项目。现已具备指数历史数据、事件结算、组合风控、滚动样本外检验与网页报告。目标胜率为 **58%**；当前结果未达到目标，尚无经过验证的盈利策略。
 
-CodeXQuant is a personal research project exploring rule-based and AI-assisted systematic trading across multiple markets. The goal: build a transparent, fully backtestable pipeline — from market data ingestion to signal generation, risk gating, and performance analytics.
+## 事件合约回测（v3，主研究入口）
 
-> Status: **Research prototype** — no strategy is currently approved for live use.
-
-## Live 30m research dashboard
-
-The browser prototype is a dependency-free static site. It includes:
-
-- live BTC/USDT and ETH/USDT quotes from Binance public market streams;
-- recent 30-minute candles with EMA overlays;
-- a published research result with separate training and held-out periods;
-- responsive desktop and mobile layouts, with clearly labeled demo charts when Binance is unavailable.
-
-The research script in `research/run.py` downloads official Binance public ZIP files, verifies their SHA-256 checksums, and tests a fixed family of contrarian rules. It selects a rule using the first 60 days, then evaluates it once on the latest 30 days. The machine-readable report is `research/results.json`.
-
-Open `index.html` directly, or serve the repository locally:
-
-```bash
-python3 -m http.server 4173
+```powershell
+python research/backtest.py --days 360 --end 2026-11-07 --train-days 90 --validation-days 30 --holdout-days 60
 ```
 
-Then visit `http://localhost:4173`. No API key is required. Research assumes +0.80 for a win and −1.00 for a loss; actual contract terms and execution constraints may differ.
+命令从币安官方 USDⓈ-M `indexPriceKlines` 下载 BTC/ETH 的 **1 分钟指数价**，验证 ZIP 的交易所 SHA-256，并检查每分钟网格、重复、OHLC。官方月归档缺失的日期使用官方 `/fapi/v1/indexPriceKlines` REST 实际数据补齐；REST 快照保存原始响应及**本地 SHA-256**，此校验值并非交易所签发。数据不完整或有冲突时中止，不插值、不替换成现货。
 
----
+首次下载后可完全离线复现：
 
-## Motivation
+```powershell
+python research/backtest.py --days 360 --end 2026-11-07 --train-days 90 --validation-days 30 --holdout-days 60 --offline
+```
 
-Retail quant trading usually fails for three reasons: hidden costs, overfitting, and unreliable statistics. CodeXQuant is built around three principles learned the hard way:
+输出 `research/event-results.json`、`research/event-trades.csv`；通过本地 HTTP 打开网页即可看到 58% 目标、样本外胜率、留出期、逐轮表现、权益曲线和成本压力测试。参数只能通过 Python 命令修改；静态网页读取报告，不运行服务器端回测。完整 JSON 是报告与逐笔记录的权威文件，CSV 的 `run_id` 可与报告核对。报告包含配置、数据/代码/规则网格 SHA-256、Git 版本和独立运行 ID；本地 `research/.runs/` 保存运行摘要。
 
-1. **Strict settlement** — signals are judged against real future prices (T+10m / T+30m), not lenient rules. Flat means flat, no "small-move-wins" exemptions.
-2. **Cost-first math** — every strategy must clear its breakeven win rate given real spreads, commissions and payout multipliers before it deserves live simulation.
-3. **Honest statistics** — confidence intervals, multiple-comparison corrections, and out-of-sample validation on every claimed edge.
+2025-11-12 至 2026-11-07（UTC，结束日期不含）的实际结果：
 
-## Planned Modules
-
-| Module | Description | Status |
+| 指标 | 滚动样本外 | 最后 60 天历史留出期 |
 |---|---|---|
-| `data` | Market data ingestion (Binance public klines via ccxt, MT5 symbols) | Planned |
-| `regime` | Five-state market regime detection (trend / range / shock / breakout / transition) via weighted multi-factor voting | Planned |
-| `signal` | Rule-based scoring engine: momentum, EMA structure, RSI/MACD filters, odds thresholds | Planned |
-| `llm` | Optional LLM layer (DeepSeek API) for trade narratives only — never for direction decisions | Planned |
-| `backtest` | Strict binary-option P&L model for event contracts (payout multiplier based) | Planned |
-| `risk` | Spread gate, daily loss cap, consecutive-loss stop, session filter, cooldown | Planned |
-| `dashboard` | Offline single-file HTML analytics: win-rate slicing, equity curves, calibration | Planned |
-| `mt5` | Expert Advisors for XAUUSD scalping (MQL5) with diagnostic overlays | Planned |
+| 交易数 | 448（249 胜、199 负） | 0，训练规则不合格，空仓 |
+| 胜率 | **55.58%** | 无样本 |
+| 净收益（每笔 1 单位） | **−4.28** | 0 |
+| 最大回撤（单位） | 15.10 | 0 |
+| 按日重采样胜率 95% 区间 | 50.91%–59.84% | 无样本 |
 
-## Target Markets
+以上以赢 +0.8、输 −1、每笔研究成本 0.01 为假设，盈亏平衡胜率为 **56.11%**。当前未通过 58% 目标、盈利、置信度与跨窗口稳定性门槛。**不会为了凑出 58% 而在测试期挑参数，也不会将无交易写成 0% 胜率。**
 
-- **Crypto event contracts** (Binance) — binary options with payout multipliers, no API order placement (alert-only)
-- **XAUUSD / forex CFDs** (MetaTrader 5) — M1 scalping EAs with full API automation
+### v3 的规则与检验方式
 
-## Roadmap
+- 16 个预先固定规则：震荡反转、趋势回调、趋势突破。指标只读取已完整收盘的 30m 指数 K 线。90 天训练期至少 100 笔有效胜负、净收益为正、胜率达到目标才允许进入候选，按 Wilson 下限对应的期望收益选一个；没有合格规则则空仓。
+- 360 天分为 90 天初始训练、7 轮各 30 天滚动样本外、最后 60 天历史留出。每轮仅用此前 90 天训练；最后留出只用它之前的 90 天选规则。训练交易必须在边界之前结算，跨界交易剔除。
+- 信号在完整 30m 收盘时产生；默认延迟 1 分钟，在该分钟**开盘指数价**入场，入场后 30 分钟的分钟开盘价结算。方向判断为严格大于/小于；持平退本金，研究成本仍扣除；胜率分母为胜 + 负，退款另列。
+- 每次固定 1 单位，初始资金 1,000 单位，默认最多同时持有 1 笔，预留本金和成本；每日已亏本金加未结算敞口受 5 单位预算约束。按 UTC 日计，不加倍追损、不提前平仓。相同时刻 BTC 优先于 ETH，是预定顺序而非按结果择优。
+- 剔除官方已公告不可交易日期：2026-01-17/18/19/24/25，以及跨越这些日期的事件。历史交易日历仍可能有未收集到的限制。
+- 分别对滚动样本外与留出期检查样本量、58% 目标、正收益、Wilson 下限、按日联合重采样的胜率与收益下限。重采样包含零交易日，BTC/ETH 同日一起抽样；跨日相关性和多次研究偏差仍存在。
+- 压力情景降低净赔付至 0.75/0.70、提高成本、向不利方向移动开仓价 2bp。规则选择日程固定；风控准入可能随情景损益变化。`publishable` 仅为历史检验状态；`live_approved` 始终为 false。
 
-- [ ] Repository structure and project skeleton
-- [ ] Data ingestion module with quality gates
-- [ ] Market regime classifier + validation suite
-- [ ] Signal engine with strict settlement backtest
-- [ ] Risk management framework
-- [ ] Analytics dashboard
-- [ ] Paper-trading phase (≥100 samples before any judgment)
+| 常用参数 | 默认值 | 含义 |
+|---|---|---|
+| `--days / --train-days / --validation-days / --holdout-days` | 360 / 90 / 30 / 60 | 总区间、滚动训练、样本外窗口、最终留出天数 |
+| `--end` | UTC 两天前 | 排他结束日期，固定日期可复现 |
+| `--target-win-rate` | 0.58 | 训练候选与历史检验目标；不承诺达到 |
+| `--payout / --fee` | 0.8 / 0.01 | 赢时每单位本金净赔付 / 每笔每单位研究成本 |
+| `--latency-minutes / --horizon-minutes` | 1 / 30 | 分钟开仓延迟 / 入场后结算期限；期限支持 10/30/60/1440 |
+| `--min-train-trades / --min-test-trades` | 100 / 100 | 有效胜负最低数量；并非盈利可信度保证 |
+| `--initial-bankroll / --stake` | 1000 / 1 | 研究资金单位、固定每笔金额 |
+| `--max-open-positions / --daily-loss-limit` | 1 / 5 | 同时持仓上限 / UTC 每日已亏本金和敞口预算 |
+| `--adverse-bps` | 0 | 不利开仓价偏移；1bp = 0.01% |
+| `--offline` | 关闭 | 只使用已验证缓存，绝不联网补数 |
 
-## Disclaimers
+### 58% 是否足以盈利
 
-- This project is for **research and education only**. Nothing here is financial advice.
-- No live trading is performed by this codebase. Event-contract execution remains manual by design.
-- Past (or backtested) performance does not guarantee anything about the future.
+无退款时，每笔单位本金的期望净收益为 `胜率 × 净赔付 − (1 − 胜率) − 成本`。58% 胜率、净赔付 0.8、成本 0.01 对应 +0.034；赔付降至 0.7 时变为 −0.024。应按每笔真实赔付评估，不能只看胜率。
 
-## License
+币安[官方事件规则](https://www.binance.com/en/support/faq/detail/172247f1c4b8401ab106fb63900f3825)规定按指数价结算、平局返本金、赔付随订单变化，并说明开仓价可能取下单后下一秒指数价。**分钟回测无法还原下一秒真实开仓与到期价格**，固定赔付也不是实际历史报价；默认 0.01 是保守研究摩擦，不代表币安额外收取该手续费。每笔 1 单位是归一化研究金额，实际最低本金另以平台为准。
 
-TBD
+此前现货研究覆盖了部分相同日期，因此本轮历史留出虽然未参与当前选参，也不是从未观察过的新证据。下一步应锁定规则，用新增秒级指数、逐笔实际赔付与纸面事件记录做前向检验，再评价是否出现可交易优势。官方 FAQ 目前说明事件产品仅在 Android/iOS App 提供，本项目没有自动下单接口。
+
+## 当前能做什么
+
+- 无构建依赖的中文行情看板：Binance BTC/ETH 实时指数价格、30m 指数 K 线与 EMA 9/21。
+- 底层接收 Binance 每秒指数推送，页面每 2 秒统一刷新显示，价格保留两位小数和交易所行情时间；推送不可用时切换为官方指数快照，每 2 秒尝试更新。
+- 每分钟刷新 K 线；10 秒请求超时；真实数据过期、报价中断、模拟走势均明确标识。
+- 下载 Binance 官方 ZIP 数据并校验 SHA-256，缓存原始文件以便复现。
+- 严格检查完整时间网格、OHLC、缺失及冲突数据。
+- 主入口包含 16 个固定策略候选与滚动检验；保留旧版现货反向规则报告供对照。
+- 输出逐笔交易、分币种表现、成本、胜率区间、回撤及校验文件清单。
+- 离线回归测试覆盖成交时间、未来数据隔离、成本、风控、数据修复与网页校验；GitHub Pages 部署前必须通过检查，部署包仅含公开页面与研究结果。
+
+## 快速启动
+
+需要 Python 3.9+；测试前端另需 Node.js 20+。没有第三方运行时依赖。
+
+```powershell
+python -m http.server 4173 --bind 127.0.0.1
+```
+
+打开 http://127.0.0.1:4173 。请通过 HTTP 服务访问；直接双击 HTML 时浏览器可能阻止读取 JSON 报告。
+
+```powershell
+python -m unittest discover -s tests -v
+node --test tests/dashboard.test.cjs
+```
+
+## 看板指数价格数据来源
+
+- WebSocket：`wss://fstream.binance.com/market/stream?streams=btcusdt@markPrice@1s/ethusdt@markPrice@1s`，使用 `i`（Index Price）字段，行情时间使用 `E`。同一消息中的 `p` 是标记价格，不作为指数价显示。[官方推送文档](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/ws-streams/market)
+- REST 补充：`GET https://fapi.binance.com/fapi/v1/premiumIndex?symbol=BTCUSDT`（ETH 同理），使用 `indexPrice` 和 `time`，页面明确标为快照。正常推送时停止对应币种的补充轮询。
+- 图表：`GET /fapi/v1/indexPriceKlines?pair=BTCUSDT&interval=30m&limit=240`，绘制真实 OHLC K 线（影线、涨跌实体）并叠加 EMA 9/21；历史快照每分钟校准，当前 30m K 线随指数价每 2 秒更新。[官方 REST 文档](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/market-data)
+- 行情超过 15 秒未更新会标记过期；断开时保留原值及时间。异常、旧消息或乱序消息不会覆盖新价格。指数报价失败时不使用模拟价格替代；图表无法获取历史数据时仍会明确展示模拟走势。
+
+公共行情不需要 API Key。浏览器直连需能访问 Binance Futures 域名；页面显示每个币种的实时/快照/过期状态。行情新鲜度校验依赖本机时钟，请保持系统时间同步。
+
+主研究使用指数历史数据。页面下方另外保留的 v2 报告使用现货归档，仅用于对照，不能视为真实事件合约结算收益。
+
+## 旧版现货研究（v2，仅供对照）
+
+```powershell
+python research/run.py --days 90 --end 2026-11-06 --output research/results.json
+```
+
+`--end` 是 **UTC 排他结束日期**。以上命令使用 2026-08-08 至 2026-11-06 的数据，前 60 天训练，后 30 天留出。省略日期时默认使用 UTC 昨日作为排他结束日，为官方日归档留出发布时间；尚未发布的归档会导致失败，需改用更早日期。下载失败或数据不合格时保留现有报告。
+
+可配置选项：
+
+| 参数 | 默认值 | 含义 |
+|---|---|---|
+| `--days` | 90 | 总历史天数，必须大于留出天数 |
+| `--holdout-days` | 30 | 留出天数 |
+| `--end` | UTC 昨日 | 排他结束日期，用固定日期可复现同一研究区间 |
+| `--payout` | 0.8 | 赢时每单位本金的净收益 |
+| `--fee` | 0 | 每笔每单位本金固定成本，无论输赢均扣除 |
+| `--cache-dir` | `research/.cache` | 校验后的原始归档缓存，不纳入 Git |
+| `--output` | `research/results.json` | 原子替换的报告路径 |
+
+考虑固定成本后，盈亏平衡胜率为 `(1 + fee) / (1 + payout)`。成本不是交易价格百分比，也不包含点差或延迟成交模型。
+
+## 旧版 v2 结果
+
+当前 v2 报告使用 2026-08-08 至 2026-11-06 的官方 BTC/ETH 数据，各 4,320 根 K 线，重新下载并校验后生成：
+
+| 指标 | 训练期 | 留出期 |
+|---|---|---|
+| 信号数 | 177 | 105 |
+| 胜率 | 61.02% | 54.29% |
+| 净收益（每次 1 单位） | +17.4 | −2.4 |
+| 最大回撤（单位） | 8.8 | 13.4 |
+
+在赢 +0.8、输 −1、成本为 0 的假设下，盈亏平衡胜率为 55.56%。留出胜率的 Wilson 95% 区间为 44.77%–63.49%。**所选规则未通过统计门槛，不能据此发布交易机会。**
+
+修复结算边界后，这个区间的所选规则汇总数值没有变化；回归测试另外构造了边界交易，验证跨期结算确实会被剔除。
+
+## 旧版 v2 口径与局限
+
+1. 信号使用第 i 根完整 K 线的收盘数据，在该根结束时产生；入场价假设等于该收盘价，第 i+1 根结束时结算。价格持平算输。仅在方向新出现或变化时记录信号。
+2. 训练交易必须在留出边界**之前完成结算**。边界时刻或之后才结算、但入场早于边界的交易标为 `purged`，不计入训练和留出。留出允许使用此前历史计算指标。
+3. 固定参数网格为 streak 2/3、z 1.0/1.5、RSI 60/65。训练至少 100 个信号，按每笔净收益选择，平手按固定网格顺序。新版不发布所有候选的留出表现，减少看过结果再选规则的诱因。
+4. 历史统计门槛要求留出至少 50 个信号、净收益为正、Wilson 95% 区间下限高于盈亏平衡胜率。`publishable` 仅表示满足这组历史门槛；`live_approved` 始终为 false。
+5. Wilson 区间假设试验独立，BTC/ETH 的相关性及连续信号会使置信度偏乐观。尚未实现相关性稳健区间、训练期多重比较校正和跨窗口稳定性检查。
+6. 每笔使用 1 单位本金；同时结算的收益先合并再计算权益回撤。没有资金不足、最大敞口、止损熔断、成交延迟或点差模拟。
+7. 反复观察重叠留出期、根据结果修改策略，不能再将该区间视为全新的独立检验。修改参数或规则后，应使用未观察的新时间段做前向验证。
+
+看板行情来自 Binance 指数；本节旧版历史回测来自现货。新版指数回测见上文。行情看板与历史回测不会自动下单。
+
+## 项目结构
+
+```text
+index.html / styles.css   中文静态看板
+app.js                   行情快照、报价连接和数据新鲜度
+research.js              报告检查与展示，兼容但标记旧版报告
+research/engine.py       归档、数据质量、信号、结算、统计与选参
+research/run.py          命令行入口
+research/results.json    v2 研究报告、文件校验值及所选规则逐笔记录
+research/event_data.py   v3 指数分钟归档、REST 缺口修复与离线校验
+research/event_engine.py v3 信号、事件结算、风控、滚动检验与压力情景
+research/backtest.py     v3 主命令，运行指纹与 JSON/CSV 导出
+research/event-results.json / event-trades.csv  v3 实际回测报告与逐笔记录
+tests/                   Python 与 Node 标准库测试
+.github/workflows/       离线检查、研究重跑、Pages 部署
+```
+
+## 完善路线（按顺序）
+
+| 优先级 | 下一步 | 完成标准 |
+|---|---|---|
+| P0 | 秒级事件与实际赔付记录 | 在已实现分钟指数近似之上，补齐秒级指数、订单实际参考价、逐笔赔付及交易可用性 |
+| P1 | 新增前向验证 | 已有滚动检验与按日重采样；下一步锁定规则，积累未参与研究的新时段并研究跨日相关性与多重比较 |
+| P1 | 持续纸面交易 | 复用已有组合风控，增加跨进程持久化、连续亏损冷却、实际赔付逐笔核算 |
+| P2 | 研究追踪 | 已有运行 ID、代码/数据/规则指纹；进一步登记所有研究尝试与数据使用历史 |
+| P2 | 看板分析 | 已有权益、分轮/币种和压力情景；进一步增加月度与市场状态切片 |
+| P3 | 扩展市场 | 在上述研究闭环稳定后，再增加市场状态分类及 MT5/XAUUSD 独立适配层 |
+| P3 | 可选 AI 解读 | 仅解释已确定的规则和风险，不参与方向决策；接入前明确配置与密钥管理 |
+
+当前优先补齐秒级数据和纸面验证闭环。样本数量达到 100 次只能帮助积累证据，不能单独作为实盘批准条件。
+
+## 使用说明
+
+项目仅用于研究与教育，不构成投资建议，不执行实盘交易。历史表现不保证未来收益。当前尚未指定开源许可证。

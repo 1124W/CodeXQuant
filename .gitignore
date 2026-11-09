@@ -1,1 +1,5 @@
 __pycache__/
+research/.cache/
+research/.runs/
+*.tmp
+.venv/

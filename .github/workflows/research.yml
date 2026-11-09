@@ -1,10 +1,15 @@
-name: Evaluate contrarian research
+name: Evaluate event-contract research
 
 on:
+  workflow_dispatch:
   push:
     branches: [research/**]
     paths:
       - research/run.py
+      - research/engine.py
+      - research/backtest.py
+      - research/event_data.py
+      - research/event_engine.py
       - .github/workflows/research.yml
 
 permissions:
@@ -18,13 +23,15 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Download verified Binance data and evaluate
-        run: python3 research/run.py --output research/results.json
+      - name: Check research invariants
+        run: python -m unittest discover -s tests -v
+      - name: Download verified Binance index data and evaluate
+        run: python3 research/backtest.py
       - name: Store report on research branch
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add research/results.json
+          git add research/event-results.json research/event-trades.csv
           if ! git diff --cached --quiet; then
             git commit -m 'Store research results'
             git push

@@ -4,9 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#07090f" />
-    <meta name="description" content="CodeXQuant — BTC 与 ETH 30 分钟市场观察与真实数据研究" />
+    <meta name="description" content="CodeXQuant — Binance BTC 与 ETH 实时指数价格与 30 分钟研究" />
     <title>CodeXQuant · 30m Research Desk</title>
-    <link rel="preconnect" href="https://api.binance.com" />
+    <link rel="preconnect" href="https://fapi.binance.com" />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
@@ -18,25 +18,25 @@
         <span class="brand-mark">CX</span>
         <span><strong>CodeXQuant</strong><small>30m research desk</small></span>
       </a>
-      <div class="market-state"><span class="status-dot" id="statusDot"></span><span id="connectionText">正在连接行情</span></div>
+      <div class="market-state"><span class="status-dot" id="statusDot"></span><span id="connectionText">正在连接指数价格</span></div>
       <div class="clock"><span>UTC+8</span><strong id="clock">--:--:--</strong></div>
     </header>
 
     <main>
       <section class="hero">
         <div>
-          <p class="eyebrow">BINANCE SPOT · 30 MINUTES</p>
+          <p class="eyebrow">BINANCE PRICE INDEX · BTC / ETH</p>
           <h1>先验证优势，<br /><em>再谈预测。</em></h1>
-          <p class="hero-copy">实时观察 BTC 与 ETH。30 分钟事件合约策略只有通过独立历史检验，才会在这里显示为候选机会。</p>
+          <p class="hero-copy">实时观察 Binance BTC 与 ETH 指数价格，每 2 秒刷新显示。图表展示 30 分钟指数 K 线，供事件合约研究参考。</p>
         </div>
         <div class="price-grid" id="priceGrid">
-          <button class="price-card active" data-symbol="BTCUSDT">
-            <span class="asset"><i class="coin btc">₿</i><span><strong>Bitcoin</strong><small>BTC / USDT</small></span></span>
-            <span class="quote"><strong id="BTCUSDT-price">—</strong><small id="BTCUSDT-change">等待行情</small></span>
+          <button class="price-card active" data-symbol="BTCUSDT" aria-pressed="true">
+            <span class="asset"><i class="coin btc">₿</i><span><strong>Bitcoin</strong><small>BTC / USDT 指数</small></span></span>
+            <span class="quote"><strong id="BTCUSDT-price">—</strong><small id="BTCUSDT-source">Binance 指数价 · USDT</small><small id="BTCUSDT-time">行情时间 —</small><small id="BTCUSDT-freshness" role="status">等待指数价格</small></span>
           </button>
-          <button class="price-card" data-symbol="ETHUSDT">
-            <span class="asset"><i class="coin eth">Ξ</i><span><strong>Ethereum</strong><small>ETH / USDT</small></span></span>
-            <span class="quote"><strong id="ETHUSDT-price">—</strong><small id="ETHUSDT-change">等待行情</small></span>
+          <button class="price-card" data-symbol="ETHUSDT" aria-pressed="false">
+            <span class="asset"><i class="coin eth">Ξ</i><span><strong>Ethereum</strong><small>ETH / USDT 指数</small></span></span>
+            <span class="quote"><strong id="ETHUSDT-price">—</strong><small id="ETHUSDT-source">Binance 指数价 · USDT</small><small id="ETHUSDT-time">行情时间 —</small><small id="ETHUSDT-freshness" role="status">等待指数价格</small></span>
           </button>
         </div>
       </section>
@@ -44,25 +44,51 @@
       <section class="desk market-desk">
         <div class="panel chart-panel">
           <div class="panel-head">
-            <div><p class="label">30 MINUTE STRUCTURE</p><h2 id="chartTitle">BTC / USDT</h2></div>
-            <div class="legend"><span><i class="ema-fast"></i>EMA 9</span><span><i class="ema-slow"></i>EMA 21</span></div>
+            <div><p class="label">30 MINUTE INDEX STRUCTURE</p><h2 id="chartTitle">BTC / USDT 指数</h2></div>
+            <div class="legend"><span><i class="candle-up"></i>上涨</span><span><i class="candle-down"></i>下跌</span><span><i class="ema-fast"></i>EMA 9</span><span><i class="ema-slow"></i>EMA 21</span></div>
           </div>
-          <div class="chart-wrap"><canvas id="chart" aria-label="30 分钟价格走势图"></canvas><div class="chart-loading" id="chartLoading">载入 30m K 线…</div></div>
+          <div class="chart-wrap"><canvas id="chart" aria-label="30 分钟指数价格 K 线图，含 EMA 9 和 EMA 21"></canvas><div class="chart-loading" id="chartLoading">载入 30m 指数 K 线…</div></div>
           <div class="chart-stats">
-            <span>高点<strong id="periodHigh">—</strong></span><span>低点<strong id="periodLow">—</strong></span><span>30m 波动<strong id="volatility">—</strong></span><span>数据<strong id="dataMode">LIVE</strong></span>
+            <span>近 24h 高点<strong id="periodHigh">—</strong></span><span>近 24h 低点<strong id="periodLow">—</strong></span><span>30m 涨跌绝对值<strong id="volatility">—</strong></span><span>数据<strong id="dataMode">等待加载</strong></span>
           </div>
+          <div class="data-health"><p id="chartFreshness" aria-live="polite">正在获取行情快照…</p><button id="refreshMarket" type="button">刷新行情</button></div>
         </div>
 
       </section>
 
-      <section class="panel research-panel">
-        <div class="research-heading"><div><p class="label">INDEPENDENT TEST</p><h2>当前没有通过验证的事件合约策略</h2></div><span class="research-badge">观察中</span></div>
-        <p>我们用 Binance 官方 BTC/ETH 30 分钟数据测试了一组反向判断规则：前 60 天选规则，最近 30 天只做独立检验。前段表现不能直接当作未来胜率。</p>
-        <div class="research-stats">
-          <div><span>前 60 天 · 训练</span><strong id="trainRate">—</strong><small id="trainDetail">等待研究结果</small></div>
-          <div><span>后 30 天 · 独立检验</span><strong id="testRate">—</strong><small id="testDetail">等待研究结果</small></div>
-          <div><span>盈亏平衡胜率</span><strong id="breakEvenRate">55.6%</strong><small>赢 +0.80 / 输 −1.00</small></div>
+      <section class="panel research-panel event-research" aria-labelledby="eventTitle">
+        <div class="research-heading"><div><p class="label">EVENT CONTRACT · WALK-FORWARD</p><h2 id="eventTitle">正在读取事件合约回测</h2></div><span class="research-badge" id="eventBadge">目标 58%</span></div>
+        <p id="eventSummary">按时间滚动训练与检验，单独展示历史留出期。选择不交易也是研究结果。</p>
+        <div class="event-goal"><span>目标胜率 <strong id="eventTarget">58.0%</strong></span><span>盈亏平衡 <strong id="eventBreakEven">—</strong></span><span id="eventCost">等待赔付与成本假设</span></div>
+        <div class="event-results">
+          <article><span>滚动样本外 · 汇总</span><strong id="eventWalkRate">—</strong><p id="eventWalkDetail">等待有效回测</p></article>
+          <article><span>历史留出期 · 单独检验</span><strong id="eventHoldoutRate">—</strong><p id="eventHoldoutDetail">等待有效回测</p></article>
         </div>
+        <dl class="research-details event-details"><div><dt>滚动样本外 · 按日重采样 95% 区间</dt><dd id="eventWalkConfidence">—</dd></div><div><dt>滚动样本外 · 最大回撤</dt><dd id="eventWalkDrawdown">—</dd></div><div><dt>历史留出期 · 按日重采样 95% 区间</dt><dd id="eventConfidence">—</dd></div><div><dt>历史留出期 · 最大回撤</dt><dd id="eventDrawdown">—</dd></div><div><dt>数据覆盖（UTC，结束日期不含）</dt><dd id="eventCoverage">—</dd></div></dl>
+        <p class="event-model" id="eventModel">使用指数历史数据；分钟级回测无法还原交易所下一秒的实际开仓价。</p>
+        <ul class="event-gates" id="eventGateList" aria-label="历史验证门槛"></ul>
+        <div class="event-equity-head"><h3>已结算权益</h3><span><i class="equity-walk"></i>滚动样本外 <i class="equity-holdout"></i>历史留出期</span></div>
+        <div class="event-equity-wrap"><canvas id="eventEquity" role="img" aria-label="滚动样本外与历史留出期的已结算权益曲线"></canvas></div>
+        <p class="event-caption" id="eventEquityNote">两段分别从同一本金开始；固定金额投入。</p>
+        <div class="event-table-heading"><h3>每轮滚动检验</h3><span>只在前面的训练期选规则</span></div>
+        <div class="table-wrap event-table-wrap"><table class="event-table"><thead><tr><th>样本外时间</th><th>训练所选规则</th><th>胜 / 负 / 退款</th><th>胜率</th><th>净收益</th></tr></thead><tbody id="eventFoldRows"></tbody></table></div>
+        <div class="event-table-heading"><h3>分币种表现</h3><span>两段检验分别列示</span></div>
+        <div class="table-wrap event-table-wrap"><table class="event-table"><thead><tr><th>币种 / 检验期</th><th>胜 / 负 / 退款</th><th>胜率</th><th>净收益</th></tr></thead><tbody id="eventSymbolRows"></tbody></table></div>
+        <details class="event-stress"><summary>赔付、成本与开仓价压力测试</summary><p>固定原先选出的规则；风控可能因亏损变化而放弃后续交易。</p><div class="table-wrap event-table-wrap"><table class="event-table"><thead><tr><th>情景</th><th>净赔付 / 成本</th><th>滚动净收益</th><th>留出净收益</th></tr></thead><tbody id="eventScenarioRows"></tbody></table></div></details>
+        <div class="event-downloads" id="eventDownloads" hidden><a class="report-download" href="research/event-results.json" download>回测报告 JSON</a><a class="report-download" href="research/event-trades.csv" download>逐笔交易 CSV</a></div>
+        <p class="research-note" id="eventNote">等待本地研究脚本生成有效报告。</p>
+      </section>
+
+      <section class="panel research-panel legacy-research">
+        <div class="research-heading"><div><p class="label">LEGACY SPOT RESEARCH</p><h2 id="researchTitle">正在加载研究报告</h2></div><span class="research-badge" id="researchBadge">待验证</span></div>
+        <p id="researchSummary">以下历史报告使用 Binance 现货 30 分钟 K 线，与上方实时指数价格的数据口径不同。历史收盘价回测仍需要指数结算、成交延迟、相关性和前向模拟验证。</p>
+        <div class="research-stats">
+          <div><span id="trainLabel">训练期</span><strong id="trainRate">—</strong><small id="trainDetail">等待研究结果</small></div>
+          <div><span id="testLabel">留出检验期</span><strong id="testRate">—</strong><small id="testDetail">等待研究结果</small></div>
+          <div><span>盈亏平衡胜率</span><strong id="breakEvenRate">—</strong><small id="costDetail">等待成本假设</small></div>
+        </div>
+        <dl class="research-details"><div><dt>留出胜率 95% 区间</dt><dd id="confidenceInterval">—</dd></div><div><dt>留出最大回撤</dt><dd id="testDrawdown">—</dd></div><div><dt>数据覆盖</dt><dd id="reportCoverage">—</dd></div></dl>
+        <a class="report-download" href="research/results.json" download>下载完整研究报告（JSON）</a>
         <p class="research-note" id="researchNote">没有可靠优势时，今天的机会数就是 0。研究结果不能代替真实成交测试。</p>
       </section>
     </main>

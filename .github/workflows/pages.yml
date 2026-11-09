@@ -15,7 +15,10 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  verify:
+    uses: ./.github/workflows/checks.yml
   deploy:
+    needs: verify
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -27,10 +30,16 @@ jobs:
         uses: actions/configure-pages@v5
         with:
           enablement: true
+      - name: Prepare public assets only
+        run: |
+          mkdir -p _site/research
+          cp index.html app.js research.js styles.css .nojekyll _site/
+          cp research/results.json _site/research/
+          cp research/event-results.json research/event-trades.csv _site/research/
       - name: Upload static site
         uses: actions/upload-pages-artifact@v3
         with:
-          path: .
+          path: _site
       - name: Deploy
         id: deployment
         uses: actions/deploy-pages@v4
