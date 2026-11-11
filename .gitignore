@@ -3,3 +3,10 @@ research/.cache/
 research/.runs/
 *.tmp
 .venv/
+external/
+research/.qd-runs/
+# Local early prototypes; the published report is workbuddy-results.json.
+research/quantdinger-demo*.json
+research/quantdinger-demo*.csv
+research/quantdinger-exploration*.json
+research/quantdinger-exploration*.csv

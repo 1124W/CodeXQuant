@@ -1,8 +1,54 @@
 # CodeXQuant
 
-一个面向 BTC/ETH 30 分钟事件合约的透明量化研究项目。现已具备指数历史数据、事件结算、组合风控、滚动样本外检验与网页报告。目标胜率为 **58%**；当前结果未达到目标，尚无经过验证的盈利策略。
+一个面向 BTC/ETH **30 分钟事件合约**的透明量化研究项目。当前主入口采用 QuantDinger 因子运行模块，参考 `events-workBuddy` 固定策略，使用三年分钟数据做滚动回测。按用户确认的 **85% 净赔付、无额外手续费**计算，58% 胜率与正收益分别检查。
 
-## 事件合约回测（v3，主研究入口）
+## 三年 WorkBuddy 策略回测 当前主入口
+
+本地 QuantDinger 后端源码位于 `external/QuantDinger-repo`，固定提交为 `d1cf2681bc84fba2551973b4bcab011ad483e8ad`。策略来源为用户的 `1124W/events-workBuddy`，固定提交 `1f4e26e948ff566a5307d821e811aa7d6228928b`。原始源码留在忽略目录中，运行时校验 Git blob 和 SHA-256，不加载原仓库的序列化模型。
+
+```powershell
+py -3.12 -m pip install -r requirements-quantdinger-demo.txt
+py -3.12 scripts/download_quantdinger.py
+# 私有参考仓库需要自己的 GitHub 读取权限；本机已经下载对应源码
+git clone https://github.com/1124W/events-workBuddy.git external/events-workBuddy
+py -3.12 -m research.workbuddy_run --profile research --end 2026-11-09
+```
+
+下载完成后可离线复现，并启动页面：
+
+```powershell
+py -3.12 -m research.workbuddy_run --profile research --end 2026-11-09 --offline
+py -3.12 -m research.workbuddy_run --serve --port 4180
+```
+
+访问 `http://127.0.0.1:4180/` 查看 CodeXQuant 行情看板和三年回测主面板；`/demo/quantdinger.html` 为完整研究页面。页面也能在 GitHub Pages 直接读取静态 JSON。输出为 `research/workbuddy-results.json` 与 `research/workbuddy-trades.csv`，前后端都会核对交易数量、时间、胜负、赔付与资金流水。
+
+### 数据与策略口径
+
+- 三年研究区间为 **2023-11-09 至 2026-11-09，不含结束日**。另载入三天特征预热；BTC、ETH 各有 1,582,560 根现货分钟线和同数量指数分钟线。
+- 现货成交量、成交笔数、主动买入量用于订单流特征；**入场、训练标签、到期结算始终使用 USD-M 官方指数价**。ZIP 验证交易所 CHECKSUM；归档遗漏通过官方日归档或官方原始 REST 观测补齐，原始响应和本地哈希持久化，不插值。
+- 固定条件来自原仓库 `live/strategy.py:decide`：`abs(p - 0.5) >= 0.12`；近 60 分钟绝对收益达到 BTC 20bp / ETH 28bp；模型方向与近 60 分钟趋势相反。只关注 BTC/ETH，不搜索近期最优阈值。
+- 原仓库存在两套模型配置。主报告的 `research` 配置来自 `research/ceiling.py`：38 个历史特征，GBM 200 轮、深度 4、学习率 0.06、叶节点最少 80，180 天训练、30 天预测。`live` 配置来自 `live/train.py`：28 特征、GBM 150 轮、深度 3、240 天训练。两个版本单独保存结果并在完整页面比较，不能把两套配置的收益混用。
+- 模型每 30 天仅用此前已结算的样本重新训练；训练标签的到期时刻必须严格早于训练截止。初始 180 天用于训练，主报告的滚动样本外起点为 **2024-05-07**，不把初始训练段写成样本外收益。
+- 每个半小时边界读取已收盘分钟数据，延迟一分钟，按指数分钟开盘价入场，再持有整 30 分钟。持平退回本金，预测阶段保留平局样本；仅模型训练时排除无方向样本。这是分钟代理，不能复现逐秒实际执行。
+- BTC/ETH 共用 1,000 USDT 资金池，每笔固定 5 USDT，最多一笔未结算持仓，每日已亏本金加未结算风险上限 25 USDT；同时信号固定 BTC 优先，不按结果择优。
+- 85% 是用户确认的当前报价，作为整个历史区间的固定赔付情景。主场景额外手续费为 0；另列 1% / 2% 本金研究摩擦、不利入场 2bp、赔付降低等压力情景。赔率历史变动并未从实际订单恢复。
+- 参考规则已经经历过历史研究，滚动训练隔离不能消除先前策略选择偏差。`live_approved` 始终为 false，当前页面没有交易下单接口。
+
+代码入口为 `research/workbuddy_run.py`，数据为 `research/qd_three_year_data.py`，策略适配为 `research/workbuddy_strategy.py`。QuantDinger 实际因子定义和计算通过 `research/qd_factors.py` 加载。这里只启动最小研究扩展，没有启动完整平台的 PostgreSQL、Redis、交易工作进程或 SaaS 服务。
+
+本次实际运行 `aa2be4a33996fe0bd007` 的结果如下。每笔固定 5 USDT，85% 净赔付，用户确认无额外手续费：
+
+| 指标 | 全部滚动样本外 2024-05-07 至 2026-11-09 | 最近三个月 2026-08-09 至 2026-11-09 |
+|---|---:|---:|
+| 交易 | 4,983 | 394 |
+| 胜率 | 54.55% | 51.52% |
+| 净收益 USDT | +226.50 | -92.25 |
+| 最大已结算回撤 USDT | 285.00 | 213.50 |
+
+完整历史为正收益，但没有达到 58% 胜率；胜率 95% Wilson 区间为 53.16%–55.92%，下界仍低于 85% 赔付的 54.05% 保本线。加入每笔本金 1% 的研究摩擦后，同一信号的净收益为 -22.65 USDT。近期切片也为负，当前结果不能视为稳定盈利已被验证。
+
+## 事件合约回测 v3 旧版研究存档
 
 ```powershell
 python research/backtest.py --days 360 --end 2026-11-07 --train-days 90 --validation-days 30 --holdout-days 60

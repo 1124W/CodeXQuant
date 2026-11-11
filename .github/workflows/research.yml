@@ -24,7 +24,10 @@ jobs:
         with:
           python-version: '3.12'
       - name: Check research invariants
-        run: python -m unittest discover -s tests -v
+        run: |
+          python -m pip install -r requirements-quantdinger-demo.txt
+          python scripts/download_quantdinger.py
+          python -m unittest discover -s tests -v
       - name: Download verified Binance index data and evaluate
         run: python3 research/backtest.py
       - name: Store report on research branch

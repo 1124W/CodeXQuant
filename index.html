@@ -20,6 +20,7 @@
       </a>
       <div class="market-state"><span class="status-dot" id="statusDot"></span><span id="connectionText">正在连接指数价格</span></div>
       <div class="clock"><span>UTC+8</span><strong id="clock">--:--:--</strong></div>
+      <a class="wb-nav" href="#workbuddyResearch">三年回测</a>
     </header>
 
     <main>
@@ -56,7 +57,32 @@
 
       </section>
 
+      <section class="panel research-panel workbuddy-research" id="workbuddyResearch" data-wb-theme="dark" data-wb-report="research/workbuddy-results.json" aria-labelledby="wbTitle">
+        <div class="research-heading"><div><p class="label">QUANTDINGER × EVENTSWORKBUDDY · 3 YEAR RESEARCH</p><h2 id="wbTitle">BTC / ETH 30 分钟事件合约</h2></div><span class="wb-badge wb-pending" id="wbStatus">正在读取三年回测</span></div>
+        <p class="wb-intro">净赔付 85%，只研究 BTC 与 ETH。参考 events-workBuddy 的固定 GBM 逆势规则，模型按时间滚动训练，用官方指数价结算。</p>
+        <p id="wbLoading" class="wb-note">正在读取三年行情回测报告…</p>
+        <p id="wbError" class="wb-error" role="alert" hidden></p>
+        <div id="wbContent" hidden>
+          <p id="wbOutcome" class="wb-outcome"></p>
+          <div class="wb-metrics">
+            <article><span>滚动样本外胜率</span><strong id="wbWinRate">—</strong><small id="wbWinDetail">—</small></article>
+            <article><span>样本外净收益</span><strong id="wbNet">—</strong><small>USDT · 已扣研究摩擦</small></article>
+            <article><span>实际交易</span><strong id="wbTrades">—</strong><small>共享同一资金池</small></article>
+            <article><span>最近三个月胜率</span><strong id="wbRecentRate">—</strong><small id="wbRecentDetail">—</small></article>
+          </div>
+          <dl class="research-details wb-details"><div><dt>三年分钟行情覆盖 UTC</dt><dd id="wbCoverage">—</dd></div><div><dt>滚动样本外统计 UTC</dt><dd id="wbOosCoverage">—</dd></div><div><dt>最大已结算回撤 USDT</dt><dd id="wbDrawdown">—</dd></div><div><dt>盈亏平衡胜率</dt><dd id="wbBreakEven">—</dd></div></dl>
+          <p id="wbWarmup" class="wb-note">前 240 天用于初始训练，不计入样本外收益。</p>
+          <div class="wb-chart-heading"><h3>滚动样本外已结算权益</h3><span id="wbEquityRange">—</span></div>
+          <div class="wb-chart"><canvas id="wbEquity" role="img" aria-label="BTC ETH 三年行情滚动样本外已结算权益曲线"></canvas></div>
+          <div class="table-wrap wb-table"><table><thead><tr><th>币种</th><th>交易</th><th>胜 / 负</th><th>胜率</th><th>净收益 USDT</th><th>回撤 USDT</th></tr></thead><tbody id="wbSymbolRows"></tbody></table></div>
+          <p class="wb-note">固定规则为置信度 ≥ 0.12、近 60 分钟波动达到门槛、模型方向与近期趋势相反。初始训练段与样本外收益分开，持平退款；历史规则仍需要新数据验证。</p>
+          <div class="wb-actions"><a class="report-download" href="demo/quantdinger.html">打开完整三年回测 Demo ↗</a><button class="wb-download" id="wbDownloadJson" disabled>下载报告 JSON</button><button class="wb-download" id="wbDownloadCsv" disabled>下载逐笔 CSV</button><button class="wb-download" id="wbRefresh">刷新结果</button></div>
+          <p class="wb-note wb-provenance" id="wbProvenance"></p>
+        </div>
+      </section>
+
       <section class="panel research-panel event-research" aria-labelledby="eventTitle">
+        <p class="wb-archive">旧版研究存档 · 以下为历史 80% 净赔付情景，当前 85% 研究见上方</p>
         <div class="research-heading"><div><p class="label">EVENT CONTRACT · WALK-FORWARD</p><h2 id="eventTitle">正在读取事件合约回测</h2></div><span class="research-badge" id="eventBadge">目标 58%</span></div>
         <p id="eventSummary">按时间滚动训练与检验，单独展示历史留出期。选择不交易也是研究结果。</p>
         <div class="event-goal"><span>目标胜率 <strong id="eventTarget">58.0%</strong></span><span>盈亏平衡 <strong id="eventBreakEven">—</strong></span><span id="eventCost">等待赔付与成本假设</span></div>
@@ -96,5 +122,6 @@
     <footer><span>CodeXQuant © 2026</span><span>Research only · Not financial advice</span></footer>
     <script src="app.js"></script>
     <script src="research.js"></script>
+    <script src="workbuddy.js"></script>
   </body>
 </html>

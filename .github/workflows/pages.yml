@@ -32,10 +32,12 @@ jobs:
           enablement: true
       - name: Prepare public assets only
         run: |
-          mkdir -p _site/research
-          cp index.html app.js research.js styles.css .nojekyll _site/
+          mkdir -p _site/research _site/demo
+          cp index.html app.js research.js workbuddy.js styles.css .nojekyll _site/
+          cp demo/quantdinger.html _site/demo/
           cp research/results.json _site/research/
           cp research/event-results.json research/event-trades.csv _site/research/
+          cp research/workbuddy-results.json research/workbuddy-trades.csv _site/research/
       - name: Upload static site
         uses: actions/upload-pages-artifact@v3
         with:

@@ -1,4 +1,19 @@
 :root { color-scheme: dark; --bg:#07090f; --panel:rgba(17,21,31,.78); --line:rgba(255,255,255,.09); --text:#f4f6fb; --muted:#8991a3; --lime:#b8f348; --cyan:#57d8ff; --red:#ff6b78; --amber:#ffbd59; }
+.wb-nav { color:var(--lime); font-size:11px; text-decoration:none; border:1px solid rgba(184,243,72,.28); padding:8px 10px; border-radius:8px; margin-left:22px; white-space:nowrap; }
+.workbuddy-research { scroll-margin-top:20px; border-color:rgba(87,216,255,.26); }
+.workbuddy-research .label { color:var(--cyan); }
+.wb-badge { font-size:11px; border:1px solid var(--line); padding:7px 10px; border-radius:8px; text-align:right; }
+.wb-positive { color:var(--lime) !important; }.wb-negative,.wb-error { color:var(--red) !important; }.wb-pending { color:var(--amber); }
+.wb-intro,.wb-outcome { color:var(--muted); font-size:12px; line-height:1.8; }.wb-outcome { margin-bottom:20px; }
+.wb-metrics { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; margin-top:20px; }
+.wb-metrics article { padding:18px; background:rgba(7,9,15,.36); border:1px solid var(--line); border-radius:13px; min-width:0; }
+.wb-metrics span,.wb-metrics small { display:block; font-size:10px; color:var(--muted); }.wb-metrics strong { display:block; font-size:29px; line-height:1.6; letter-spacing:-.04em; margin:7px 0; font-variant-numeric:tabular-nums; }
+.wb-details { margin-top:21px; }.wb-note { color:var(--muted); font-size:10px; line-height:1.8; }.wb-provenance { overflow-wrap:anywhere; }
+.wb-chart-heading { display:flex; gap:20px; justify-content:space-between; align-items:center; margin-top:24px; }.wb-chart-heading h3 { font-size:12px; }.wb-chart-heading span { font-size:10px; color:var(--muted); }
+.wb-chart { height:250px; }.wb-chart canvas { display:block; width:100%; height:100%; }.wb-table table { min-width:620px; }
+.wb-actions { display:flex; gap:12px; align-items:center; flex-wrap:wrap; margin-top:18px; }.wb-download { font:10px inherit; padding:8px 11px; border:1px solid var(--line); border-radius:8px; color:var(--cyan); background:rgba(7,9,15,.35); cursor:pointer; }.wb-download:disabled { opacity:.4; cursor:default; }.wb-archive { font-size:10px; color:var(--muted); border-bottom:1px solid var(--line); padding-bottom:14px; margin:0 0 20px; }
+@media(max-width:850px) { .wb-metrics { grid-template-columns:repeat(2,minmax(0,1fr)); }.wb-nav { margin-left:12px; } }
+@media(max-width:550px) { .wb-metrics { gap:8px; }.wb-metrics article { padding:14px; }.wb-metrics strong { font-size:25px; }.wb-nav { display:none; }.wb-badge { max-width:150px; }.wb-chart-heading { align-items:start; flex-direction:column; gap:0; }.wb-chart { height:220px; } }
 * { box-sizing:border-box; }
 html { scroll-behavior:smooth; }
 body { margin:0; min-width:320px; background:var(--bg); color:var(--text); font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif; overflow-x:hidden; }
