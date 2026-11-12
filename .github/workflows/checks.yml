@@ -23,4 +23,4 @@ jobs:
       - run: python -m pip install -r requirements-quantdinger-demo.txt
       - run: python scripts/download_quantdinger.py
       - run: python -m unittest discover -s tests -v
-      - run: node --test tests/dashboard.test.cjs tests/workbuddy.test.cjs
+      - run: node --test tests/dashboard.test.cjs tests/workbuddy.test.cjs tests/trade-view.test.cjs

@@ -1,0 +1,1025 @@
+{
+  "plan_sha256": "145f565b0322e8192039bdad63601ad4b7275e143c7ac096f952360b9ddacebc",
+  "selected_rule": {
+    "id": "regularized_gbm_0.56_exhaustion",
+    "model": "regularized_gbm",
+    "threshold": 0.56,
+    "regime": "exhaustion",
+    "family": "model"
+  },
+  "selection_cutoff_ms": 1746576000000,
+  "ranking": [
+    {
+      "rule": {
+        "id": "regularized_gbm_0.56_unrestricted",
+        "model": "regularized_gbm",
+        "threshold": 0.56,
+        "regime": "unrestricted",
+        "family": "model"
+      },
+      "discovery": {
+        "signals": 3491,
+        "wins": 1917,
+        "losses": 1574,
+        "refunds": 0,
+        "decisive_trades": 3491,
+        "win_rate": 0.5491263248352908,
+        "per_day": 9.564383561643835,
+        "win_rate_lower_95": 0.5325752008538938,
+        "win_rate_upper_95": 0.5655694475330317,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": 277.25,
+        "max_drawdown_units": 313.5,
+        "profit_factor": 1.0352287166454892,
+        "expectancy_per_trade": 0.07941850472643941
+      },
+      "eligible": true,
+      "multiplicity_adjusted_lower_95": 0.5223122174403553
+    },
+    {
+      "rule": {
+        "id": "regularized_gbm_0.56_exhaustion",
+        "model": "regularized_gbm",
+        "threshold": 0.56,
+        "regime": "exhaustion",
+        "family": "model"
+      },
+      "discovery": {
+        "signals": 2009,
+        "wins": 1160,
+        "losses": 849,
+        "refunds": 0,
+        "decisive_trades": 2009,
+        "win_rate": 0.5774016923842707,
+        "per_day": 5.504109589041096,
+        "win_rate_lower_95": 0.555673326249499,
+        "win_rate_upper_95": 0.5988346091985759,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": 685.0,
+        "max_drawdown_units": 129.0,
+        "profit_factor": 1.1613663133097762,
+        "expectancy_per_trade": 0.3409656545545047
+      },
+      "eligible": true,
+      "multiplicity_adjusted_lower_95": 0.542145711839794
+    },
+    {
+      "rule": {
+        "id": "regularized_gbm_0.56_trend_pullback",
+        "model": "regularized_gbm",
+        "threshold": 0.56,
+        "regime": "trend_pullback",
+        "family": "model"
+      },
+      "discovery": {
+        "signals": 78,
+        "wins": 40,
+        "losses": 38,
+        "refunds": 0,
+        "decisive_trades": 78,
+        "win_rate": 0.5128205128205128,
+        "per_day": 0.2136986301369863,
+        "win_rate_lower_95": 0.40392509465379506,
+        "win_rate_upper_95": 0.6205123552494326,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": -20.0,
+        "max_drawdown_units": 69.25,
+        "profit_factor": 0.8947368421052632,
+        "expectancy_per_trade": -0.2564102564102564
+      },
+      "eligible": false,
+      "multiplicity_adjusted_lower_95": null
+    },
+    {
+      "rule": {
+        "id": "regularized_gbm_0.60_unrestricted",
+        "model": "regularized_gbm",
+        "threshold": 0.6,
+        "regime": "unrestricted",
+        "family": "model"
+      },
+      "discovery": {
+        "signals": 660,
+        "wins": 383,
+        "losses": 277,
+        "refunds": 0,
+        "decisive_trades": 660,
+        "win_rate": 0.5803030303030303,
+        "per_day": 1.8082191780821917,
+        "win_rate_lower_95": 0.5422932938538784,
+        "win_rate_upper_95": 0.6173833519001689,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": 242.75,
+        "max_drawdown_units": 85.75,
+        "profit_factor": 1.1752707581227437,
+        "expectancy_per_trade": 0.3678030303030303
+      },
+      "eligible": true,
+      "multiplicity_adjusted_lower_95": 0.5186154206587867
+    },
+    {
+      "rule": {
+        "id": "regularized_gbm_0.60_exhaustion",
+        "model": "regularized_gbm",
+        "threshold": 0.6,
+        "regime": "exhaustion",
+        "family": "model"
+      },
+      "discovery": {
+        "signals": 326,
+        "wins": 199,
+        "losses": 127,
+        "refunds": 0,
+        "decisive_trades": 326,
+        "win_rate": 0.6104294478527608,
+        "per_day": 0.8931506849315068,
+        "win_rate_lower_95": 0.5564999127589583,
+        "win_rate_upper_95": 0.6617866829888188,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": 210.75,
+        "max_drawdown_units": 42.0,
+        "profit_factor": 1.3318897637795275,
+        "expectancy_per_trade": 0.6464723926380368
+      },
+      "eligible": true,
+      "multiplicity_adjusted_lower_95": 0.5226859726998189
+    },
+    {
+      "rule": {
+        "id": "regularized_gbm_0.60_trend_pullback",
+        "model": "regularized_gbm",
+        "threshold": 0.6,
+        "regime": "trend_pullback",
+        "family": "model"
+      },
+      "discovery": {
+        "signals": 9,
+        "wins": 2,
+        "losses": 7,
+        "refunds": 0,
+        "decisive_trades": 9,
+        "win_rate": 0.2222222222222222,
+        "per_day": 0.024657534246575342,
+        "win_rate_lower_95": 0.06322376231222723,
+        "win_rate_upper_95": 0.5474166563271946,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": -26.5,
+        "max_drawdown_units": 30.75,
+        "profit_factor": 0.24285714285714285,
+        "expectancy_per_trade": -2.9444444444444446
+      },
+      "eligible": false,
+      "multiplicity_adjusted_lower_95": null
+    },
+    {
+      "rule": {
+        "id": "regularized_gbm_0.64_unrestricted",
+        "model": "regularized_gbm",
+        "threshold": 0.64,
+        "regime": "unrestricted",
+        "family": "model"
+      },
+      "discovery": {
+        "signals": 25,
+        "wins": 18,
+        "losses": 7,
+        "refunds": 0,
+        "decisive_trades": 25,
+        "win_rate": 0.72,
+        "per_day": 0.0684931506849315,
+        "win_rate_lower_95": 0.5242302810344169,
+        "win_rate_upper_95": 0.8571632616261843,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": 41.5,
+        "max_drawdown_units": 20.0,
+        "profit_factor": 2.1857142857142855,
+        "expectancy_per_trade": 1.66
+      },
+      "eligible": false,
+      "multiplicity_adjusted_lower_95": null
+    },
+    {
+      "rule": {
+        "id": "regularized_gbm_0.64_exhaustion",
+        "model": "regularized_gbm",
+        "threshold": 0.64,
+        "regime": "exhaustion",
+        "family": "model"
+      },
+      "discovery": {
+        "signals": 16,
+        "wins": 11,
+        "losses": 5,
+        "refunds": 0,
+        "decisive_trades": 16,
+        "win_rate": 0.6875,
+        "per_day": 0.043835616438356165,
+        "win_rate_lower_95": 0.4440393186673406,
+        "win_rate_upper_95": 0.8583556494803894,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": 21.75,
+        "max_drawdown_units": 16.5,
+        "profit_factor": 1.87,
+        "expectancy_per_trade": 1.359375
+      },
+      "eligible": false,
+      "multiplicity_adjusted_lower_95": null
+    },
+    {
+      "rule": {
+        "id": "regularized_gbm_0.64_trend_pullback",
+        "model": "regularized_gbm",
+        "threshold": 0.64,
+        "regime": "trend_pullback",
+        "family": "model"
+      },
+      "discovery": {
+        "signals": 0,
+        "wins": 0,
+        "losses": 0,
+        "refunds": 0,
+        "decisive_trades": 0,
+        "win_rate": null,
+        "per_day": 0.0,
+        "win_rate_lower_95": null,
+        "win_rate_upper_95": null,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": null,
+        "net_units": 0.0,
+        "max_drawdown_units": 0.0,
+        "profit_factor": null,
+        "expectancy_per_trade": null
+      },
+      "eligible": false,
+      "multiplicity_adjusted_lower_95": null
+    },
+    {
+      "rule": {
+        "id": "workbuddy_gbm_0.56_unrestricted",
+        "model": "workbuddy_gbm",
+        "threshold": 0.56,
+        "regime": "unrestricted",
+        "family": "model"
+      },
+      "discovery": {
+        "signals": 3889,
+        "wins": 2064,
+        "losses": 1825,
+        "refunds": 0,
+        "decisive_trades": 3889,
+        "win_rate": 0.5307276934944716,
+        "per_day": 10.654794520547945,
+        "win_rate_lower_95": 0.5150200491130805,
+        "win_rate_upper_95": 0.546374691428122,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": -353.0,
+        "max_drawdown_units": 730.75,
+        "profit_factor": 0.9613150684931507,
+        "expectancy_per_trade": -0.09076883517613782
+      },
+      "eligible": true,
+      "multiplicity_adjusted_lower_95": 0.5052987829734777
+    },
+    {
+      "rule": {
+        "id": "workbuddy_gbm_0.56_exhaustion",
+        "model": "workbuddy_gbm",
+        "threshold": 0.56,
+        "regime": "exhaustion",
+        "family": "model"
+      },
+      "discovery": {
+        "signals": 2782,
+        "wins": 1585,
+        "losses": 1197,
+        "refunds": 0,
+        "decisive_trades": 2782,
+        "win_rate": 0.5697340043134436,
+        "per_day": 7.6219178082191785,
+        "win_rate_lower_95": 0.5512517952275986,
+        "win_rate_upper_95": 0.588023890798484,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": 751.25,
+        "max_drawdown_units": 147.75,
+        "profit_factor": 1.1255221386800334,
+        "expectancy_per_trade": 0.270039539899353
+      },
+      "eligible": true,
+      "multiplicity_adjusted_lower_95": 0.5397620589102038
+    },
+    {
+      "rule": {
+        "id": "workbuddy_gbm_0.56_trend_pullback",
+        "model": "workbuddy_gbm",
+        "threshold": 0.56,
+        "regime": "trend_pullback",
+        "family": "model"
+      },
+      "discovery": {
+        "signals": 294,
+        "wins": 151,
+        "losses": 143,
+        "refunds": 0,
+        "decisive_trades": 294,
+        "win_rate": 0.5136054421768708,
+        "per_day": 0.8054794520547945,
+        "win_rate_lower_95": 0.4566657431564578,
+        "win_rate_upper_95": 0.5701941716438925,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": -73.25,
+        "max_drawdown_units": 162.5,
+        "profit_factor": 0.8975524475524476,
+        "expectancy_per_trade": -0.24914965986394558
+      },
+      "eligible": true,
+      "multiplicity_adjusted_lower_95": 0.42224022362683905
+    },
+    {
+      "rule": {
+        "id": "workbuddy_gbm_0.60_unrestricted",
+        "model": "workbuddy_gbm",
+        "threshold": 0.6,
+        "regime": "unrestricted",
+        "family": "model"
+      },
+      "discovery": {
+        "signals": 3861,
+        "wins": 2091,
+        "losses": 1770,
+        "refunds": 0,
+        "decisive_trades": 3861,
+        "win_rate": 0.5415695415695416,
+        "per_day": 10.578082191780823,
+        "win_rate_lower_95": 0.5258189676386796,
+        "win_rate_upper_95": 0.5572374763822087,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": 36.75,
+        "max_drawdown_units": 383.75,
+        "profit_factor": 1.0041525423728814,
+        "expectancy_per_trade": 0.009518259518259518
+      },
+      "eligible": true,
+      "multiplicity_adjusted_lower_95": 0.5160603286486846
+    },
+    {
+      "rule": {
+        "id": "workbuddy_gbm_0.60_exhaustion",
+        "model": "workbuddy_gbm",
+        "threshold": 0.6,
+        "regime": "exhaustion",
+        "family": "model"
+      },
+      "discovery": {
+        "signals": 1881,
+        "wins": 1080,
+        "losses": 801,
+        "refunds": 0,
+        "decisive_trades": 1881,
+        "win_rate": 0.5741626794258373,
+        "per_day": 5.153424657534247,
+        "win_rate_lower_95": 0.5516877338671132,
+        "win_rate_upper_95": 0.5963353148601643,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": 585.0,
+        "max_drawdown_units": 135.5,
+        "profit_factor": 1.146067415730337,
+        "expectancy_per_trade": 0.31100478468899523
+      },
+      "eligible": true,
+      "multiplicity_adjusted_lower_95": 0.53770083599929
+    },
+    {
+      "rule": {
+        "id": "workbuddy_gbm_0.60_trend_pullback",
+        "model": "workbuddy_gbm",
+        "threshold": 0.6,
+        "regime": "trend_pullback",
+        "family": "model"
+      },
+      "discovery": {
+        "signals": 125,
+        "wins": 67,
+        "losses": 58,
+        "refunds": 0,
+        "decisive_trades": 125,
+        "win_rate": 0.536,
+        "per_day": 0.3424657534246575,
+        "win_rate_lower_95": 0.44880678264565155,
+        "win_rate_upper_95": 0.6210464324649959,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": -5.25,
+        "max_drawdown_units": 83.25,
+        "profit_factor": 0.9818965517241379,
+        "expectancy_per_trade": -0.042
+      },
+      "eligible": false,
+      "multiplicity_adjusted_lower_95": null
+    },
+    {
+      "rule": {
+        "id": "workbuddy_gbm_0.64_unrestricted",
+        "model": "workbuddy_gbm",
+        "threshold": 0.64,
+        "regime": "unrestricted",
+        "family": "model"
+      },
+      "discovery": {
+        "signals": 2675,
+        "wins": 1469,
+        "losses": 1206,
+        "refunds": 0,
+        "decisive_trades": 2675,
+        "win_rate": 0.5491588785046729,
+        "per_day": 7.328767123287672,
+        "win_rate_lower_95": 0.5302455421437692,
+        "win_rate_upper_95": 0.5679312220217568,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": 213.25,
+        "max_drawdown_units": 265.75,
+        "profit_factor": 1.0353648424543946,
+        "expectancy_per_trade": 0.0797196261682243
+      },
+      "eligible": true,
+      "multiplicity_adjusted_lower_95": 0.5185172963709841
+    },
+    {
+      "rule": {
+        "id": "workbuddy_gbm_0.64_exhaustion",
+        "model": "workbuddy_gbm",
+        "threshold": 0.64,
+        "regime": "exhaustion",
+        "family": "model"
+      },
+      "discovery": {
+        "signals": 974,
+        "wins": 561,
+        "losses": 413,
+        "refunds": 0,
+        "decisive_trades": 974,
+        "win_rate": 0.5759753593429158,
+        "per_day": 2.6684931506849314,
+        "win_rate_lower_95": 0.5446998698260387,
+        "win_rate_upper_95": 0.6066538872650892,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": 319.25,
+        "max_drawdown_units": 91.75,
+        "profit_factor": 1.1546004842615012,
+        "expectancy_per_trade": 0.3277720739219713
+      },
+      "eligible": true,
+      "multiplicity_adjusted_lower_95": 0.5252251026981228
+    },
+    {
+      "rule": {
+        "id": "workbuddy_gbm_0.64_trend_pullback",
+        "model": "workbuddy_gbm",
+        "threshold": 0.64,
+        "regime": "trend_pullback",
+        "family": "model"
+      },
+      "discovery": {
+        "signals": 48,
+        "wins": 26,
+        "losses": 22,
+        "refunds": 0,
+        "decisive_trades": 48,
+        "win_rate": 0.5416666666666666,
+        "per_day": 0.13150684931506848,
+        "win_rate_lower_95": 0.4029083309494732,
+        "win_rate_upper_95": 0.6742497814544648,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": 0.5,
+        "max_drawdown_units": 39.0,
+        "profit_factor": 1.0045454545454546,
+        "expectancy_per_trade": 0.010416666666666666
+      },
+      "eligible": false,
+      "multiplicity_adjusted_lower_95": null
+    },
+    {
+      "rule": {
+        "id": "regularized_logistic_0.56_unrestricted",
+        "model": "regularized_logistic",
+        "threshold": 0.56,
+        "regime": "unrestricted",
+        "family": "model"
+      },
+      "discovery": {
+        "signals": 3718,
+        "wins": 1983,
+        "losses": 1735,
+        "refunds": 0,
+        "decisive_trades": 3718,
+        "win_rate": 0.5333512641204949,
+        "per_day": 10.186301369863013,
+        "win_rate_lower_95": 0.517288820972821,
+        "win_rate_upper_95": 0.5493448584400804,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": -247.25,
+        "max_drawdown_units": 511.75,
+        "profit_factor": 0.9714985590778098,
+        "expectancy_per_trade": -0.06650080688542227
+      },
+      "eligible": true,
+      "multiplicity_adjusted_lower_95": 0.5073455041184024
+    },
+    {
+      "rule": {
+        "id": "regularized_logistic_0.56_exhaustion",
+        "model": "regularized_logistic",
+        "threshold": 0.56,
+        "regime": "exhaustion",
+        "family": "model"
+      },
+      "discovery": {
+        "signals": 2261,
+        "wins": 1300,
+        "losses": 961,
+        "refunds": 0,
+        "decisive_trades": 2261,
+        "win_rate": 0.5749668288367978,
+        "per_day": 6.1945205479452055,
+        "win_rate_lower_95": 0.554479640021781,
+        "win_rate_upper_95": 0.5951997017917922,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": 720.0,
+        "max_drawdown_units": 125.75,
+        "profit_factor": 1.149843912591051,
+        "expectancy_per_trade": 0.31844316674038037
+      },
+      "eligible": true,
+      "multiplicity_adjusted_lower_95": 0.5417312771263243
+    },
+    {
+      "rule": {
+        "id": "regularized_logistic_0.56_trend_pullback",
+        "model": "regularized_logistic",
+        "threshold": 0.56,
+        "regime": "trend_pullback",
+        "family": "model"
+      },
+      "discovery": {
+        "signals": 100,
+        "wins": 62,
+        "losses": 38,
+        "refunds": 0,
+        "decisive_trades": 100,
+        "win_rate": 0.62,
+        "per_day": 0.273972602739726,
+        "win_rate_lower_95": 0.5220957382071033,
+        "win_rate_upper_95": 0.7090255079986562,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": 73.5,
+        "max_drawdown_units": 38.0,
+        "profit_factor": 1.3868421052631579,
+        "expectancy_per_trade": 0.735
+      },
+      "eligible": false,
+      "multiplicity_adjusted_lower_95": null
+    },
+    {
+      "rule": {
+        "id": "regularized_logistic_0.60_unrestricted",
+        "model": "regularized_logistic",
+        "threshold": 0.6,
+        "regime": "unrestricted",
+        "family": "model"
+      },
+      "discovery": {
+        "signals": 1463,
+        "wins": 806,
+        "losses": 657,
+        "refunds": 0,
+        "decisive_trades": 1463,
+        "win_rate": 0.5509227614490773,
+        "per_day": 4.008219178082192,
+        "win_rate_lower_95": 0.5253342091339798,
+        "win_rate_upper_95": 0.5762445843771943,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": 140.5,
+        "max_drawdown_units": 134.5,
+        "profit_factor": 1.0427701674277017,
+        "expectancy_per_trade": 0.09603554340396446
+      },
+      "eligible": true,
+      "multiplicity_adjusted_lower_95": 0.5094683199155212
+    },
+    {
+      "rule": {
+        "id": "regularized_logistic_0.60_exhaustion",
+        "model": "regularized_logistic",
+        "threshold": 0.6,
+        "regime": "exhaustion",
+        "family": "model"
+      },
+      "discovery": {
+        "signals": 735,
+        "wins": 418,
+        "losses": 317,
+        "refunds": 0,
+        "decisive_trades": 735,
+        "win_rate": 0.5687074829931973,
+        "per_day": 2.0136986301369864,
+        "win_rate_lower_95": 0.5326367268098752,
+        "win_rate_upper_95": 0.6040637513440349,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": 191.5,
+        "max_drawdown_units": 78.5,
+        "profit_factor": 1.120820189274448,
+        "expectancy_per_trade": 0.2605442176870748
+      },
+      "eligible": true,
+      "multiplicity_adjusted_lower_95": 0.5102235407031132
+    },
+    {
+      "rule": {
+        "id": "regularized_logistic_0.60_trend_pullback",
+        "model": "regularized_logistic",
+        "threshold": 0.6,
+        "regime": "trend_pullback",
+        "family": "model"
+      },
+      "discovery": {
+        "signals": 18,
+        "wins": 13,
+        "losses": 5,
+        "refunds": 0,
+        "decisive_trades": 18,
+        "win_rate": 0.7222222222222222,
+        "per_day": 0.049315068493150684,
+        "win_rate_lower_95": 0.49126922453805477,
+        "win_rate_upper_95": 0.8750043085364452,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": 30.25,
+        "max_drawdown_units": 10.75,
+        "profit_factor": 2.21,
+        "expectancy_per_trade": 1.6805555555555556
+      },
+      "eligible": false,
+      "multiplicity_adjusted_lower_95": null
+    },
+    {
+      "rule": {
+        "id": "regularized_logistic_0.64_unrestricted",
+        "model": "regularized_logistic",
+        "threshold": 0.64,
+        "regime": "unrestricted",
+        "family": "model"
+      },
+      "discovery": {
+        "signals": 289,
+        "wins": 167,
+        "losses": 122,
+        "refunds": 0,
+        "decisive_trades": 289,
+        "win_rate": 0.5778546712802768,
+        "per_day": 0.7917808219178082,
+        "win_rate_lower_95": 0.5202549327082024,
+        "win_rate_upper_95": 0.6334117594557525,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": 99.75,
+        "max_drawdown_units": 48.5,
+        "profit_factor": 1.1635245901639344,
+        "expectancy_per_trade": 0.34515570934256057
+      },
+      "eligible": true,
+      "multiplicity_adjusted_lower_95": 0.4846116339943136
+    },
+    {
+      "rule": {
+        "id": "regularized_logistic_0.64_exhaustion",
+        "model": "regularized_logistic",
+        "threshold": 0.64,
+        "regime": "exhaustion",
+        "family": "model"
+      },
+      "discovery": {
+        "signals": 140,
+        "wins": 90,
+        "losses": 50,
+        "refunds": 0,
+        "decisive_trades": 140,
+        "win_rate": 0.6428571428571429,
+        "per_day": 0.3835616438356164,
+        "win_rate_lower_95": 0.5606434835587822,
+        "win_rate_upper_95": 0.7174401862557916,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": 132.5,
+        "max_drawdown_units": 25.25,
+        "profit_factor": 1.53,
+        "expectancy_per_trade": 0.9464285714285714
+      },
+      "eligible": false,
+      "multiplicity_adjusted_lower_95": null
+    },
+    {
+      "rule": {
+        "id": "regularized_logistic_0.64_trend_pullback",
+        "model": "regularized_logistic",
+        "threshold": 0.64,
+        "regime": "trend_pullback",
+        "family": "model"
+      },
+      "discovery": {
+        "signals": 1,
+        "wins": 1,
+        "losses": 0,
+        "refunds": 0,
+        "decisive_trades": 1,
+        "win_rate": 1.0,
+        "per_day": 0.0027397260273972603,
+        "win_rate_lower_95": 0.20654329147389294,
+        "win_rate_upper_95": 1,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": 4.25,
+        "max_drawdown_units": 0.0,
+        "profit_factor": null,
+        "expectancy_per_trade": 4.25
+      },
+      "eligible": false,
+      "multiplicity_adjusted_lower_95": null
+    },
+    {
+      "rule": {
+        "id": "direct_exhaustion_1.0",
+        "family": "direct_exhaustion",
+        "threshold": 1.0
+      },
+      "discovery": {
+        "signals": 3772,
+        "wins": 2078,
+        "losses": 1694,
+        "refunds": 0,
+        "decisive_trades": 3772,
+        "win_rate": 0.5509013785790032,
+        "per_day": 10.334246575342465,
+        "win_rate_lower_95": 0.5349838887526235,
+        "win_rate_upper_95": 0.5667152926960899,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": 361.5,
+        "max_drawdown_units": 180.25,
+        "profit_factor": 1.0426800472255018,
+        "expectancy_per_trade": 0.09583775185577943
+      },
+      "eligible": true,
+      "multiplicity_adjusted_lower_95": 0.5251122405637685
+    },
+    {
+      "rule": {
+        "id": "direct_exhaustion_1.5",
+        "family": "direct_exhaustion",
+        "threshold": 1.5
+      },
+      "discovery": {
+        "signals": 1857,
+        "wins": 1033,
+        "losses": 824,
+        "refunds": 0,
+        "decisive_trades": 1857,
+        "win_rate": 0.5562735595045772,
+        "per_day": 5.087671232876712,
+        "win_rate_lower_95": 0.5335833620026356,
+        "win_rate_upper_95": 0.578731409980106,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": 270.25,
+        "max_drawdown_units": 179.5,
+        "profit_factor": 1.0655946601941748,
+        "expectancy_per_trade": 0.1455304254173398
+      },
+      "eligible": true,
+      "multiplicity_adjusted_lower_95": 0.5195000882953177
+    },
+    {
+      "rule": {
+        "id": "direct_exhaustion_2.0",
+        "family": "direct_exhaustion",
+        "threshold": 2.0
+      },
+      "discovery": {
+        "signals": 523,
+        "wins": 295,
+        "losses": 228,
+        "refunds": 0,
+        "decisive_trades": 523,
+        "win_rate": 0.5640535372848948,
+        "per_day": 1.4328767123287671,
+        "win_rate_lower_95": 0.5212398107132061,
+        "win_rate_upper_95": 0.6059331384236881,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": 113.75,
+        "max_drawdown_units": 55.25,
+        "profit_factor": 1.099780701754386,
+        "expectancy_per_trade": 0.21749521988527726
+      },
+      "eligible": true,
+      "multiplicity_adjusted_lower_95": 0.494711599143023
+    },
+    {
+      "rule": {
+        "id": "direct_trend_pullback_1.0",
+        "family": "direct_trend_pullback",
+        "threshold": 1.0
+      },
+      "discovery": {
+        "signals": 1195,
+        "wins": 602,
+        "losses": 593,
+        "refunds": 0,
+        "decisive_trades": 1195,
+        "win_rate": 0.503765690376569,
+        "per_day": 3.2739726027397262,
+        "win_rate_lower_95": 0.47545059585445937,
+        "win_rate_upper_95": 0.5320566511413073,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": -406.5,
+        "max_drawdown_units": 468.0,
+        "profit_factor": 0.8629005059021922,
+        "expectancy_per_trade": -0.3401673640167364
+      },
+      "eligible": true,
+      "multiplicity_adjusted_lower_95": 0.4580512609464874
+    },
+    {
+      "rule": {
+        "id": "direct_trend_pullback_1.5",
+        "family": "direct_trend_pullback",
+        "threshold": 1.5
+      },
+      "discovery": {
+        "signals": 308,
+        "wins": 149,
+        "losses": 159,
+        "refunds": 0,
+        "decisive_trades": 308,
+        "win_rate": 0.4837662337662338,
+        "per_day": 0.8438356164383561,
+        "win_rate_lower_95": 0.4284994522317655,
+        "win_rate_upper_95": 0.5394329852621419,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": -161.75,
+        "max_drawdown_units": 214.5,
+        "profit_factor": 0.7965408805031446,
+        "expectancy_per_trade": -0.5251623376623377
+      },
+      "eligible": true,
+      "multiplicity_adjusted_lower_95": 0.3954016043979688
+    },
+    {
+      "rule": {
+        "id": "direct_trend_pullback_2.0",
+        "family": "direct_trend_pullback",
+        "threshold": 2.0
+      },
+      "discovery": {
+        "signals": 50,
+        "wins": 20,
+        "losses": 30,
+        "refunds": 0,
+        "decisive_trades": 50,
+        "win_rate": 0.4,
+        "per_day": 0.136986301369863,
+        "win_rate_lower_95": 0.2760818978624575,
+        "win_rate_upper_95": 0.5381881089724063,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": -65.0,
+        "max_drawdown_units": 84.75,
+        "profit_factor": 0.5666666666666667,
+        "expectancy_per_trade": -1.3
+      },
+      "eligible": false,
+      "multiplicity_adjusted_lower_95": null
+    }
+  ],
+  "locked_at_utc": "2026-11-12T03:22:37.379440+00:00"
+}

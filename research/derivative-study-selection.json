@@ -1,0 +1,280 @@
+{
+  "plan_sha256": "1a23892727cd8ee634f00034a3cf34cf850fffcb446126e7b0ae0402ae8d282a",
+  "selected_rule": {
+    "id": "both_regularized_logistic",
+    "block": "both",
+    "base_model": "regularized_logistic",
+    "model": "both_regularized_logistic",
+    "family": "model",
+    "regime": "exhaustion",
+    "threshold": 0.56
+  },
+  "discovery_ranking": [
+    {
+      "rule": {
+        "id": "base50_regularized_gbm",
+        "block": "base50",
+        "base_model": "regularized_gbm",
+        "model": "base50_regularized_gbm",
+        "family": "model",
+        "regime": "exhaustion",
+        "threshold": 0.56
+      },
+      "discovery": {
+        "signals": 2029,
+        "wins": 1169,
+        "losses": 860,
+        "refunds": 0,
+        "decisive_trades": 2029,
+        "win_rate": 0.5761458846722524,
+        "per_day": 5.558904109589041,
+        "win_rate_lower_95": 0.5545193056141522,
+        "win_rate_upper_95": 0.597484667543422,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": 668.25,
+        "max_drawdown_units": 143.75,
+        "profit_factor": 1.1554069767441861,
+        "expectancy_per_trade": 0.32934943321833415
+      },
+      "eligible": true,
+      "multiplicity_adjusted_lower_95": 0.545922258280497
+    },
+    {
+      "rule": {
+        "id": "base50_regularized_logistic",
+        "block": "base50",
+        "base_model": "regularized_logistic",
+        "model": "base50_regularized_logistic",
+        "family": "model",
+        "regime": "exhaustion",
+        "threshold": 0.56
+      },
+      "discovery": {
+        "signals": 2267,
+        "wins": 1306,
+        "losses": 961,
+        "refunds": 0,
+        "decisive_trades": 2267,
+        "win_rate": 0.5760917512130569,
+        "per_day": 6.210958904109589,
+        "win_rate_lower_95": 0.5556369700186612,
+        "win_rate_upper_95": 0.5962890824193423,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": 745.5,
+        "max_drawdown_units": 126.5,
+        "profit_factor": 1.1551508844953173,
+        "expectancy_per_trade": 0.3288486987207764
+      },
+      "eligible": true,
+      "multiplicity_adjusted_lower_95": 0.5475071534292323
+    },
+    {
+      "rule": {
+        "id": "premium_regularized_gbm",
+        "block": "premium",
+        "base_model": "regularized_gbm",
+        "model": "premium_regularized_gbm",
+        "family": "model",
+        "regime": "exhaustion",
+        "threshold": 0.56
+      },
+      "discovery": {
+        "signals": 1990,
+        "wins": 1144,
+        "losses": 846,
+        "refunds": 0,
+        "decisive_trades": 1990,
+        "win_rate": 0.5748743718592965,
+        "per_day": 5.4520547945205475,
+        "win_rate_lower_95": 0.5530298228684027,
+        "win_rate_upper_95": 0.596430395034564,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": 632.0,
+        "max_drawdown_units": 131.5,
+        "profit_factor": 1.1494089834515366,
+        "expectancy_per_trade": 0.31758793969849247
+      },
+      "eligible": true,
+      "multiplicity_adjusted_lower_95": 0.5443472709360415
+    },
+    {
+      "rule": {
+        "id": "premium_regularized_logistic",
+        "block": "premium",
+        "base_model": "regularized_logistic",
+        "model": "premium_regularized_logistic",
+        "family": "model",
+        "regime": "exhaustion",
+        "threshold": 0.56
+      },
+      "discovery": {
+        "signals": 2319,
+        "wins": 1339,
+        "losses": 980,
+        "refunds": 0,
+        "decisive_trades": 2319,
+        "win_rate": 0.5774040534713238,
+        "per_day": 6.353424657534247,
+        "win_rate_lower_95": 0.5571870698744059,
+        "win_rate_upper_95": 0.5973650097852661,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": 790.75,
+        "max_drawdown_units": 101.0,
+        "profit_factor": 1.161377551020408,
+        "expectancy_per_trade": 0.3409874946097456
+      },
+      "eligible": true,
+      "multiplicity_adjusted_lower_95": 0.549150818986259
+    },
+    {
+      "rule": {
+        "id": "funding_regularized_gbm",
+        "block": "funding",
+        "base_model": "regularized_gbm",
+        "model": "funding_regularized_gbm",
+        "family": "model",
+        "regime": "exhaustion",
+        "threshold": 0.56
+      },
+      "discovery": {
+        "signals": 2018,
+        "wins": 1159,
+        "losses": 859,
+        "refunds": 0,
+        "decisive_trades": 2018,
+        "win_rate": 0.5743310208126858,
+        "per_day": 5.528767123287671,
+        "win_rate_lower_95": 0.5526367265879385,
+        "win_rate_upper_95": 0.5957428497349545,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": 630.75,
+        "max_drawdown_units": 136.25,
+        "profit_factor": 1.1468568102444703,
+        "expectancy_per_trade": 0.3125619425173439
+      },
+      "eligible": true,
+      "multiplicity_adjusted_lower_95": 0.5440146472715452
+    },
+    {
+      "rule": {
+        "id": "funding_regularized_logistic",
+        "block": "funding",
+        "base_model": "regularized_logistic",
+        "model": "funding_regularized_logistic",
+        "family": "model",
+        "regime": "exhaustion",
+        "threshold": 0.56
+      },
+      "discovery": {
+        "signals": 2312,
+        "wins": 1328,
+        "losses": 984,
+        "refunds": 0,
+        "decisive_trades": 2312,
+        "win_rate": 0.5743944636678201,
+        "per_day": 6.3342465753424655,
+        "win_rate_lower_95": 0.5541329525065043,
+        "win_rate_upper_95": 0.5944091584910701,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": 724.0,
+        "max_drawdown_units": 110.5,
+        "profit_factor": 1.1471544715447155,
+        "expectancy_per_trade": 0.31314878892733566
+      },
+      "eligible": true,
+      "multiplicity_adjusted_lower_95": 0.5460817939429596
+    },
+    {
+      "rule": {
+        "id": "both_regularized_gbm",
+        "block": "both",
+        "base_model": "regularized_gbm",
+        "model": "both_regularized_gbm",
+        "family": "model",
+        "regime": "exhaustion",
+        "threshold": 0.56
+      },
+      "discovery": {
+        "signals": 1987,
+        "wins": 1134,
+        "losses": 853,
+        "refunds": 0,
+        "decisive_trades": 1987,
+        "win_rate": 0.5707096124811273,
+        "per_day": 5.443835616438356,
+        "win_rate_lower_95": 0.5488296690671347,
+        "win_rate_upper_95": 0.592316668240665,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": 554.5,
+        "max_drawdown_units": 127.25,
+        "profit_factor": 1.1300117233294256,
+        "expectancy_per_trade": 0.2790639154504278
+      },
+      "eligible": true,
+      "multiplicity_adjusted_lower_95": 0.5401375800478293
+    },
+    {
+      "rule": {
+        "id": "both_regularized_logistic",
+        "block": "both",
+        "base_model": "regularized_logistic",
+        "model": "both_regularized_logistic",
+        "family": "model",
+        "regime": "exhaustion",
+        "threshold": 0.56
+      },
+      "discovery": {
+        "signals": 2355,
+        "wins": 1370,
+        "losses": 985,
+        "refunds": 0,
+        "decisive_trades": 2355,
+        "win_rate": 0.5817409766454352,
+        "per_day": 6.4520547945205475,
+        "win_rate_lower_95": 0.5617009423547458,
+        "win_rate_upper_95": 0.6015147648805345,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": 897.5,
+        "max_drawdown_units": 105.25,
+        "profit_factor": 1.182233502538071,
+        "expectancy_per_trade": 0.38110403397027603
+      },
+      "eligible": true,
+      "multiplicity_adjusted_lower_95": 0.5537312164693735
+    }
+  ],
+  "locked_at_utc": "2026-11-12T04:00:30.813065+00:00",
+  "selection_cutoff_ms": 1746576000000
+}

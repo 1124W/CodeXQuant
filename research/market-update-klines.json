@@ -1,0 +1,115 @@
+{
+  "start_utc": "2026-11-09",
+  "end_exclusive_utc": "2026-11-12",
+  "component": "klines",
+  "downloaded_at_utc": "2026-11-12T03:48:20.292735+00:00",
+  "only_public_market_data": true,
+  "results": {
+    "BTCUSDT": {
+      "spot_minutes": 4320,
+      "index_minutes": 4320,
+      "first_open_ms": 1794182400000,
+      "last_open_ms": 1794441540000,
+      "sources": [
+        {
+          "kind": "index",
+          "path": "daily/indexPriceKlines/BTCUSDT/1m/BTCUSDT-1m-2026-11-09.zip",
+          "url": "https://data.binance.vision/data/futures/um/daily/indexPriceKlines/BTCUSDT/1m/BTCUSDT-1m-2026-11-09.zip",
+          "sha256": "34739503d16d9e80671c1cb604735c3df09241cd49ef8002eebefc56eaeed90e",
+          "verification": "exchange_archive_sha256"
+        },
+        {
+          "kind": "index",
+          "path": "daily/indexPriceKlines/BTCUSDT/1m/BTCUSDT-1m-2026-11-10.zip",
+          "url": "https://data.binance.vision/data/futures/um/daily/indexPriceKlines/BTCUSDT/1m/BTCUSDT-1m-2026-11-10.zip",
+          "sha256": "947f3cd8a91e29437fe6a056017a08ab9ac94fc6aa17085f6fef6d625ac0a072",
+          "verification": "exchange_archive_sha256"
+        },
+        {
+          "kind": "index",
+          "path": "futures\\um\\rest\\indexPriceKlines\\BTCUSDT\\1m\\BTCUSDT-1m-2026-11-11.json",
+          "sha256": "461fb3baef2f6eda8acc90e5c36d378c74680d4ceba3010c7d5dcb48f144b2f4",
+          "urls": [
+            "https://fapi.binance.com/fapi/v1/indexPriceKlines?pair=BTCUSDT&interval=1m&startTime=1794355200000&endTime=1794441599999&limit=1500"
+          ],
+          "verification": "local_sha256_of_official_rest_snapshot",
+          "purpose": "repair_missing_archive_minutes"
+        },
+        {
+          "kind": "spot",
+          "path": "daily/klines/BTCUSDT/1m/BTCUSDT-1m-2026-11-09.zip",
+          "url": "https://data.binance.vision/data/spot/daily/klines/BTCUSDT/1m/BTCUSDT-1m-2026-11-09.zip",
+          "sha256": "a15a88522315affc04f617af6e09e5c53d0456f5531c66cabe54b5038222b8f9",
+          "verification": "exchange_archive_sha256"
+        },
+        {
+          "kind": "spot",
+          "path": "daily/klines/BTCUSDT/1m/BTCUSDT-1m-2026-11-10.zip",
+          "url": "https://data.binance.vision/data/spot/daily/klines/BTCUSDT/1m/BTCUSDT-1m-2026-11-10.zip",
+          "sha256": "8bd3e44fd27277977b0354d745639d37b07da218c0c8983d36bdb75392dc192f",
+          "verification": "exchange_archive_sha256"
+        },
+        {
+          "kind": "spot",
+          "path": "daily/klines/BTCUSDT/1m/BTCUSDT-1m-2026-11-11.zip",
+          "url": "https://data.binance.vision/data/spot/daily/klines/BTCUSDT/1m/BTCUSDT-1m-2026-11-11.zip",
+          "sha256": "c565c8f8c6c56789de44433ab01deca6d18eb7d1706f294ad09cf7f97b88cb95",
+          "verification": "exchange_archive_sha256"
+        }
+      ]
+    },
+    "ETHUSDT": {
+      "spot_minutes": 4320,
+      "index_minutes": 4320,
+      "first_open_ms": 1794182400000,
+      "last_open_ms": 1794441540000,
+      "sources": [
+        {
+          "kind": "index",
+          "path": "daily/indexPriceKlines/ETHUSDT/1m/ETHUSDT-1m-2026-11-09.zip",
+          "url": "https://data.binance.vision/data/futures/um/daily/indexPriceKlines/ETHUSDT/1m/ETHUSDT-1m-2026-11-09.zip",
+          "sha256": "e87b4dc56056e93f4ecb204bc7ebc14f66e1c82cd6b7423d035a518979dc8c3e",
+          "verification": "exchange_archive_sha256"
+        },
+        {
+          "kind": "index",
+          "path": "daily/indexPriceKlines/ETHUSDT/1m/ETHUSDT-1m-2026-11-10.zip",
+          "url": "https://data.binance.vision/data/futures/um/daily/indexPriceKlines/ETHUSDT/1m/ETHUSDT-1m-2026-11-10.zip",
+          "sha256": "aac0e5f757eb19d2fb64eaa735b0da4716c0c0f9582ecf28a81b531f9dcde2d4",
+          "verification": "exchange_archive_sha256"
+        },
+        {
+          "kind": "index",
+          "path": "futures\\um\\rest\\indexPriceKlines\\ETHUSDT\\1m\\ETHUSDT-1m-2026-11-11.json",
+          "sha256": "3c0b5cb5da21cd9781f3ea68356485560ae1095ca22dbdb0da0bb4020775e80f",
+          "urls": [
+            "https://fapi.binance.com/fapi/v1/indexPriceKlines?pair=ETHUSDT&interval=1m&startTime=1794355200000&endTime=1794441599999&limit=1500"
+          ],
+          "verification": "local_sha256_of_official_rest_snapshot",
+          "purpose": "repair_missing_archive_minutes"
+        },
+        {
+          "kind": "spot",
+          "path": "daily/klines/ETHUSDT/1m/ETHUSDT-1m-2026-11-09.zip",
+          "url": "https://data.binance.vision/data/spot/daily/klines/ETHUSDT/1m/ETHUSDT-1m-2026-11-09.zip",
+          "sha256": "03079b0224a53cda02423d40958e0f489c7ea6ee0f169f936a31ece4f122c93b",
+          "verification": "exchange_archive_sha256"
+        },
+        {
+          "kind": "spot",
+          "path": "daily/klines/ETHUSDT/1m/ETHUSDT-1m-2026-11-10.zip",
+          "url": "https://data.binance.vision/data/spot/daily/klines/ETHUSDT/1m/ETHUSDT-1m-2026-11-10.zip",
+          "sha256": "426ec31f66ac36c991a20c9d89bb1ddc5aa9dd2e6a0461f06a836131bdee69bf",
+          "verification": "exchange_archive_sha256"
+        },
+        {
+          "kind": "spot",
+          "path": "daily/klines/ETHUSDT/1m/ETHUSDT-1m-2026-11-11.zip",
+          "url": "https://data.binance.vision/data/spot/daily/klines/ETHUSDT/1m/ETHUSDT-1m-2026-11-11.zip",
+          "sha256": "1d87b67f51030b5ee3204f1017ad70f3fc5fed3094fca308ab1e217c5dbd9764",
+          "verification": "exchange_archive_sha256"
+        }
+      ]
+    }
+  }
+}

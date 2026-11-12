@@ -33,8 +33,10 @@ jobs:
       - name: Prepare public assets only
         run: |
           mkdir -p _site/research _site/demo
-          cp index.html app.js research.js workbuddy.js styles.css .nojekyll _site/
+          cp index.html app.js research.js workbuddy.js trade-view.js styles.css .nojekyll _site/
           cp demo/quantdinger.html _site/demo/
+          cp demo/trades.html _site/demo/
+          cp research/trade-chart-data.json _site/research/
           cp research/results.json _site/research/
           cp research/event-results.json research/event-trades.csv _site/research/
           cp research/workbuddy-results.json research/workbuddy-trades.csv _site/research/

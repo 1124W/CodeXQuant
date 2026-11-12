@@ -21,6 +21,7 @@
       <div class="market-state"><span class="status-dot" id="statusDot"></span><span id="connectionText">正在连接指数价格</span></div>
       <div class="clock"><span>UTC+8</span><strong id="clock">--:--:--</strong></div>
       <a class="wb-nav" href="#workbuddyResearch">三年回测</a>
+      <a class="wb-nav" href="demo/trades.html">交易图与信号</a>
     </header>
 
     <main>
@@ -76,7 +77,7 @@
           <div class="wb-chart"><canvas id="wbEquity" role="img" aria-label="BTC ETH 三年行情滚动样本外已结算权益曲线"></canvas></div>
           <div class="table-wrap wb-table"><table><thead><tr><th>币种</th><th>交易</th><th>胜 / 负</th><th>胜率</th><th>净收益 USDT</th><th>回撤 USDT</th></tr></thead><tbody id="wbSymbolRows"></tbody></table></div>
           <p class="wb-note">固定规则为置信度 ≥ 0.12、近 60 分钟波动达到门槛、模型方向与近期趋势相反。初始训练段与样本外收益分开，持平退款；历史规则仍需要新数据验证。</p>
-          <div class="wb-actions"><a class="report-download" href="demo/quantdinger.html">打开完整三年回测 Demo ↗</a><button class="wb-download" id="wbDownloadJson" disabled>下载报告 JSON</button><button class="wb-download" id="wbDownloadCsv" disabled>下载逐笔 CSV</button><button class="wb-download" id="wbRefresh">刷新结果</button></div>
+          <div class="wb-actions"><a class="report-download" href="demo/quantdinger.html">打开完整三年回测 Demo ↗</a><a class="report-download" href="demo/trades.html">442 笔交易图与实时信号 ↗</a><button class="wb-download" id="wbDownloadJson" disabled>下载报告 JSON</button><button class="wb-download" id="wbDownloadCsv" disabled>下载逐笔 CSV</button><button class="wb-download" id="wbRefresh">刷新结果</button></div>
           <p class="wb-note wb-provenance" id="wbProvenance"></p>
         </div>
       </section>

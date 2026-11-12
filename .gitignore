@@ -4,6 +4,13 @@ research/.runs/
 *.tmp
 .venv/
 external/
+.private/
+live-state/
+deploy-bundles/
+*.joblib
+.env
+.env.*
+!.env.example
 research/.qd-runs/
 # Local early prototypes; the published report is workbuddy-results.json.
 research/quantdinger-demo*.json

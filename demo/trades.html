@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="CodeXQuant BTC/ETH 30分钟事件合约研究信号与442笔历史交易图">
+  <title>CodeXQuant · 交易与信号</title>
+  <link rel="stylesheet" href="../styles.css">
+  <style>
+    .trade-page main{padding-top:32px}.trade-page .topbar{gap:18px}.trade-page .topbar>a:last-child{color:var(--cyan);font-size:13px;text-decoration:none}.trade-page h1{font-size:clamp(26px,4vw,42px);letter-spacing:-.04em;margin:0 0 12px}.trade-page h2{font-size:20px;margin:0}.trade-page .intro{color:var(--muted);line-height:1.7;margin:0 0 24px}.trade-page .section-head{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:20px}.trade-page .live-badge{font-size:12px;color:var(--amber)}.trade-page .live-price-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.trade-page .live-price{border-bottom:1px solid var(--line);padding-bottom:18px;min-width:0}.trade-page .live-price span{display:block;color:var(--muted);font-size:12px}.trade-page .live-price strong{display:block;font-size:30px;font-variant-numeric:tabular-nums;margin:8px 0}.trade-page .live-price small{color:var(--muted);font-size:12px;overflow-wrap:anywhere}.trade-page .status-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-top:22px}.trade-page .status-grid span{display:block;color:var(--muted);font-size:12px;margin-bottom:8px}.trade-page .status-grid strong{font-size:13px;font-weight:500;line-height:1.7;overflow-wrap:anywhere}.trade-page .monitor-note{margin:18px 0 0;color:var(--muted);font-size:12px;line-height:1.7}.trade-page #tradeView{margin-top:24px;min-width:0}.trade-page .trade-controls{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:16px;margin-top:20px}.trade-page label{font-size:12px;color:var(--muted)}.trade-page select{display:block;width:100%;min-width:0;margin-top:8px;background:var(--bg);border:1px solid var(--line);border-radius:8px;color:var(--text);padding:11px;font:inherit;font-size:14px}.trade-page .trade-nav{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-top:16px}.trade-page .trade-nav button{min-height:44px;padding:9px 13px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--text);cursor:pointer}.trade-page button:disabled{opacity:.4;cursor:default}.trade-page .trade-count{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}.trade-page .trade-chart{height:470px;width:100%;min-width:0;margin-top:16px}.trade-page .trade-detail{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:18px;display:grid;gap:14px;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}.trade-page .detail-prices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.trade-page .detail-prices small{display:block;font-size:12px;line-height:1.6;color:var(--muted);margin-bottom:7px}.trade-page .trade-legend,.trade-page .trade-provenance{color:var(--muted);font-size:12px;line-height:1.8;overflow-wrap:anywhere}.trade-page .trade-error{color:var(--red);font-size:13px}.trade-page .positive{color:var(--lime)}.trade-page .negative{color:var(--red)}.trade-page [hidden]{display:none!important}@media(max-width:650px){.trade-page main{padding:26px 16px}.trade-page .topbar{padding:0 16px}.trade-page .trade-controls,.trade-page .status-grid,.trade-page .detail-prices{grid-template-columns:1fr}.trade-page .trade-chart{height:400px}.trade-page .panel{padding:18px}.trade-page .live-price strong{font-size:24px}.trade-page .status-grid{gap:14px}.trade-page select{font-size:16px;min-height:44px}}
+  </style>
+</head>
+<body class="trade-page">
+  <header class="topbar">
+    <a class="brand" href="../index.html"><span class="brand-mark">CX</span><span><strong>CodeXQuant</strong><small>30m event research</small></span></a>
+    <a href="../index.html">行情首页 ↗</a>
+  </header>
+  <main>
+    <h1>交易位置与研究信号</h1>
+    <p class="intro">BTC / ETH · 30 分钟到期 · 85% 净赔付 · 研究信号提醒，自动下单关闭</p>
+    <section class="panel" id="liveMonitor" aria-labelledby="liveTitle">
+      <div class="section-head"><h2 id="liveTitle">实时预测与群通知</h2><span class="live-badge" id="liveMode" role="status">正在连接预测服务</span></div>
+      <div class="live-price-grid">
+        <div class="live-price"><span>BTC / USDT 指数</span><strong id="liveBtcPrice">—</strong><small id="liveBtcTime">等待真实行情</small></div>
+        <div class="live-price"><span>ETH / USDT 指数</span><strong id="liveEthPrice">—</strong><small id="liveEthTime">等待真实行情</small></div>
+      </div>
+      <div class="status-grid">
+        <div><span>当前模型</span><strong id="liveModel">等待模型状态</strong></div>
+        <div><span>最近研究信号</span><strong id="liveSignal">暂无信号记录</strong></div>
+        <div><span>企业微信群通知</span><strong id="liveNotify">等待推送状态</strong></div>
+      </div>
+      <p class="monitor-note" id="liveNote">信号出现时即时提醒；价格播报为北京时间每小时整点。此处每 10 秒同步服务状态。</p>
+    </section>
+    <section class="panel" id="tradeView" data-trades-url="../research/trade-chart-data.json" aria-labelledby="tradeTitle">
+      <div class="section-head"><h2 id="tradeTitle">442 笔开仓与到期结算</h2><span class="live-badge">历史确认段 · 56.79%</span></div>
+      <p class="trade-legend">2026-08-09 至 2026-11-09（UTC，结束日不含）。251 胜、191 负；每笔 5 USDT，净收益 +111.75 USDT。</p>
+      <div class="trade-controls">
+        <label for="tradeSymbol">币种<select id="tradeSymbol"><option value="BTCUSDT">BTC / USDT · 227 笔</option><option value="ETHUSDT">ETH / USDT · 215 笔</option></select></label>
+        <label for="tradeSelect">定位交易<select id="tradeSelect" aria-label="定位一笔交易" disabled><option>正在读取交易流水</option></select></label>
+      </div>
+      <div class="trade-nav"><button id="tradePrevious" type="button" disabled>上一笔</button><button id="tradeNext" type="button" disabled>下一笔</button><span class="trade-count" id="tradeCount" aria-live="polite">正在核对 442 笔交易</span></div>
+      <div id="tradeChart" class="trade-chart" role="img" aria-label="币安指数30分钟K线、看涨看跌开仓与到期结算价格"></div>
+      <div id="tradeDetail" class="trade-detail" aria-live="polite"><span>读取交易数据后可查看准确开仓与到期价格。</span></div>
+      <p class="trade-legend">▲ 看涨开仓　▼ 看跌开仓　◇ 到期结算　连线为持有的 30 分钟。拖动下方滑块查看全区间，滚轮可缩放。</p>
+      <p class="trade-provenance" id="tradeProvenance">价格单位 USDT；图示时间 UTC。K 线保留两位小数，执行价格保留原始精度。</p>
+      <p id="tradeError" class="trade-error" role="alert" hidden></p>
+    </section>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/plotly.js-dist-min@2.35.2/plotly.min.js"></script>
+  <script src="../trade-view.js"></script>
+</body>
+</html>

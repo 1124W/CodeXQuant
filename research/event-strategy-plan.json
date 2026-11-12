@@ -1,0 +1,292 @@
+{
+  "version": 1,
+  "data_start_utc": "2023-11-09",
+  "end_exclusive_utc": "2026-11-09",
+  "train_days": 180,
+  "refit_days": 30,
+  "discovery_start_utc": "2024-05-07",
+  "discovery_end_exclusive_utc": "2025-05-07",
+  "validation_end_exclusive_utc": "2026-08-09",
+  "confirmation_end_exclusive_utc": "2026-11-09",
+  "confidence_scores": [
+    0.56,
+    0.6,
+    0.64
+  ],
+  "regimes": [
+    "unrestricted",
+    "exhaustion",
+    "trend_pullback"
+  ],
+  "direct_normalized_thresholds": [
+    1.0,
+    1.5,
+    2.0
+  ],
+  "model_configs": {
+    "regularized_gbm": {
+      "max_iter": 120,
+      "max_depth": 2,
+      "learning_rate": 0.04,
+      "min_samples_leaf": 300,
+      "l2_regularization": 10.0,
+      "early_stopping": false,
+      "random_state": 17
+    },
+    "workbuddy_gbm": {
+      "max_iter": 200,
+      "max_depth": 4,
+      "learning_rate": 0.06,
+      "min_samples_leaf": 80,
+      "l2_regularization": 1.0,
+      "early_stopping": false,
+      "random_state": 7
+    },
+    "regularized_logistic": {
+      "C": 0.1,
+      "max_iter": 400,
+      "solver": "lbfgs",
+      "random_state": 17
+    }
+  },
+  "capital": {
+    "payout": 0.85,
+    "fee": 0.0,
+    "initial_bankroll": 1000.0,
+    "stake": 5.0,
+    "max_open_positions": 1,
+    "daily_loss_limit": 25.0,
+    "adverse_bps": 0.0
+  },
+  "selection": "maximum Bonferroni-Wilson lower bound on discovery only; minimum 200 decisive accepted trades; lexical tie break",
+  "min_discovery_trades": 200,
+  "min_validation_trades": 400,
+  "min_confirmation_trades": 100,
+  "target_win_rate": 0.58,
+  "post_selection_changes_permitted": false,
+  "historical_data_previously_observed": true,
+  "pristine_holdout": false,
+  "forward_trades": 0,
+  "rules": [
+    {
+      "id": "regularized_gbm_0.56_unrestricted",
+      "model": "regularized_gbm",
+      "threshold": 0.56,
+      "regime": "unrestricted",
+      "family": "model"
+    },
+    {
+      "id": "regularized_gbm_0.56_exhaustion",
+      "model": "regularized_gbm",
+      "threshold": 0.56,
+      "regime": "exhaustion",
+      "family": "model"
+    },
+    {
+      "id": "regularized_gbm_0.56_trend_pullback",
+      "model": "regularized_gbm",
+      "threshold": 0.56,
+      "regime": "trend_pullback",
+      "family": "model"
+    },
+    {
+      "id": "regularized_gbm_0.60_unrestricted",
+      "model": "regularized_gbm",
+      "threshold": 0.6,
+      "regime": "unrestricted",
+      "family": "model"
+    },
+    {
+      "id": "regularized_gbm_0.60_exhaustion",
+      "model": "regularized_gbm",
+      "threshold": 0.6,
+      "regime": "exhaustion",
+      "family": "model"
+    },
+    {
+      "id": "regularized_gbm_0.60_trend_pullback",
+      "model": "regularized_gbm",
+      "threshold": 0.6,
+      "regime": "trend_pullback",
+      "family": "model"
+    },
+    {
+      "id": "regularized_gbm_0.64_unrestricted",
+      "model": "regularized_gbm",
+      "threshold": 0.64,
+      "regime": "unrestricted",
+      "family": "model"
+    },
+    {
+      "id": "regularized_gbm_0.64_exhaustion",
+      "model": "regularized_gbm",
+      "threshold": 0.64,
+      "regime": "exhaustion",
+      "family": "model"
+    },
+    {
+      "id": "regularized_gbm_0.64_trend_pullback",
+      "model": "regularized_gbm",
+      "threshold": 0.64,
+      "regime": "trend_pullback",
+      "family": "model"
+    },
+    {
+      "id": "workbuddy_gbm_0.56_unrestricted",
+      "model": "workbuddy_gbm",
+      "threshold": 0.56,
+      "regime": "unrestricted",
+      "family": "model"
+    },
+    {
+      "id": "workbuddy_gbm_0.56_exhaustion",
+      "model": "workbuddy_gbm",
+      "threshold": 0.56,
+      "regime": "exhaustion",
+      "family": "model"
+    },
+    {
+      "id": "workbuddy_gbm_0.56_trend_pullback",
+      "model": "workbuddy_gbm",
+      "threshold": 0.56,
+      "regime": "trend_pullback",
+      "family": "model"
+    },
+    {
+      "id": "workbuddy_gbm_0.60_unrestricted",
+      "model": "workbuddy_gbm",
+      "threshold": 0.6,
+      "regime": "unrestricted",
+      "family": "model"
+    },
+    {
+      "id": "workbuddy_gbm_0.60_exhaustion",
+      "model": "workbuddy_gbm",
+      "threshold": 0.6,
+      "regime": "exhaustion",
+      "family": "model"
+    },
+    {
+      "id": "workbuddy_gbm_0.60_trend_pullback",
+      "model": "workbuddy_gbm",
+      "threshold": 0.6,
+      "regime": "trend_pullback",
+      "family": "model"
+    },
+    {
+      "id": "workbuddy_gbm_0.64_unrestricted",
+      "model": "workbuddy_gbm",
+      "threshold": 0.64,
+      "regime": "unrestricted",
+      "family": "model"
+    },
+    {
+      "id": "workbuddy_gbm_0.64_exhaustion",
+      "model": "workbuddy_gbm",
+      "threshold": 0.64,
+      "regime": "exhaustion",
+      "family": "model"
+    },
+    {
+      "id": "workbuddy_gbm_0.64_trend_pullback",
+      "model": "workbuddy_gbm",
+      "threshold": 0.64,
+      "regime": "trend_pullback",
+      "family": "model"
+    },
+    {
+      "id": "regularized_logistic_0.56_unrestricted",
+      "model": "regularized_logistic",
+      "threshold": 0.56,
+      "regime": "unrestricted",
+      "family": "model"
+    },
+    {
+      "id": "regularized_logistic_0.56_exhaustion",
+      "model": "regularized_logistic",
+      "threshold": 0.56,
+      "regime": "exhaustion",
+      "family": "model"
+    },
+    {
+      "id": "regularized_logistic_0.56_trend_pullback",
+      "model": "regularized_logistic",
+      "threshold": 0.56,
+      "regime": "trend_pullback",
+      "family": "model"
+    },
+    {
+      "id": "regularized_logistic_0.60_unrestricted",
+      "model": "regularized_logistic",
+      "threshold": 0.6,
+      "regime": "unrestricted",
+      "family": "model"
+    },
+    {
+      "id": "regularized_logistic_0.60_exhaustion",
+      "model": "regularized_logistic",
+      "threshold": 0.6,
+      "regime": "exhaustion",
+      "family": "model"
+    },
+    {
+      "id": "regularized_logistic_0.60_trend_pullback",
+      "model": "regularized_logistic",
+      "threshold": 0.6,
+      "regime": "trend_pullback",
+      "family": "model"
+    },
+    {
+      "id": "regularized_logistic_0.64_unrestricted",
+      "model": "regularized_logistic",
+      "threshold": 0.64,
+      "regime": "unrestricted",
+      "family": "model"
+    },
+    {
+      "id": "regularized_logistic_0.64_exhaustion",
+      "model": "regularized_logistic",
+      "threshold": 0.64,
+      "regime": "exhaustion",
+      "family": "model"
+    },
+    {
+      "id": "regularized_logistic_0.64_trend_pullback",
+      "model": "regularized_logistic",
+      "threshold": 0.64,
+      "regime": "trend_pullback",
+      "family": "model"
+    },
+    {
+      "id": "direct_exhaustion_1.0",
+      "family": "direct_exhaustion",
+      "threshold": 1.0
+    },
+    {
+      "id": "direct_exhaustion_1.5",
+      "family": "direct_exhaustion",
+      "threshold": 1.5
+    },
+    {
+      "id": "direct_exhaustion_2.0",
+      "family": "direct_exhaustion",
+      "threshold": 2.0
+    },
+    {
+      "id": "direct_trend_pullback_1.0",
+      "family": "direct_trend_pullback",
+      "threshold": 1.0
+    },
+    {
+      "id": "direct_trend_pullback_1.5",
+      "family": "direct_trend_pullback",
+      "threshold": 1.5
+    },
+    {
+      "id": "direct_trend_pullback_2.0",
+      "family": "direct_trend_pullback",
+      "threshold": 2.0
+    }
+  ],
+  "source_sha256": "2c9794f7c5b142d90e9a1236011f8f7af3736feef91383e7ad6260f015f11560"
+}
