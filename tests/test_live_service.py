@@ -2,6 +2,8 @@
 import tempfile
 import unittest
 import gc
+import csv
+import io
 from contextlib import closing
 from datetime import datetime,timezone
 from pathlib import Path
@@ -94,8 +96,26 @@ class LiveServiceTests(unittest.TestCase):
                         self.assertNotIn(b'private-content-marker',response.data)
                         self.assertEqual(response.headers['X-Content-Type-Options'],'nosniff')
 
+    def test_latest_research_public_routes_preserve_both_cohorts(self):
+        for route in ('/demo/research.html','/research-view.js','/research-view.css'):
+            with self.subTest(route=route), self.client.get(route) as response:
+                self.assertEqual(response.status_code,200)
+        with self.client.get('/research/high-win-public.json') as response:
+            self.assertEqual(response.status_code,200)
+            self.assertEqual(len(response.get_json()['trades']),1262)
+        with self.client.get('/research/high-win-public-trades.csv') as response:
+            rows=list(csv.DictReader(io.StringIO(response.data.decode('utf-8-sig'))))
+            self.assertEqual(len(rows),1262)
+            self.assertAlmostEqual(sum(float(row['net_units']) for row in rows),340.75)
+        for route in ('/research/calendar-audit-results.json',
+                      '/research/high-win-research-register.json',
+                      '/research/high-win-local-summary.txt'):
+            with self.subTest(route=route):
+                self.assertEqual(self.client.get(route).status_code,404)
+
     def test_public_endpoints_accept_no_post_put_delete_mutations(self):
-        for route in ('/','/api/live/status','/health','/demo/trades.html','/research/trade-chart-data.json'):
+        for route in ('/','/api/live/status','/health','/demo/trades.html','/research/trade-chart-data.json',
+                      '/demo/research.html','/research/high-win-public.json','/research/high-win-public-trades.csv'):
             for method in ('POST','PUT','DELETE'):
                 with self.subTest(route=route,method=method):
                     self.assertEqual(self.client.open(route,method=method,json={'action':'order'}).status_code,405)

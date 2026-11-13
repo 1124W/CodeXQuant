@@ -15,6 +15,8 @@ def build():
     path=out/'codexquant-deploy.tgz'
     files=['index.html','styles.css','app.js','research.js','workbuddy.js','trade-view.js',
            'requirements-live.txt','.env.example','demo/trades.html','demo/quantdinger.html',
+           'demo/research.html','research-view.js','research-view.css',
+           'research/high-win-public.json','research/high-win-public-trades.csv',
            'research/trade-chart-data.json','research/workbuddy-results.json','research/workbuddy-trades.csv',
            'research/event-results.json','research/event-trades.csv','research/results.json',
            'research/derivative-study-results.json','research/minute-scan-results.json',

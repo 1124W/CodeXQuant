@@ -345,17 +345,18 @@ def create_app(worker=None):
     def index():return send_file(ROOT/'index.html')
     @app.get('/demo/<name>')
     def demo(name):
-        if name not in ('trades.html','quantdinger.html'):abort(404)
+        if name not in ('trades.html','quantdinger.html','research.html'):abort(404)
         return send_file(ROOT/'demo'/name)
     @app.get('/<name>')
     def asset(name):
-        if name not in ('app.js','styles.css','research.js','workbuddy.js','trade-view.js'):abort(404)
+        if name not in ('app.js','styles.css','research.js','workbuddy.js','trade-view.js',
+                        'research-view.js','research-view.css'):abort(404)
         return send_file(ROOT/name)
     @app.get('/research/<name>')
     def report(name):
         if name not in ('trade-chart-data.json','workbuddy-results.json','workbuddy-trades.csv',
                         'event-results.json','event-trades.csv','results.json','derivative-study-results.json',
-                        'minute-scan-results.json'):abort(404)
+                        'minute-scan-results.json','high-win-public.json','high-win-public-trades.csv'):abort(404)
         return send_file(ROOT/'research'/name)
     return app
 

@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="CodeXQuant 最新高胜率研究：8轮研究与1262笔BTC/ETH事件合约历史对照，明确披露时间、开仓及结算价格。">
+  <title>CodeXQuant · 最新研究与 1,262 笔交易</title>
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="../research-view.css">
+</head>
+<body class="research-page">
+  <header class="topbar">
+    <a class="brand" href="../index.html"><span class="brand-mark">CX</span><span><strong>CodeXQuant</strong><small>research notebook</small></span></a>
+    <nav aria-label="页面导航"><a href="../index.html">行情首页</a><a href="trades.html">实时信号与旧 442 笔图</a></nav>
+  </header>
+  <main id="researchView" data-research-url="../research/high-win-public.json">
+    <section class="research-hero">
+      <p class="label">BTC / ETH · 30 MINUTE EVENT RESEARCH</p>
+      <h1>把胜率放回<br><em>完整的时间里。</em></h1>
+      <p class="intro">最新研究结论、分段表现与每一笔开仓、到期价格。此处展示历史研究对照；服务器正在运行的信号和持续模拟，请查看<a href="trades.html">实时面板</a>。</p>
+      <p class="research-state" id="researchState" role="status">正在校验研究数据…</p>
+      <p class="research-error" id="researchError" role="alert" hidden></p>
+      <button id="researchRetry" type="button" hidden>重新载入</button>
+      <p class="note"><a class="download-link" href="../research/high-win-public-trades.csv" download>直接下载 1,262 笔公开账本 CSV</a></p>
+      <noscript><p class="research-error">请启用 JavaScript 查看交互图表；也可直接下载下方逐笔 CSV。</p></noscript>
+    </section>
+
+    <div id="researchContent" hidden>
+      <section class="panel study-panel" aria-labelledby="studyTitle">
+        <div class="section-heading"><div><p class="label">LATEST RESEARCH</p><h2 id="studyTitle">稳定 58% 目标尚未达到</h2></div><span class="status-pill">未通过完整研究门槛</span></div>
+        <div class="research-cards" id="studyCards"></div>
+        <p class="note">候选与对照包含重复、相关组合，不是独立实验次数。筛选规则先固定，再看后续时段；未根据后续赢家替换入选方案。</p>
+        <details><summary>查看 8 轮研究范围</summary><div class="table-scroll"><table><thead><tr><th scope="col">研究方向</th><th scope="col">候选配置</th><th scope="col">配对对照</th><th scope="col">通过完整门槛</th></tr></thead><tbody id="studyRows"></tbody></table></div></details>
+      </section>
+
+      <section class="panel study-panel" aria-labelledby="comparisonTitle">
+        <div class="section-heading"><div><p class="label">EXPLORATORY GBM COMPARISON</p><h2 id="comparisonTitle">56.97% 来自哪段时间？</h2></div><span class="status-pill subdued">研究对照 · 非当前线上策略</span></div>
+        <p class="intro small">2025-05-07 00:00 至 2026-11-12 00:00 UTC，截止时刻不包含。已排除已知不可交易日期；这 1,262 笔与旧 442 笔研究的模型及统计区间不同。</p>
+        <div class="research-cards" id="comparisonCards"></div>
+        <p id="assumptionText" class="note"></p>
+        <div class="table-scroll"><table><thead><tr><th scope="col">阶段</th><th scope="col">UTC 区间（截止日不含）</th><th scope="col">笔数</th><th scope="col">胜率</th><th scope="col">净收益 USDT</th></tr></thead><tbody id="periodRows"></tbody></table></div>
+        <p id="uncertaintyText" class="uncertainty"></p>
+      </section>
+
+      <section class="panel study-panel" aria-labelledby="explorerTitle">
+        <div class="section-heading"><div><p class="label">AUDITED TRADE EXPLORER</p><h2 id="explorerTitle">逐笔查看这 1,262 笔交易</h2></div><a class="download-link" href="../research/high-win-public-trades.csv" download>下载完整 CSV ↓</a></div>
+        <div class="research-filters">
+          <label for="researchSymbol">币种<select id="researchSymbol"><option value="ALL">BTC + ETH</option><option value="BTCUSDT">BTC</option><option value="ETHUSDT">ETH</option></select></label>
+          <label for="researchPeriod">区间（UTC）<select id="researchPeriod"><option value="continuous_post_selection">完整后续期间</option><option value="validation">长期验证</option><option value="historical_confirmation">近期检查</option></select></label>
+          <label for="researchDirection">方向<select id="researchDirection"><option value="ALL">全部方向</option><option value="1">看涨 / 多</option><option value="-1">看跌 / 空</option></select></label>
+          <label for="researchOutcome">结果<select id="researchOutcome"><option value="ALL">全部结果</option><option value="win">盈利</option><option value="loss">亏损</option><option value="refund">持平退款</option></select></label>
+          <label for="researchTimezone">显示时区<select id="researchTimezone"><option value="UTC">UTC</option><option value="Asia/Shanghai">北京时间 UTC+8</option></select></label>
+        </div>
+        <p class="filter-summary" id="filterSummary" aria-live="polite"></p>
+        <p class="note">筛选展示同一份已准入账本的子集，不重新分配资金或重跑策略。曲线为初始 1,000 USDT 加所选交易的已结算盈亏；单币种曲线表示该币种贡献。</p>
+        <div class="equity-frame"><svg id="researchEquity" viewBox="0 0 1000 290" role="group" tabindex="0" aria-label="已结算权益图，左右方向键逐笔查看交易"></svg></div>
+        <p class="chart-instruction">指向曲线或使用左右方向键查看一笔交易；点击表格中的编号也可定位。</p>
+        <div class="selected-trade" id="selectedTrade" aria-live="polite"></div>
+        <div class="ledger-heading"><h3>开仓与到期账本</h3><span id="ledgerTimezone"></span></div>
+        <div class="table-scroll ledger-scroll" tabindex="0" role="region" aria-label="可横向滚动的逐笔交易表">
+          <table class="trade-ledger"><thead><tr><th scope="col">编号</th><th scope="col">币种 / 方向</th><th scope="col">信号时间</th><th scope="col">开仓时间</th><th scope="col">开仓指数</th><th scope="col">到期时间</th><th scope="col">到期指数</th><th scope="col">结果</th><th scope="col">模拟盈亏</th></tr></thead><tbody id="researchTradeRows"></tbody></table>
+        </div>
+        <div class="ledger-nav"><button id="ledgerPrevious" type="button">上一页</button><span id="ledgerPage" aria-live="polite"></span><button id="ledgerNext" type="button">下一页</button></div>
+        <p class="note">表格价格显示两位小数。选中交易可查看原始精度；输赢按原始指数价格判定，非四舍五入后的显示值。</p>
+      </section>
+      <section class="panel study-panel research-method" aria-labelledby="methodTitle"><h2 id="methodTitle">如何理解这些结果</h2><ul id="researchLimitations"></ul><p class="note">研究数据版本 <span id="publicDataVersion"></span>。本页不提交订单，也不将历史胜率合并到服务器持续模拟统计。</p></section>
+    </div>
+  </main>
+  <script src="../research-view.js" defer></script>
+</body>
+</html>

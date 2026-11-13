@@ -1,0 +1,544 @@
+{
+  "selected_rule": {
+    "id": "score_064",
+    "label": "方向分数至少0.64",
+    "threshold": 0.64
+  },
+  "ranking": [
+    {
+      "rule": {
+        "id": "baseline",
+        "label": "原始分钟反转规则"
+      },
+      "stats": {
+        "signals": 3796,
+        "wins": 1980,
+        "losses": 1816,
+        "refunds": 0,
+        "decisive_trades": 3796,
+        "win_rate": 0.5216016859852476,
+        "per_day": 10.4,
+        "win_rate_lower_95": 0.5056966452866748,
+        "win_rate_upper_95": 0.5374630485279305,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": -665.0,
+        "max_drawdown_units": 769.5,
+        "profit_factor": 0.926762114537445,
+        "expectancy_per_trade": -0.17518440463645943,
+        "raw_opportunities": 87224,
+        "by_symbol_counts": {
+          "BTCUSDT": 2102,
+          "ETHUSDT": 1694
+        }
+      },
+      "eligible": true,
+      "adjusted_lower": 0.49761976391553325
+    },
+    {
+      "rule": {
+        "id": "score_058",
+        "label": "方向分数至少0.58",
+        "threshold": 0.58
+      },
+      "stats": {
+        "signals": 3827,
+        "wins": 2059,
+        "losses": 1768,
+        "refunds": 0,
+        "decisive_trades": 3827,
+        "win_rate": 0.5380193362947479,
+        "per_day": 10.484931506849316,
+        "win_rate_lower_95": 0.5221934296134807,
+        "win_rate_upper_95": 0.5537689907591079,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": -89.25,
+        "max_drawdown_units": 340.75,
+        "profit_factor": 0.9899038461538462,
+        "expectancy_per_trade": -0.02332113927358244,
+        "raw_opportunities": 50687,
+        "by_symbol_counts": {
+          "BTCUSDT": 2085,
+          "ETHUSDT": 1742
+        }
+      },
+      "eligible": true,
+      "adjusted_lower": 0.5141440303580574
+    },
+    {
+      "rule": {
+        "id": "score_060",
+        "label": "方向分数至少0.60",
+        "threshold": 0.6
+      },
+      "stats": {
+        "signals": 3396,
+        "wins": 1832,
+        "losses": 1564,
+        "refunds": 0,
+        "decisive_trades": 3396,
+        "win_rate": 0.5394581861012956,
+        "per_day": 9.304109589041095,
+        "win_rate_lower_95": 0.5226587065279529,
+        "win_rate_upper_95": 0.5561684953040382,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": -34.0,
+        "max_drawdown_units": 215.0,
+        "profit_factor": 0.9956521739130435,
+        "expectancy_per_trade": -0.010011778563015312,
+        "raw_opportunities": 25520,
+        "by_symbol_counts": {
+          "BTCUSDT": 1855,
+          "ETHUSDT": 1541
+        }
+      },
+      "eligible": true,
+      "adjusted_lower": 0.5141130225941867
+    },
+    {
+      "rule": {
+        "id": "score_062",
+        "label": "方向分数至少0.62",
+        "threshold": 0.62
+      },
+      "stats": {
+        "signals": 2446,
+        "wins": 1341,
+        "losses": 1105,
+        "refunds": 0,
+        "decisive_trades": 2446,
+        "win_rate": 0.5482420278004906,
+        "per_day": 6.701369863013698,
+        "win_rate_lower_95": 0.5284589788568945,
+        "win_rate_upper_95": 0.5678737799631042,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": 174.25,
+        "max_drawdown_units": 278.75,
+        "profit_factor": 1.0315384615384615,
+        "expectancy_per_trade": 0.07123875715453802,
+        "raw_opportunities": 11490,
+        "by_symbol_counts": {
+          "BTCUSDT": 1403,
+          "ETHUSDT": 1043
+        }
+      },
+      "eligible": true,
+      "adjusted_lower": 0.5183861421576834
+    },
+    {
+      "rule": {
+        "id": "score_064",
+        "label": "方向分数至少0.64",
+        "threshold": 0.64
+      },
+      "stats": {
+        "signals": 1365,
+        "wins": 795,
+        "losses": 570,
+        "refunds": 0,
+        "decisive_trades": 1365,
+        "win_rate": 0.5824175824175825,
+        "per_day": 3.73972602739726,
+        "win_rate_lower_95": 0.5560595641164487,
+        "win_rate_upper_95": 0.6083129973252843,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": 528.75,
+        "max_drawdown_units": 58.0,
+        "profit_factor": 1.1855263157894738,
+        "expectancy_per_trade": 0.3873626373626374,
+        "raw_opportunities": 4888,
+        "by_symbol_counts": {
+          "BTCUSDT": 804,
+          "ETHUSDT": 561
+        }
+      },
+      "eligible": true,
+      "adjusted_lower": 0.5425696384871824
+    },
+    {
+      "rule": {
+        "id": "volatility_cap_100",
+        "label": "短期波动不高于60分钟波动"
+      },
+      "stats": {
+        "signals": 3775,
+        "wins": 1980,
+        "losses": 1795,
+        "refunds": 0,
+        "decisive_trades": 3775,
+        "win_rate": 0.5245033112582781,
+        "per_day": 10.342465753424657,
+        "win_rate_lower_95": 0.5085553925867267,
+        "win_rate_upper_95": 0.5404014094131241,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": -560.0,
+        "max_drawdown_units": 583.25,
+        "profit_factor": 0.9376044568245125,
+        "expectancy_per_trade": -0.14834437086092717,
+        "raw_opportunities": 49720,
+        "by_symbol_counts": {
+          "BTCUSDT": 2095,
+          "ETHUSDT": 1680
+        }
+      },
+      "eligible": true,
+      "adjusted_lower": 0.5004545144520791
+    },
+    {
+      "rule": {
+        "id": "exhaustion_150",
+        "label": "60分钟标准化偏离至少1.5"
+      },
+      "stats": {
+        "signals": 3461,
+        "wins": 1878,
+        "losses": 1583,
+        "refunds": 0,
+        "decisive_trades": 3461,
+        "win_rate": 0.542617740537417,
+        "per_day": 9.482191780821918,
+        "win_rate_lower_95": 0.5259821538178778,
+        "win_rate_upper_95": 0.5591588234781696,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": 66.5,
+        "max_drawdown_units": 204.75,
+        "profit_factor": 1.0084017687934301,
+        "expectancy_per_trade": 0.019214099971106617,
+        "raw_opportunities": 33641,
+        "by_symbol_counts": {
+          "BTCUSDT": 1952,
+          "ETHUSDT": 1509
+        }
+      },
+      "eligible": true,
+      "adjusted_lower": 0.5175171163720095
+    },
+    {
+      "rule": {
+        "id": "avoid_strong_opposing_trend",
+        "label": "避开强烈反向4小时趋势"
+      },
+      "stats": {
+        "signals": 3768,
+        "wins": 1969,
+        "losses": 1799,
+        "refunds": 0,
+        "decisive_trades": 3768,
+        "win_rate": 0.5225583864118896,
+        "per_day": 10.323287671232876,
+        "win_rate_lower_95": 0.5065947124157931,
+        "win_rate_upper_95": 0.5384761092221039,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": -626.75,
+        "max_drawdown_units": 838.0,
+        "profit_factor": 0.9303224013340745,
+        "expectancy_per_trade": -0.16633492569002123,
+        "raw_opportunities": 56426,
+        "by_symbol_counts": {
+          "BTCUSDT": 2081,
+          "ETHUSDT": 1687
+        }
+      },
+      "eligible": true,
+      "adjusted_lower": 0.4984873618590033
+    },
+    {
+      "rule": {
+        "id": "align_4h_trend",
+        "label": "与4小时趋势同向"
+      },
+      "stats": {
+        "signals": 2578,
+        "wins": 1341,
+        "losses": 1237,
+        "refunds": 0,
+        "decisive_trades": 2578,
+        "win_rate": 0.5201706749418153,
+        "per_day": 7.063013698630137,
+        "win_rate_lower_95": 0.5008694904263555,
+        "win_rate_upper_95": 0.5394118343458536,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": -485.75,
+        "max_drawdown_units": 593.0,
+        "profit_factor": 0.9214632174616006,
+        "expectancy_per_trade": -0.18842125678820792,
+        "raw_opportunities": 17576,
+        "by_symbol_counts": {
+          "BTCUSDT": 1386,
+          "ETHUSDT": 1192
+        }
+      },
+      "eligible": true,
+      "adjusted_lower": 0.491074135394757
+    },
+    {
+      "rule": {
+        "id": "price_turn_3m",
+        "label": "近3分钟价格确认反转"
+      },
+      "stats": {
+        "signals": 3640,
+        "wins": 1938,
+        "losses": 1702,
+        "refunds": 0,
+        "decisive_trades": 3640,
+        "win_rate": 0.5324175824175824,
+        "per_day": 9.972602739726028,
+        "win_rate_lower_95": 0.5161827504741371,
+        "win_rate_upper_95": 0.5485840604651749,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": -273.5,
+        "max_drawdown_units": 324.75,
+        "profit_factor": 0.96786133960047,
+        "expectancy_per_trade": -0.07513736263736263,
+        "raw_opportunities": 23966,
+        "by_symbol_counts": {
+          "BTCUSDT": 1962,
+          "ETHUSDT": 1678
+        }
+      },
+      "eligible": true,
+      "adjusted_lower": 0.5079299559968667
+    },
+    {
+      "rule": {
+        "id": "flow_turn",
+        "label": "短期主动买卖流确认反转"
+      },
+      "stats": {
+        "signals": 3687,
+        "wins": 1967,
+        "losses": 1720,
+        "refunds": 0,
+        "decisive_trades": 3687,
+        "win_rate": 0.5334960672633577,
+        "per_day": 10.101369863013698,
+        "win_rate_lower_95": 0.5173663263459881,
+        "win_rate_upper_95": 0.549556079644017,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": -240.25,
+        "max_drawdown_units": 466.75,
+        "profit_factor": 0.972063953488372,
+        "expectancy_per_trade": -0.06516137781394088,
+        "raw_opportunities": 33112,
+        "by_symbol_counts": {
+          "BTCUSDT": 1906,
+          "ETHUSDT": 1781
+        }
+      },
+      "eligible": true,
+      "adjusted_lower": 0.5091660479590457
+    },
+    {
+      "rule": {
+        "id": "candle_confirmation",
+        "label": "最新分钟收盘位置确认方向"
+      },
+      "stats": {
+        "signals": 3856,
+        "wins": 2080,
+        "losses": 1776,
+        "refunds": 0,
+        "decisive_trades": 3856,
+        "win_rate": 0.5394190871369294,
+        "per_day": 10.564383561643835,
+        "win_rate_lower_95": 0.5236549213053625,
+        "win_rate_upper_95": 0.5551047873832011,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": -40.0,
+        "max_drawdown_units": 271.0,
+        "profit_factor": 0.9954954954954955,
+        "expectancy_per_trade": -0.01037344398340249,
+        "raw_opportunities": 36597,
+        "by_symbol_counts": {
+          "BTCUSDT": 2094,
+          "ETHUSDT": 1762
+        }
+      },
+      "eligible": true,
+      "adjusted_lower": 0.5156358458746256
+    },
+    {
+      "rule": {
+        "id": "peer_flow_confirmation",
+        "label": "另一币种主动买卖流同向"
+      },
+      "stats": {
+        "signals": 3484,
+        "wins": 1849,
+        "losses": 1635,
+        "refunds": 0,
+        "decisive_trades": 3484,
+        "win_rate": 0.5307118254879449,
+        "per_day": 9.545205479452054,
+        "win_rate_lower_95": 0.5141154263359455,
+        "win_rate_upper_95": 0.5472405710235677,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": -316.75,
+        "max_drawdown_units": 383.5,
+        "profit_factor": 0.9612538226299694,
+        "expectancy_per_trade": -0.09091561423650976,
+        "raw_opportunities": 24588,
+        "by_symbol_counts": {
+          "BTCUSDT": 1825,
+          "ETHUSDT": 1659
+        }
+      },
+      "eligible": true,
+      "adjusted_lower": 0.5056804388602686
+    },
+    {
+      "rule": {
+        "id": "contrarian_premium",
+        "label": "溢价方向支持反向交易"
+      },
+      "stats": {
+        "signals": 3502,
+        "wins": 1848,
+        "losses": 1654,
+        "refunds": 0,
+        "decisive_trades": 3502,
+        "win_rate": 0.5276984580239863,
+        "per_day": 9.594520547945205,
+        "win_rate_lower_95": 0.5111422779108209,
+        "win_rate_upper_95": 0.5441939357960391,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": -416.0,
+        "max_drawdown_units": 528.75,
+        "profit_factor": 0.9496977025392986,
+        "expectancy_per_trade": -0.11878926327812679,
+        "raw_opportunities": 48127,
+        "by_symbol_counts": {
+          "BTCUSDT": 1807,
+          "ETHUSDT": 1695
+        }
+      },
+      "eligible": true,
+      "adjusted_lower": 0.5027302447870258
+    },
+    {
+      "rule": {
+        "id": "persistent_2m",
+        "label": "连续两分钟同方向满足原始规则"
+      },
+      "stats": {
+        "signals": 3834,
+        "wins": 2079,
+        "losses": 1755,
+        "refunds": 0,
+        "decisive_trades": 3834,
+        "win_rate": 0.5422535211267606,
+        "per_day": 10.504109589041096,
+        "win_rate_lower_95": 0.5264486279155756,
+        "win_rate_upper_95": 0.5579738245379078,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": 60.75,
+        "max_drawdown_units": 353.75,
+        "profit_factor": 1.006923076923077,
+        "expectancy_per_trade": 0.01584507042253521,
+        "raw_opportunities": 55931,
+        "by_symbol_counts": {
+          "BTCUSDT": 2205,
+          "ETHUSDT": 1629
+        }
+      },
+      "eligible": true,
+      "adjusted_lower": 0.5184066461662
+    },
+    {
+      "rule": {
+        "id": "price_and_flow_turn",
+        "label": "3分钟价格与主动买卖流同时确认"
+      },
+      "stats": {
+        "signals": 3207,
+        "wins": 1738,
+        "losses": 1469,
+        "refunds": 0,
+        "decisive_trades": 3207,
+        "win_rate": 0.5419395073277206,
+        "per_day": 8.786301369863013,
+        "win_rate_lower_95": 0.5246553604191857,
+        "win_rate_upper_95": 0.5591232974878253,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": 41.5,
+        "max_drawdown_units": 173.75,
+        "profit_factor": 1.005650102110279,
+        "expectancy_per_trade": 0.012940442781415653,
+        "raw_opportunities": 14429,
+        "by_symbol_counts": {
+          "BTCUSDT": 1661,
+          "ETHUSDT": 1546
+        }
+      },
+      "eligible": true,
+      "adjusted_lower": 0.5158609291159861
+    }
+  ],
+  "selection_cutoff_ms": 1746576000000,
+  "locked_at_utc": "2026-11-13T02:26:28.840407+00:00",
+  "plan_sha256": "925202509016b19cac7bc81f874aa13e8221df0c9445f60c73d46d0a82623c90"
+}

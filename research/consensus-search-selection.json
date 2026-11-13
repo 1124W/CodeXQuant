@@ -1,0 +1,738 @@
+{
+  "selected_rule": {
+    "id": "pair_logistic_halfhour_gbm_deeper_5m_0.60_unrestricted",
+    "family": "consensus",
+    "consensus_kind": "pair",
+    "members": [
+      "logistic_halfhour",
+      "gbm_deeper_5m"
+    ],
+    "aggregation": "minimum",
+    "threshold": 0.6,
+    "regime": "unrestricted",
+    "label": "logistic_halfhour + gbm_deeper_5m / 各自分数≥0.60 / 仅同方向共识",
+    "score_is_calibrated_win_probability": false,
+    "members_not_independent": true
+  },
+  "ranking": [
+    {
+      "rule": {
+        "id": "pair_logistic_halfhour_gbm_deeper_5m_0.56_exhaustion",
+        "family": "consensus",
+        "consensus_kind": "pair",
+        "members": [
+          "logistic_halfhour",
+          "gbm_deeper_5m"
+        ],
+        "aggregation": "minimum",
+        "threshold": 0.56,
+        "regime": "exhaustion",
+        "label": "logistic_halfhour + gbm_deeper_5m / 各自分数≥0.56 / 原有极端偏离反转门槛",
+        "score_is_calibrated_win_probability": false,
+        "members_not_independent": true
+      },
+      "discovery": {
+        "signals": 3245,
+        "wins": 1799,
+        "losses": 1446,
+        "refunds": 0,
+        "decisive_trades": 3245,
+        "win_rate": 0.5543913713405239,
+        "per_day": 8.89041095890411,
+        "win_rate_lower_95": 0.5372355669588308,
+        "win_rate_upper_95": 0.5714185453253754,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": 415.75,
+        "max_drawdown_units": 222.75,
+        "profit_factor": 1.0575034578146612,
+        "expectancy_per_trade": 0.12812018489984592,
+        "raw_opportunities": 33550,
+        "by_symbol_counts": {
+          "BTCUSDT": 1807,
+          "ETHUSDT": 1438
+        }
+      },
+      "eligible": false,
+      "adjusted_lower": null
+    },
+    {
+      "rule": {
+        "id": "pair_logistic_halfhour_gbm_deeper_5m_0.56_unrestricted",
+        "family": "consensus",
+        "consensus_kind": "pair",
+        "members": [
+          "logistic_halfhour",
+          "gbm_deeper_5m"
+        ],
+        "aggregation": "minimum",
+        "threshold": 0.56,
+        "regime": "unrestricted",
+        "label": "logistic_halfhour + gbm_deeper_5m / 各自分数≥0.56 / 仅同方向共识",
+        "score_is_calibrated_win_probability": false,
+        "members_not_independent": true
+      },
+      "discovery": {
+        "signals": 3663,
+        "wins": 1978,
+        "losses": 1685,
+        "refunds": 0,
+        "decisive_trades": 3663,
+        "win_rate": 0.53999453999454,
+        "per_day": 10.035616438356165,
+        "win_rate_lower_95": 0.5238206606841663,
+        "win_rate_upper_95": 0.5560846180167188,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": -18.5,
+        "max_drawdown_units": 464.75,
+        "profit_factor": 0.9978041543026707,
+        "expectancy_per_trade": -0.005050505050505051,
+        "raw_opportunities": 74741,
+        "by_symbol_counts": {
+          "BTCUSDT": 2040,
+          "ETHUSDT": 1623
+        }
+      },
+      "eligible": false,
+      "adjusted_lower": null
+    },
+    {
+      "rule": {
+        "id": "pair_logistic_halfhour_gbm_deeper_5m_0.60_exhaustion",
+        "family": "consensus",
+        "consensus_kind": "pair",
+        "members": [
+          "logistic_halfhour",
+          "gbm_deeper_5m"
+        ],
+        "aggregation": "minimum",
+        "threshold": 0.6,
+        "regime": "exhaustion",
+        "label": "logistic_halfhour + gbm_deeper_5m / 各自分数≥0.60 / 原有极端偏离反转门槛",
+        "score_is_calibrated_win_probability": false,
+        "members_not_independent": true
+      },
+      "discovery": {
+        "signals": 782,
+        "wins": 457,
+        "losses": 325,
+        "refunds": 0,
+        "decisive_trades": 782,
+        "win_rate": 0.5843989769820972,
+        "per_day": 2.1424657534246574,
+        "win_rate_lower_95": 0.5495265935841427,
+        "win_rate_upper_95": 0.6184461887170234,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": 317.25,
+        "max_drawdown_units": 103.5,
+        "profit_factor": 1.1952307692307693,
+        "expectancy_per_trade": 0.40569053708439895,
+        "raw_opportunities": 3439,
+        "by_symbol_counts": {
+          "BTCUSDT": 402,
+          "ETHUSDT": 380
+        }
+      },
+      "eligible": true,
+      "adjusted_lower": 0.5316667789511699
+    },
+    {
+      "rule": {
+        "id": "pair_logistic_halfhour_gbm_deeper_5m_0.60_unrestricted",
+        "family": "consensus",
+        "consensus_kind": "pair",
+        "members": [
+          "logistic_halfhour",
+          "gbm_deeper_5m"
+        ],
+        "aggregation": "minimum",
+        "threshold": 0.6,
+        "regime": "unrestricted",
+        "label": "logistic_halfhour + gbm_deeper_5m / 各自分数≥0.60 / 仅同方向共识",
+        "score_is_calibrated_win_probability": false,
+        "members_not_independent": true
+      },
+      "discovery": {
+        "signals": 1137,
+        "wins": 673,
+        "losses": 464,
+        "refunds": 0,
+        "decisive_trades": 1137,
+        "win_rate": 0.5919085312225154,
+        "per_day": 3.115068493150685,
+        "win_rate_lower_95": 0.5630773692870435,
+        "win_rate_upper_95": 0.6201207188612147,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": 540.25,
+        "max_drawdown_units": 76.25,
+        "profit_factor": 1.232866379310345,
+        "expectancy_per_trade": 0.4751539138082674,
+        "raw_opportunities": 6716,
+        "by_symbol_counts": {
+          "BTCUSDT": 572,
+          "ETHUSDT": 565
+        }
+      },
+      "eligible": true,
+      "adjusted_lower": 0.548293469142089
+    },
+    {
+      "rule": {
+        "id": "pair_logistic_1m_gbm_deeper_5m_0.56_exhaustion",
+        "family": "consensus",
+        "consensus_kind": "pair",
+        "members": [
+          "logistic_1m",
+          "gbm_deeper_5m"
+        ],
+        "aggregation": "minimum",
+        "threshold": 0.56,
+        "regime": "exhaustion",
+        "label": "logistic_1m + gbm_deeper_5m / 各自分数≥0.56 / 原有极端偏离反转门槛",
+        "score_is_calibrated_win_probability": false,
+        "members_not_independent": true
+      },
+      "discovery": {
+        "signals": 2871,
+        "wins": 1603,
+        "losses": 1268,
+        "refunds": 0,
+        "decisive_trades": 2871,
+        "win_rate": 0.5583420411006618,
+        "per_day": 7.865753424657535,
+        "win_rate_lower_95": 0.5401111672705479,
+        "win_rate_upper_95": 0.5764169920548214,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": 472.75,
+        "max_drawdown_units": 204.0,
+        "profit_factor": 1.0745662460567824,
+        "expectancy_per_trade": 0.16466388018112155,
+        "raw_opportunities": 27446,
+        "by_symbol_counts": {
+          "BTCUSDT": 1676,
+          "ETHUSDT": 1195
+        }
+      },
+      "eligible": false,
+      "adjusted_lower": null
+    },
+    {
+      "rule": {
+        "id": "pair_logistic_1m_gbm_deeper_5m_0.56_unrestricted",
+        "family": "consensus",
+        "consensus_kind": "pair",
+        "members": [
+          "logistic_1m",
+          "gbm_deeper_5m"
+        ],
+        "aggregation": "minimum",
+        "threshold": 0.56,
+        "regime": "unrestricted",
+        "label": "logistic_1m + gbm_deeper_5m / 各自分数≥0.56 / 仅同方向共识",
+        "score_is_calibrated_win_probability": false,
+        "members_not_independent": true
+      },
+      "discovery": {
+        "signals": 3413,
+        "wins": 1905,
+        "losses": 1508,
+        "refunds": 0,
+        "decisive_trades": 3413,
+        "win_rate": 0.558159976560211,
+        "per_day": 9.35068493150685,
+        "win_rate_lower_95": 0.5414428753561079,
+        "win_rate_upper_95": 0.5747462977094507,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": 556.25,
+        "max_drawdown_units": 266.0,
+        "profit_factor": 1.0737732095490715,
+        "expectancy_per_trade": 0.16297978318195136,
+        "raw_opportunities": 57123,
+        "by_symbol_counts": {
+          "BTCUSDT": 1983,
+          "ETHUSDT": 1430
+        }
+      },
+      "eligible": false,
+      "adjusted_lower": null
+    },
+    {
+      "rule": {
+        "id": "pair_logistic_1m_gbm_deeper_5m_0.60_exhaustion",
+        "family": "consensus",
+        "consensus_kind": "pair",
+        "members": [
+          "logistic_1m",
+          "gbm_deeper_5m"
+        ],
+        "aggregation": "minimum",
+        "threshold": 0.6,
+        "regime": "exhaustion",
+        "label": "logistic_1m + gbm_deeper_5m / 各自分数≥0.60 / 原有极端偏离反转门槛",
+        "score_is_calibrated_win_probability": false,
+        "members_not_independent": true
+      },
+      "discovery": {
+        "signals": 323,
+        "wins": 181,
+        "losses": 142,
+        "refunds": 0,
+        "decisive_trades": 323,
+        "win_rate": 0.5603715170278638,
+        "per_day": 0.8849315068493151,
+        "win_rate_lower_95": 0.505846586375611,
+        "win_rate_upper_95": 0.6134772695839732,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": 59.25,
+        "max_drawdown_units": 64.75,
+        "profit_factor": 1.083450704225352,
+        "expectancy_per_trade": 0.18343653250773995,
+        "raw_opportunities": 1584,
+        "by_symbol_counts": {
+          "BTCUSDT": 181,
+          "ETHUSDT": 142
+        }
+      },
+      "eligible": false,
+      "adjusted_lower": null
+    },
+    {
+      "rule": {
+        "id": "pair_logistic_1m_gbm_deeper_5m_0.60_unrestricted",
+        "family": "consensus",
+        "consensus_kind": "pair",
+        "members": [
+          "logistic_1m",
+          "gbm_deeper_5m"
+        ],
+        "aggregation": "minimum",
+        "threshold": 0.6,
+        "regime": "unrestricted",
+        "label": "logistic_1m + gbm_deeper_5m / 各自分数≥0.60 / 仅同方向共识",
+        "score_is_calibrated_win_probability": false,
+        "members_not_independent": true
+      },
+      "discovery": {
+        "signals": 486,
+        "wins": 271,
+        "losses": 215,
+        "refunds": 0,
+        "decisive_trades": 486,
+        "win_rate": 0.5576131687242798,
+        "per_day": 1.3315068493150686,
+        "win_rate_lower_95": 0.5131749010356984,
+        "win_rate_upper_95": 0.6011477698032012,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": 76.75,
+        "max_drawdown_units": 51.0,
+        "profit_factor": 1.0713953488372092,
+        "expectancy_per_trade": 0.15792181069958847,
+        "raw_opportunities": 3113,
+        "by_symbol_counts": {
+          "BTCUSDT": 264,
+          "ETHUSDT": 222
+        }
+      },
+      "eligible": false,
+      "adjusted_lower": null
+    },
+    {
+      "rule": {
+        "id": "pair_gbm_shallow_5m_gbm_deeper_5m_0.56_exhaustion",
+        "family": "consensus",
+        "consensus_kind": "pair",
+        "members": [
+          "gbm_shallow_5m",
+          "gbm_deeper_5m"
+        ],
+        "aggregation": "minimum",
+        "threshold": 0.56,
+        "regime": "exhaustion",
+        "label": "gbm_shallow_5m + gbm_deeper_5m / 各自分数≥0.56 / 原有极端偏离反转门槛",
+        "score_is_calibrated_win_probability": false,
+        "members_not_independent": true
+      },
+      "discovery": {
+        "signals": 2737,
+        "wins": 1531,
+        "losses": 1206,
+        "refunds": 0,
+        "decisive_trades": 2737,
+        "win_rate": 0.5593715747168433,
+        "per_day": 7.498630136986302,
+        "win_rate_lower_95": 0.5407015466829977,
+        "win_rate_upper_95": 0.5778751707748809,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": 476.75,
+        "max_drawdown_units": 179.25,
+        "profit_factor": 1.0790630182421228,
+        "expectancy_per_trade": 0.17418706613080015,
+        "raw_opportunities": 29401,
+        "by_symbol_counts": {
+          "BTCUSDT": 1496,
+          "ETHUSDT": 1241
+        }
+      },
+      "eligible": false,
+      "adjusted_lower": null
+    },
+    {
+      "rule": {
+        "id": "pair_gbm_shallow_5m_gbm_deeper_5m_0.56_unrestricted",
+        "family": "consensus",
+        "consensus_kind": "pair",
+        "members": [
+          "gbm_shallow_5m",
+          "gbm_deeper_5m"
+        ],
+        "aggregation": "minimum",
+        "threshold": 0.56,
+        "regime": "unrestricted",
+        "label": "gbm_shallow_5m + gbm_deeper_5m / 各自分数≥0.56 / 仅同方向共识",
+        "score_is_calibrated_win_probability": false,
+        "members_not_independent": true
+      },
+      "discovery": {
+        "signals": 3311,
+        "wins": 1815,
+        "losses": 1496,
+        "refunds": 0,
+        "decisive_trades": 3311,
+        "win_rate": 0.5481727574750831,
+        "per_day": 9.07123287671233,
+        "win_rate_lower_95": 0.5311746451526399,
+        "win_rate_upper_95": 0.5650592141062761,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": 233.75,
+        "max_drawdown_units": 266.75,
+        "profit_factor": 1.03125,
+        "expectancy_per_trade": 0.07059800664451828,
+        "raw_opportunities": 62600,
+        "by_symbol_counts": {
+          "BTCUSDT": 1882,
+          "ETHUSDT": 1429
+        }
+      },
+      "eligible": false,
+      "adjusted_lower": null
+    },
+    {
+      "rule": {
+        "id": "pair_gbm_shallow_5m_gbm_deeper_5m_0.60_exhaustion",
+        "family": "consensus",
+        "consensus_kind": "pair",
+        "members": [
+          "gbm_shallow_5m",
+          "gbm_deeper_5m"
+        ],
+        "aggregation": "minimum",
+        "threshold": 0.6,
+        "regime": "exhaustion",
+        "label": "gbm_shallow_5m + gbm_deeper_5m / 各自分数≥0.60 / 原有极端偏离反转门槛",
+        "score_is_calibrated_win_probability": false,
+        "members_not_independent": true
+      },
+      "discovery": {
+        "signals": 249,
+        "wins": 146,
+        "losses": 103,
+        "refunds": 0,
+        "decisive_trades": 249,
+        "win_rate": 0.5863453815261044,
+        "per_day": 0.6821917808219178,
+        "win_rate_lower_95": 0.5243138769633074,
+        "win_rate_upper_95": 0.6457530740447545,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": 105.5,
+        "max_drawdown_units": 59.25,
+        "profit_factor": 1.2048543689320388,
+        "expectancy_per_trade": 0.42369477911646586,
+        "raw_opportunities": 1686,
+        "by_symbol_counts": {
+          "BTCUSDT": 94,
+          "ETHUSDT": 155
+        }
+      },
+      "eligible": false,
+      "adjusted_lower": null
+    },
+    {
+      "rule": {
+        "id": "pair_gbm_shallow_5m_gbm_deeper_5m_0.60_unrestricted",
+        "family": "consensus",
+        "consensus_kind": "pair",
+        "members": [
+          "gbm_shallow_5m",
+          "gbm_deeper_5m"
+        ],
+        "aggregation": "minimum",
+        "threshold": 0.6,
+        "regime": "unrestricted",
+        "label": "gbm_shallow_5m + gbm_deeper_5m / 各自分数≥0.60 / 仅同方向共识",
+        "score_is_calibrated_win_probability": false,
+        "members_not_independent": true
+      },
+      "discovery": {
+        "signals": 336,
+        "wins": 200,
+        "losses": 136,
+        "refunds": 0,
+        "decisive_trades": 336,
+        "win_rate": 0.5952380952380952,
+        "per_day": 0.9205479452054794,
+        "win_rate_lower_95": 0.5419633345018209,
+        "win_rate_upper_95": 0.6463596959923859,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": 170.0,
+        "max_drawdown_units": 50.0,
+        "profit_factor": 1.25,
+        "expectancy_per_trade": 0.5059523809523809,
+        "raw_opportunities": 2822,
+        "by_symbol_counts": {
+          "BTCUSDT": 134,
+          "ETHUSDT": 202
+        }
+      },
+      "eligible": false,
+      "adjusted_lower": null
+    },
+    {
+      "rule": {
+        "id": "unanimous_five_0.56_exhaustion",
+        "family": "consensus",
+        "consensus_kind": "unanimous_five",
+        "members": [
+          "logistic_halfhour",
+          "logistic_5m",
+          "logistic_1m",
+          "gbm_shallow_5m",
+          "gbm_deeper_5m"
+        ],
+        "aggregation": "mean",
+        "threshold": 0.56,
+        "regime": "exhaustion",
+        "label": "5个训练模型方向一致 / 平均方向分数≥0.56 / 原有极端偏离反转门槛",
+        "score_is_calibrated_win_probability": false,
+        "members_not_independent": true
+      },
+      "discovery": {
+        "signals": 3598,
+        "wins": 1971,
+        "losses": 1627,
+        "refunds": 0,
+        "decisive_trades": 3598,
+        "win_rate": 0.547804335742079,
+        "per_day": 9.857534246575343,
+        "win_rate_lower_95": 0.5314989159872185,
+        "win_rate_upper_95": 0.5640077825860892,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": 241.75,
+        "max_drawdown_units": 301.5,
+        "profit_factor": 1.029717271051014,
+        "expectancy_per_trade": 0.06719010561423013,
+        "raw_opportunities": 50338,
+        "by_symbol_counts": {
+          "BTCUSDT": 2042,
+          "ETHUSDT": 1556
+        }
+      },
+      "eligible": false,
+      "adjusted_lower": null
+    },
+    {
+      "rule": {
+        "id": "unanimous_five_0.56_unrestricted",
+        "family": "consensus",
+        "consensus_kind": "unanimous_five",
+        "members": [
+          "logistic_halfhour",
+          "logistic_5m",
+          "logistic_1m",
+          "gbm_shallow_5m",
+          "gbm_deeper_5m"
+        ],
+        "aggregation": "mean",
+        "threshold": 0.56,
+        "regime": "unrestricted",
+        "label": "5个训练模型方向一致 / 平均方向分数≥0.56 / 仅同方向共识",
+        "score_is_calibrated_win_probability": false,
+        "members_not_independent": true
+      },
+      "discovery": {
+        "signals": 3826,
+        "wins": 2065,
+        "losses": 1761,
+        "refunds": 0,
+        "decisive_trades": 3826,
+        "win_rate": 0.5397281756403555,
+        "per_day": 10.482191780821918,
+        "win_rate_lower_95": 0.5239027002063178,
+        "win_rate_upper_95": 0.5554739507758012,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": -28.75,
+        "max_drawdown_units": 360.5,
+        "profit_factor": 0.9967348097671778,
+        "expectancy_per_trade": -0.007514375326711971,
+        "raw_opportunities": 110824,
+        "by_symbol_counts": {
+          "BTCUSDT": 2176,
+          "ETHUSDT": 1650
+        }
+      },
+      "eligible": false,
+      "adjusted_lower": null
+    },
+    {
+      "rule": {
+        "id": "unanimous_five_0.60_exhaustion",
+        "family": "consensus",
+        "consensus_kind": "unanimous_five",
+        "members": [
+          "logistic_halfhour",
+          "logistic_5m",
+          "logistic_1m",
+          "gbm_shallow_5m",
+          "gbm_deeper_5m"
+        ],
+        "aggregation": "mean",
+        "threshold": 0.6,
+        "regime": "exhaustion",
+        "label": "5个训练模型方向一致 / 平均方向分数≥0.60 / 原有极端偏离反转门槛",
+        "score_is_calibrated_win_probability": false,
+        "members_not_independent": true
+      },
+      "discovery": {
+        "signals": 821,
+        "wins": 477,
+        "losses": 344,
+        "refunds": 0,
+        "decisive_trades": 821,
+        "win_rate": 0.5809987819732034,
+        "per_day": 2.249315068493151,
+        "win_rate_lower_95": 0.5469476489754606,
+        "win_rate_upper_95": 0.6142954309079984,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": 307.25,
+        "max_drawdown_units": 75.5,
+        "profit_factor": 1.1786337209302327,
+        "expectancy_per_trade": 0.37423873325213153,
+        "raw_opportunities": 4310,
+        "by_symbol_counts": {
+          "BTCUSDT": 470,
+          "ETHUSDT": 351
+        }
+      },
+      "eligible": true,
+      "adjusted_lower": 0.5295207236687689
+    },
+    {
+      "rule": {
+        "id": "unanimous_five_0.60_unrestricted",
+        "family": "consensus",
+        "consensus_kind": "unanimous_five",
+        "members": [
+          "logistic_halfhour",
+          "logistic_5m",
+          "logistic_1m",
+          "gbm_shallow_5m",
+          "gbm_deeper_5m"
+        ],
+        "aggregation": "mean",
+        "threshold": 0.6,
+        "regime": "unrestricted",
+        "label": "5个训练模型方向一致 / 平均方向分数≥0.60 / 仅同方向共识",
+        "score_is_calibrated_win_probability": false,
+        "members_not_independent": true
+      },
+      "discovery": {
+        "signals": 1182,
+        "wins": 673,
+        "losses": 509,
+        "refunds": 0,
+        "decisive_trades": 1182,
+        "win_rate": 0.5693739424703892,
+        "per_day": 3.2383561643835614,
+        "win_rate_lower_95": 0.5409650164477924,
+        "win_rate_upper_95": 0.5973333869814683,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": 315.25,
+        "max_drawdown_units": 74.0,
+        "profit_factor": 1.1238703339882121,
+        "expectancy_per_trade": 0.2667089678510998,
+        "raw_opportunities": 9476,
+        "by_symbol_counts": {
+          "BTCUSDT": 687,
+          "ETHUSDT": 495
+        }
+      },
+      "eligible": false,
+      "adjusted_lower": null
+    }
+  ],
+  "selection_cutoff_ms": 1746576000000,
+  "locked_at_utc": "2026-11-13T02:59:41.169808+00:00",
+  "plan_sha256": "beab998fb1663f92c1733865079d1189dd14b47449b1c5a7eea1a14ad4dda3de"
+}

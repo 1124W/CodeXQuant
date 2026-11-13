@@ -1,0 +1,41 @@
+{
+  "source_family": "Official Binance USD-M daily metrics; newly observed futures positioning rather than an alternative transformation of the existing 60 inputs",
+  "archive_directory": "https://data.binance.vision/?prefix=data/futures/um/daily/metrics/",
+  "official_bucket_declared_by_archive_page": "https://s3-ap-northeast-1.amazonaws.com/data.binance.vision",
+  "official_rest_reference": "https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/market-data",
+  "verified_schema": [
+    "create_time",
+    "symbol",
+    "sum_open_interest",
+    "sum_open_interest_value",
+    "count_toptrader_long_short_ratio",
+    "sum_toptrader_long_short_ratio",
+    "count_long_short_ratio",
+    "sum_taker_long_short_vol_ratio"
+  ],
+  "official_api_context": {
+    "open_interest_history_endpoint": "/futures/data/openInterestHist",
+    "minimum_period": "5m",
+    "historical_api_retention": "latest one month; use archives for this three-year study",
+    "api_timestamp_description": "end time of the period",
+    "top_trader_definition": "users in the top 20% by margin balance, not a demonstrated high-skill or profitable cohort"
+  },
+  "new_information": {
+    "open_interest": "stock of open futures positions and changes in outstanding exposure; absent from the current price/spot-flow/premium/funding features",
+    "positioning_ratios": "account and position crowding; not equal to signed net market ownership",
+    "taker_ratio": "futures aggressor flow, distinct market from existing spot flow but potentially correlated"
+  },
+  "research_interpretation": [
+    "Incremental predictive value must be assessed using identical observation populations and models, not assumed from novelty.",
+    "Dollar open-interest value partly reflects price mechanically; fixed new features use quantity changes."
+  ],
+  "time_availability_limitations": [
+    "Nine checksum-verified representative files all used labels from 00:00 through 23:55; the queried ETH June24/25 pair had no shared label. A publicly reported June25 timing change was not reproduced by these label samples and is not treated as established.",
+    "Timestamp labels alone cannot establish measurement windows or earliest API availability.",
+    "Each asset had 871 of 1099 archive objects last-modified more than two calendar days after its file date. Last-Modified is current object publication/revision metadata, not original API availability.",
+    "Using record_ms+10 minutes and requiring available age in [0,5 minutes) is a conservative research assumption, not point-in-time provenance or a guarantee against all historical revisions."
+  ],
+  "quality_policy": "Publisher SHA256 first; exact 5-minute UTC clocks; sort observed records; positive finite numeric fields; all conflicting same-time rows discarded; no interpolation or fabricated observations.",
+  "probe_report": "D:/CodeXQuant/research/metrics-source-feasibility.json",
+  "generated_at_utc": "2026-11-13T03:42:03.051222+00:00"
+}

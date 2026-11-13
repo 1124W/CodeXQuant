@@ -1,0 +1,104 @@
+{
+  "selected_rule": null,
+  "ranking": [
+    {
+      "rule": {
+        "id": "pooled_exhaustion_reversal_logistic_score_0.60",
+        "family": "conditional_exhaustion_reversal",
+        "model": "pooled_regularized_logistic",
+        "parameters": {
+          "C": 0.1,
+          "max_iter": 400,
+          "solver": "lbfgs",
+          "random_state": 17
+        },
+        "threshold": 0.6,
+        "train_days": 180,
+        "refit_days": 30,
+        "train_sample_minutes": 30,
+        "minimum_training_rows": 500,
+        "minimum_training_rows_per_asset": 100,
+        "signed_features": [
+          "ret_1",
+          "ret_3",
+          "ret_15",
+          "ret_60",
+          "ret_240",
+          "imb",
+          "imb_ma5",
+          "imb_ma60",
+          "peer_ret_60",
+          "premium_deviation60_bps",
+          "premium_slope15_60_bps",
+          "funding_rate_bps"
+        ],
+        "unsigned_features": [
+          "rv_60",
+          "rv_ratio",
+          "rv_ratio_long",
+          "vol_z60",
+          "cnt_z60",
+          "premium_std60_bps",
+          "funding_age_hours"
+        ],
+        "asset_indicator": "is_eth",
+        "transformed_features": [
+          "reversal_side_x_ret_1",
+          "reversal_side_x_ret_3",
+          "reversal_side_x_ret_15",
+          "reversal_side_x_ret_60",
+          "reversal_side_x_ret_240",
+          "reversal_side_x_imb",
+          "reversal_side_x_imb_ma5",
+          "reversal_side_x_imb_ma60",
+          "reversal_side_x_peer_ret_60",
+          "reversal_side_x_premium_deviation60_bps",
+          "reversal_side_x_premium_slope15_60_bps",
+          "reversal_side_x_funding_rate_bps",
+          "rv_60",
+          "rv_ratio",
+          "rv_ratio_long",
+          "vol_z60",
+          "cnt_z60",
+          "premium_std60_bps",
+          "funding_age_hours",
+          "is_eth"
+        ],
+        "direction": "minus sign of completed60minute return",
+        "population": "abs(ret60)/(max(rv60,1e-8)*sqrt60)>=1;0<=rv_ratio<=1.25; known available dates",
+        "target": "reversal-side index change >0 over entry+30minutes; exact flats omitted from training",
+        "score_is_calibrated_win_probability": false
+      },
+      "discovery": {
+        "signals": 3761,
+        "wins": 2061,
+        "losses": 1700,
+        "refunds": 0,
+        "decisive_trades": 3761,
+        "win_rate": 0.5479925551714969,
+        "per_day": 10.304109589041095,
+        "win_rate_lower_95": 0.5320454959882039,
+        "win_rate_upper_95": 0.56384167227938,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": 259.25,
+        "max_drawdown_units": 168.25,
+        "profit_factor": 1.0305,
+        "expectancy_per_trade": 0.06893113533634672,
+        "raw_opportunities": 31270,
+        "by_symbol_counts": {
+          "BTCUSDT": 1870,
+          "ETHUSDT": 1891
+        }
+      },
+      "eligible": false,
+      "adjusted_lower": null
+    }
+  ],
+  "selection_cutoff_ms": 1746576000000,
+  "locked_at_utc": "2026-11-13T03:20:21.333128+00:00",
+  "plan_sha256": "7766d89dca0fad96c8a950227bff1e34ae3239892a9c1fb2de1ecd953aa578f0"
+}

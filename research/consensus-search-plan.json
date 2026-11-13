@@ -1,0 +1,373 @@
+{
+  "version": 1,
+  "models": {
+    "logistic_halfhour": {
+      "family": "logistic",
+      "sample_minutes": 30,
+      "parameters": {
+        "C": 0.1,
+        "max_iter": 400,
+        "solver": "lbfgs",
+        "random_state": 17
+      }
+    },
+    "logistic_5m": {
+      "family": "logistic",
+      "sample_minutes": 5,
+      "parameters": {
+        "C": 0.016666666666666666,
+        "max_iter": 400,
+        "solver": "lbfgs",
+        "random_state": 17
+      }
+    },
+    "logistic_1m": {
+      "family": "logistic",
+      "sample_minutes": 1,
+      "parameters": {
+        "C": 0.0033333333333333335,
+        "max_iter": 400,
+        "solver": "lbfgs",
+        "random_state": 17
+      }
+    },
+    "gbm_shallow_5m": {
+      "family": "gbm",
+      "sample_minutes": 5,
+      "parameters": {
+        "max_iter": 100,
+        "max_depth": 2,
+        "min_samples_leaf": 300,
+        "l2_regularization": 10.0,
+        "learning_rate": 0.04,
+        "early_stopping": false,
+        "random_state": 17
+      }
+    },
+    "gbm_deeper_5m": {
+      "family": "gbm",
+      "sample_minutes": 5,
+      "parameters": {
+        "max_iter": 140,
+        "max_depth": 3,
+        "min_samples_leaf": 300,
+        "l2_regularization": 20.0,
+        "learning_rate": 0.035,
+        "early_stopping": false,
+        "random_state": 17
+      }
+    },
+    "ensemble_5m": {
+      "family": "mean",
+      "members": [
+        "logistic_5m",
+        "gbm_shallow_5m"
+      ],
+      "weights": [
+        0.5,
+        0.5
+      ]
+    }
+  },
+  "rules": [
+    {
+      "id": "pair_logistic_halfhour_gbm_deeper_5m_0.56_exhaustion",
+      "family": "consensus",
+      "consensus_kind": "pair",
+      "members": [
+        "logistic_halfhour",
+        "gbm_deeper_5m"
+      ],
+      "aggregation": "minimum",
+      "threshold": 0.56,
+      "regime": "exhaustion",
+      "label": "logistic_halfhour + gbm_deeper_5m / 各自分数≥0.56 / 原有极端偏离反转门槛",
+      "score_is_calibrated_win_probability": false,
+      "members_not_independent": true
+    },
+    {
+      "id": "pair_logistic_halfhour_gbm_deeper_5m_0.56_unrestricted",
+      "family": "consensus",
+      "consensus_kind": "pair",
+      "members": [
+        "logistic_halfhour",
+        "gbm_deeper_5m"
+      ],
+      "aggregation": "minimum",
+      "threshold": 0.56,
+      "regime": "unrestricted",
+      "label": "logistic_halfhour + gbm_deeper_5m / 各自分数≥0.56 / 仅同方向共识",
+      "score_is_calibrated_win_probability": false,
+      "members_not_independent": true
+    },
+    {
+      "id": "pair_logistic_halfhour_gbm_deeper_5m_0.60_exhaustion",
+      "family": "consensus",
+      "consensus_kind": "pair",
+      "members": [
+        "logistic_halfhour",
+        "gbm_deeper_5m"
+      ],
+      "aggregation": "minimum",
+      "threshold": 0.6,
+      "regime": "exhaustion",
+      "label": "logistic_halfhour + gbm_deeper_5m / 各自分数≥0.60 / 原有极端偏离反转门槛",
+      "score_is_calibrated_win_probability": false,
+      "members_not_independent": true
+    },
+    {
+      "id": "pair_logistic_halfhour_gbm_deeper_5m_0.60_unrestricted",
+      "family": "consensus",
+      "consensus_kind": "pair",
+      "members": [
+        "logistic_halfhour",
+        "gbm_deeper_5m"
+      ],
+      "aggregation": "minimum",
+      "threshold": 0.6,
+      "regime": "unrestricted",
+      "label": "logistic_halfhour + gbm_deeper_5m / 各自分数≥0.60 / 仅同方向共识",
+      "score_is_calibrated_win_probability": false,
+      "members_not_independent": true
+    },
+    {
+      "id": "pair_logistic_1m_gbm_deeper_5m_0.56_exhaustion",
+      "family": "consensus",
+      "consensus_kind": "pair",
+      "members": [
+        "logistic_1m",
+        "gbm_deeper_5m"
+      ],
+      "aggregation": "minimum",
+      "threshold": 0.56,
+      "regime": "exhaustion",
+      "label": "logistic_1m + gbm_deeper_5m / 各自分数≥0.56 / 原有极端偏离反转门槛",
+      "score_is_calibrated_win_probability": false,
+      "members_not_independent": true
+    },
+    {
+      "id": "pair_logistic_1m_gbm_deeper_5m_0.56_unrestricted",
+      "family": "consensus",
+      "consensus_kind": "pair",
+      "members": [
+        "logistic_1m",
+        "gbm_deeper_5m"
+      ],
+      "aggregation": "minimum",
+      "threshold": 0.56,
+      "regime": "unrestricted",
+      "label": "logistic_1m + gbm_deeper_5m / 各自分数≥0.56 / 仅同方向共识",
+      "score_is_calibrated_win_probability": false,
+      "members_not_independent": true
+    },
+    {
+      "id": "pair_logistic_1m_gbm_deeper_5m_0.60_exhaustion",
+      "family": "consensus",
+      "consensus_kind": "pair",
+      "members": [
+        "logistic_1m",
+        "gbm_deeper_5m"
+      ],
+      "aggregation": "minimum",
+      "threshold": 0.6,
+      "regime": "exhaustion",
+      "label": "logistic_1m + gbm_deeper_5m / 各自分数≥0.60 / 原有极端偏离反转门槛",
+      "score_is_calibrated_win_probability": false,
+      "members_not_independent": true
+    },
+    {
+      "id": "pair_logistic_1m_gbm_deeper_5m_0.60_unrestricted",
+      "family": "consensus",
+      "consensus_kind": "pair",
+      "members": [
+        "logistic_1m",
+        "gbm_deeper_5m"
+      ],
+      "aggregation": "minimum",
+      "threshold": 0.6,
+      "regime": "unrestricted",
+      "label": "logistic_1m + gbm_deeper_5m / 各自分数≥0.60 / 仅同方向共识",
+      "score_is_calibrated_win_probability": false,
+      "members_not_independent": true
+    },
+    {
+      "id": "pair_gbm_shallow_5m_gbm_deeper_5m_0.56_exhaustion",
+      "family": "consensus",
+      "consensus_kind": "pair",
+      "members": [
+        "gbm_shallow_5m",
+        "gbm_deeper_5m"
+      ],
+      "aggregation": "minimum",
+      "threshold": 0.56,
+      "regime": "exhaustion",
+      "label": "gbm_shallow_5m + gbm_deeper_5m / 各自分数≥0.56 / 原有极端偏离反转门槛",
+      "score_is_calibrated_win_probability": false,
+      "members_not_independent": true
+    },
+    {
+      "id": "pair_gbm_shallow_5m_gbm_deeper_5m_0.56_unrestricted",
+      "family": "consensus",
+      "consensus_kind": "pair",
+      "members": [
+        "gbm_shallow_5m",
+        "gbm_deeper_5m"
+      ],
+      "aggregation": "minimum",
+      "threshold": 0.56,
+      "regime": "unrestricted",
+      "label": "gbm_shallow_5m + gbm_deeper_5m / 各自分数≥0.56 / 仅同方向共识",
+      "score_is_calibrated_win_probability": false,
+      "members_not_independent": true
+    },
+    {
+      "id": "pair_gbm_shallow_5m_gbm_deeper_5m_0.60_exhaustion",
+      "family": "consensus",
+      "consensus_kind": "pair",
+      "members": [
+        "gbm_shallow_5m",
+        "gbm_deeper_5m"
+      ],
+      "aggregation": "minimum",
+      "threshold": 0.6,
+      "regime": "exhaustion",
+      "label": "gbm_shallow_5m + gbm_deeper_5m / 各自分数≥0.60 / 原有极端偏离反转门槛",
+      "score_is_calibrated_win_probability": false,
+      "members_not_independent": true
+    },
+    {
+      "id": "pair_gbm_shallow_5m_gbm_deeper_5m_0.60_unrestricted",
+      "family": "consensus",
+      "consensus_kind": "pair",
+      "members": [
+        "gbm_shallow_5m",
+        "gbm_deeper_5m"
+      ],
+      "aggregation": "minimum",
+      "threshold": 0.6,
+      "regime": "unrestricted",
+      "label": "gbm_shallow_5m + gbm_deeper_5m / 各自分数≥0.60 / 仅同方向共识",
+      "score_is_calibrated_win_probability": false,
+      "members_not_independent": true
+    },
+    {
+      "id": "unanimous_five_0.56_exhaustion",
+      "family": "consensus",
+      "consensus_kind": "unanimous_five",
+      "members": [
+        "logistic_halfhour",
+        "logistic_5m",
+        "logistic_1m",
+        "gbm_shallow_5m",
+        "gbm_deeper_5m"
+      ],
+      "aggregation": "mean",
+      "threshold": 0.56,
+      "regime": "exhaustion",
+      "label": "5个训练模型方向一致 / 平均方向分数≥0.56 / 原有极端偏离反转门槛",
+      "score_is_calibrated_win_probability": false,
+      "members_not_independent": true
+    },
+    {
+      "id": "unanimous_five_0.56_unrestricted",
+      "family": "consensus",
+      "consensus_kind": "unanimous_five",
+      "members": [
+        "logistic_halfhour",
+        "logistic_5m",
+        "logistic_1m",
+        "gbm_shallow_5m",
+        "gbm_deeper_5m"
+      ],
+      "aggregation": "mean",
+      "threshold": 0.56,
+      "regime": "unrestricted",
+      "label": "5个训练模型方向一致 / 平均方向分数≥0.56 / 仅同方向共识",
+      "score_is_calibrated_win_probability": false,
+      "members_not_independent": true
+    },
+    {
+      "id": "unanimous_five_0.60_exhaustion",
+      "family": "consensus",
+      "consensus_kind": "unanimous_five",
+      "members": [
+        "logistic_halfhour",
+        "logistic_5m",
+        "logistic_1m",
+        "gbm_shallow_5m",
+        "gbm_deeper_5m"
+      ],
+      "aggregation": "mean",
+      "threshold": 0.6,
+      "regime": "exhaustion",
+      "label": "5个训练模型方向一致 / 平均方向分数≥0.60 / 原有极端偏离反转门槛",
+      "score_is_calibrated_win_probability": false,
+      "members_not_independent": true
+    },
+    {
+      "id": "unanimous_five_0.60_unrestricted",
+      "family": "consensus",
+      "consensus_kind": "unanimous_five",
+      "members": [
+        "logistic_halfhour",
+        "logistic_5m",
+        "logistic_1m",
+        "gbm_shallow_5m",
+        "gbm_deeper_5m"
+      ],
+      "aggregation": "mean",
+      "threshold": 0.6,
+      "regime": "unrestricted",
+      "label": "5个训练模型方向一致 / 平均方向分数≥0.60 / 仅同方向共识",
+      "score_is_calibrated_win_probability": false,
+      "members_not_independent": true
+    }
+  ],
+  "candidate_count": 16,
+  "discovery_start_utc": "2024-05-07",
+  "discovery_end_exclusive_utc": "2025-05-07",
+  "validation_end_exclusive_utc": "2026-08-09",
+  "confirmation_end_exclusive_utc": "2026-11-12",
+  "symbols": [
+    "BTCUSDT",
+    "ETHUSDT"
+  ],
+  "scan_minutes": 1,
+  "holding_minutes": 30,
+  "entry_delay_minutes": 1,
+  "train_days": 180,
+  "refit_days": 30,
+  "baseline_rule_id": "logistic_halfhour_0.56_exhaustion",
+  "prediction_policy": "reuse complete source/content-verified cache only; no training or downloads",
+  "calendar_policy": "primary matches earlier unmasked studies; selected-only calendar exclusion is a disclosed sensitivity, with no reselection",
+  "known_unavailable_utc_dates": [
+    "2026-01-17",
+    "2026-01-18",
+    "2026-01-19",
+    "2026-01-24",
+    "2026-01-25"
+  ],
+  "selection": "discovery only; >=500 decisive, >=100 each asset, >=58% point win, positive PnL; maximum Bonferroni-Wilson lower; lexical tie",
+  "minimum_validation_trades": 400,
+  "minimum_confirmation_trades": 100,
+  "target_win_rate": 0.58,
+  "capital": {
+    "payout": 0.85,
+    "fee": 0.0,
+    "initial_bankroll": 1000.0,
+    "stake": 5.0,
+    "max_open_positions": 1,
+    "daily_loss_limit": 25.0,
+    "adverse_bps": 0.0
+  },
+  "pending_outcomes_reserved": true,
+  "joint_asset_feature_availability_required": true,
+  "historical_data_previously_researched": true,
+  "pristine_holdout": false,
+  "forward_validated": false,
+  "post_selection_changes_allowed": false,
+  "local_only": true,
+  "publish_or_deploy": false,
+  "source_sha256": "a34c747ab5713ab50225094bc29cc360250951b6fd2282fdea0d3034f59294ab",
+  "frozen_at_utc": "2026-11-13T02:59:32.960339+00:00"
+}

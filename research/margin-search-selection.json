@@ -1,0 +1,320 @@
+{
+  "selected_rule": null,
+  "ranking": [
+    {
+      "rule": {
+        "id": "margin_shallow_0.56_exhaustion",
+        "family": "three_class_margin",
+        "model": "margin_shallow",
+        "threshold": 0.56,
+        "regime": "exhaustion",
+        "margin_bps": 2.0,
+        "score_is_calibrated_win_probability": false,
+        "label": "margin_shallow / 方向超过2bp分数≥0.56 / exhaustion"
+      },
+      "discovery": {
+        "signals": 2016,
+        "wins": 1130,
+        "losses": 886,
+        "refunds": 0,
+        "decisive_trades": 2016,
+        "win_rate": 0.560515873015873,
+        "per_day": 5.523287671232877,
+        "win_rate_lower_95": 0.5387552018437269,
+        "win_rate_upper_95": 0.5820463501195556,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": 372.5,
+        "max_drawdown_units": 187.0,
+        "profit_factor": 1.0840857787810383,
+        "expectancy_per_trade": 0.1847718253968254,
+        "raw_opportunities": 19742,
+        "by_symbol_counts": {
+          "BTCUSDT": 805,
+          "ETHUSDT": 1211
+        }
+      },
+      "eligible": false,
+      "adjusted_lower": null
+    },
+    {
+      "rule": {
+        "id": "margin_shallow_0.56_unrestricted",
+        "family": "three_class_margin",
+        "model": "margin_shallow",
+        "threshold": 0.56,
+        "regime": "unrestricted",
+        "margin_bps": 2.0,
+        "score_is_calibrated_win_probability": false,
+        "label": "margin_shallow / 方向超过2bp分数≥0.56 / unrestricted"
+      },
+      "discovery": {
+        "signals": 2525,
+        "wins": 1387,
+        "losses": 1138,
+        "refunds": 0,
+        "decisive_trades": 2525,
+        "win_rate": 0.5493069306930694,
+        "per_day": 6.917808219178082,
+        "win_rate_lower_95": 0.529838961783063,
+        "win_rate_upper_95": 0.5686250938541111,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": 204.75,
+        "max_drawdown_units": 142.0,
+        "profit_factor": 1.0359841827768015,
+        "expectancy_per_trade": 0.08108910891089109,
+        "raw_opportunities": 43651,
+        "by_symbol_counts": {
+          "BTCUSDT": 1049,
+          "ETHUSDT": 1476
+        }
+      },
+      "eligible": false,
+      "adjusted_lower": null
+    },
+    {
+      "rule": {
+        "id": "margin_shallow_0.60_exhaustion",
+        "family": "three_class_margin",
+        "model": "margin_shallow",
+        "threshold": 0.6,
+        "regime": "exhaustion",
+        "margin_bps": 2.0,
+        "score_is_calibrated_win_probability": false,
+        "label": "margin_shallow / 方向超过2bp分数≥0.60 / exhaustion"
+      },
+      "discovery": {
+        "signals": 368,
+        "wins": 205,
+        "losses": 163,
+        "refunds": 0,
+        "decisive_trades": 368,
+        "win_rate": 0.5570652173913043,
+        "per_day": 1.0082191780821919,
+        "win_rate_lower_95": 0.5059828432673107,
+        "win_rate_upper_95": 0.6069684779404293,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": 56.25,
+        "max_drawdown_units": 87.5,
+        "profit_factor": 1.0690184049079754,
+        "expectancy_per_trade": 0.15285326086956522,
+        "raw_opportunities": 2137,
+        "by_symbol_counts": {
+          "BTCUSDT": 94,
+          "ETHUSDT": 274
+        }
+      },
+      "eligible": false,
+      "adjusted_lower": null
+    },
+    {
+      "rule": {
+        "id": "margin_shallow_0.60_unrestricted",
+        "family": "three_class_margin",
+        "model": "margin_shallow",
+        "threshold": 0.6,
+        "regime": "unrestricted",
+        "margin_bps": 2.0,
+        "score_is_calibrated_win_probability": false,
+        "label": "margin_shallow / 方向超过2bp分数≥0.60 / unrestricted"
+      },
+      "discovery": {
+        "signals": 542,
+        "wins": 303,
+        "losses": 239,
+        "refunds": 0,
+        "decisive_trades": 542,
+        "win_rate": 0.559040590405904,
+        "per_day": 1.484931506849315,
+        "win_rate_lower_95": 0.5169702385585823,
+        "win_rate_upper_95": 0.6002798940806303,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": 92.75,
+        "max_drawdown_units": 91.75,
+        "profit_factor": 1.0776150627615062,
+        "expectancy_per_trade": 0.17112546125461256,
+        "raw_opportunities": 4399,
+        "by_symbol_counts": {
+          "BTCUSDT": 136,
+          "ETHUSDT": 406
+        }
+      },
+      "eligible": false,
+      "adjusted_lower": null
+    },
+    {
+      "rule": {
+        "id": "margin_deep_0.56_exhaustion",
+        "family": "three_class_margin",
+        "model": "margin_deep",
+        "threshold": 0.56,
+        "regime": "exhaustion",
+        "margin_bps": 2.0,
+        "score_is_calibrated_win_probability": false,
+        "label": "margin_deep / 方向超过2bp分数≥0.56 / exhaustion"
+      },
+      "discovery": {
+        "signals": 3055,
+        "wins": 1704,
+        "losses": 1351,
+        "refunds": 0,
+        "decisive_trades": 3055,
+        "win_rate": 0.5577741407528641,
+        "per_day": 8.36986301369863,
+        "win_rate_lower_95": 0.5401007775375478,
+        "win_rate_upper_95": 0.5753023868499118,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": 487.0,
+        "max_drawdown_units": 146.0,
+        "profit_factor": 1.0720947446336047,
+        "expectancy_per_trade": 0.15941080196399346,
+        "raw_opportunities": 37424,
+        "by_symbol_counts": {
+          "BTCUSDT": 1330,
+          "ETHUSDT": 1725
+        }
+      },
+      "eligible": false,
+      "adjusted_lower": null
+    },
+    {
+      "rule": {
+        "id": "margin_deep_0.56_unrestricted",
+        "family": "three_class_margin",
+        "model": "margin_deep",
+        "threshold": 0.56,
+        "regime": "unrestricted",
+        "margin_bps": 2.0,
+        "score_is_calibrated_win_probability": false,
+        "label": "margin_deep / 方向超过2bp分数≥0.56 / unrestricted"
+      },
+      "discovery": {
+        "signals": 3536,
+        "wins": 1903,
+        "losses": 1633,
+        "refunds": 0,
+        "decisive_trades": 3536,
+        "win_rate": 0.5381787330316742,
+        "per_day": 9.687671232876712,
+        "win_rate_lower_95": 0.5217137976465641,
+        "win_rate_upper_95": 0.5545608017592397,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": -77.25,
+        "max_drawdown_units": 435.25,
+        "profit_factor": 0.990538885486834,
+        "expectancy_per_trade": -0.021846719457013573,
+        "raw_opportunities": 101450,
+        "by_symbol_counts": {
+          "BTCUSDT": 1526,
+          "ETHUSDT": 2010
+        }
+      },
+      "eligible": false,
+      "adjusted_lower": null
+    },
+    {
+      "rule": {
+        "id": "margin_deep_0.60_exhaustion",
+        "family": "three_class_margin",
+        "model": "margin_deep",
+        "threshold": 0.6,
+        "regime": "exhaustion",
+        "margin_bps": 2.0,
+        "score_is_calibrated_win_probability": false,
+        "label": "margin_deep / 方向超过2bp分数≥0.60 / exhaustion"
+      },
+      "discovery": {
+        "signals": 1324,
+        "wins": 749,
+        "losses": 575,
+        "refunds": 0,
+        "decisive_trades": 1324,
+        "win_rate": 0.5657099697885196,
+        "per_day": 3.627397260273973,
+        "win_rate_lower_95": 0.5388585938342123,
+        "win_rate_upper_95": 0.5921811325909878,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": 308.25,
+        "max_drawdown_units": 87.0,
+        "profit_factor": 1.107217391304348,
+        "expectancy_per_trade": 0.23281722054380666,
+        "raw_opportunities": 9965,
+        "by_symbol_counts": {
+          "BTCUSDT": 496,
+          "ETHUSDT": 828
+        }
+      },
+      "eligible": false,
+      "adjusted_lower": null
+    },
+    {
+      "rule": {
+        "id": "margin_deep_0.60_unrestricted",
+        "family": "three_class_margin",
+        "model": "margin_deep",
+        "threshold": 0.6,
+        "regime": "unrestricted",
+        "margin_bps": 2.0,
+        "score_is_calibrated_win_probability": false,
+        "label": "margin_deep / 方向超过2bp分数≥0.60 / unrestricted"
+      },
+      "discovery": {
+        "signals": 1928,
+        "wins": 1075,
+        "losses": 853,
+        "refunds": 0,
+        "decisive_trades": 1928,
+        "win_rate": 0.5575726141078838,
+        "per_day": 5.282191780821917,
+        "win_rate_lower_95": 0.5353094477166083,
+        "win_rate_upper_95": 0.5796068062868256,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": 303.75,
+        "max_drawdown_units": 124.5,
+        "profit_factor": 1.071219226260258,
+        "expectancy_per_trade": 0.1575466804979253,
+        "raw_opportunities": 22591,
+        "by_symbol_counts": {
+          "BTCUSDT": 726,
+          "ETHUSDT": 1202
+        }
+      },
+      "eligible": false,
+      "adjusted_lower": null
+    }
+  ],
+  "selection_cutoff_ms": 1746576000000,
+  "locked_at_utc": "2026-11-13T03:15:45.105732+00:00",
+  "plan_sha256": "26a328707a0543e2c6fd2ef531a9ebf637a9081ed1f89861ede6fd0de2e5429c"
+}

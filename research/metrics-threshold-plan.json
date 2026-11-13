@@ -1,0 +1,451 @@
+{
+  "schema_version": 1,
+  "engine": "fixed-cached-metrics-confidence-extension-v1",
+  "rules": [
+    {
+      "id": "metrics_threshold_logistic_aug_0.56_exhaustion",
+      "family": "fixed_metrics_confidence_extension",
+      "model": "logistic",
+      "feature_set": "aug",
+      "threshold": 0.56,
+      "regime": "exhaustion",
+      "selection_candidate": true,
+      "score_is_calibrated_win_probability": false,
+      "previous_study_threshold": true
+    },
+    {
+      "id": "metrics_threshold_logistic_aug_0.56_unrestricted",
+      "family": "fixed_metrics_confidence_extension",
+      "model": "logistic",
+      "feature_set": "aug",
+      "threshold": 0.56,
+      "regime": "unrestricted",
+      "selection_candidate": true,
+      "score_is_calibrated_win_probability": false,
+      "previous_study_threshold": true
+    },
+    {
+      "id": "metrics_threshold_logistic_aug_0.60_exhaustion",
+      "family": "fixed_metrics_confidence_extension",
+      "model": "logistic",
+      "feature_set": "aug",
+      "threshold": 0.6,
+      "regime": "exhaustion",
+      "selection_candidate": true,
+      "score_is_calibrated_win_probability": false,
+      "previous_study_threshold": true
+    },
+    {
+      "id": "metrics_threshold_logistic_aug_0.60_unrestricted",
+      "family": "fixed_metrics_confidence_extension",
+      "model": "logistic",
+      "feature_set": "aug",
+      "threshold": 0.6,
+      "regime": "unrestricted",
+      "selection_candidate": true,
+      "score_is_calibrated_win_probability": false,
+      "previous_study_threshold": true
+    },
+    {
+      "id": "metrics_threshold_logistic_aug_0.64_exhaustion",
+      "family": "fixed_metrics_confidence_extension",
+      "model": "logistic",
+      "feature_set": "aug",
+      "threshold": 0.64,
+      "regime": "exhaustion",
+      "selection_candidate": true,
+      "score_is_calibrated_win_probability": false,
+      "previous_study_threshold": false
+    },
+    {
+      "id": "metrics_threshold_logistic_aug_0.64_unrestricted",
+      "family": "fixed_metrics_confidence_extension",
+      "model": "logistic",
+      "feature_set": "aug",
+      "threshold": 0.64,
+      "regime": "unrestricted",
+      "selection_candidate": true,
+      "score_is_calibrated_win_probability": false,
+      "previous_study_threshold": false
+    },
+    {
+      "id": "metrics_threshold_logistic_aug_0.68_exhaustion",
+      "family": "fixed_metrics_confidence_extension",
+      "model": "logistic",
+      "feature_set": "aug",
+      "threshold": 0.68,
+      "regime": "exhaustion",
+      "selection_candidate": true,
+      "score_is_calibrated_win_probability": false,
+      "previous_study_threshold": false
+    },
+    {
+      "id": "metrics_threshold_logistic_aug_0.68_unrestricted",
+      "family": "fixed_metrics_confidence_extension",
+      "model": "logistic",
+      "feature_set": "aug",
+      "threshold": 0.68,
+      "regime": "unrestricted",
+      "selection_candidate": true,
+      "score_is_calibrated_win_probability": false,
+      "previous_study_threshold": false
+    },
+    {
+      "id": "metrics_threshold_gbm_aug_0.56_exhaustion",
+      "family": "fixed_metrics_confidence_extension",
+      "model": "gbm",
+      "feature_set": "aug",
+      "threshold": 0.56,
+      "regime": "exhaustion",
+      "selection_candidate": true,
+      "score_is_calibrated_win_probability": false,
+      "previous_study_threshold": true
+    },
+    {
+      "id": "metrics_threshold_gbm_aug_0.56_unrestricted",
+      "family": "fixed_metrics_confidence_extension",
+      "model": "gbm",
+      "feature_set": "aug",
+      "threshold": 0.56,
+      "regime": "unrestricted",
+      "selection_candidate": true,
+      "score_is_calibrated_win_probability": false,
+      "previous_study_threshold": true
+    },
+    {
+      "id": "metrics_threshold_gbm_aug_0.60_exhaustion",
+      "family": "fixed_metrics_confidence_extension",
+      "model": "gbm",
+      "feature_set": "aug",
+      "threshold": 0.6,
+      "regime": "exhaustion",
+      "selection_candidate": true,
+      "score_is_calibrated_win_probability": false,
+      "previous_study_threshold": true
+    },
+    {
+      "id": "metrics_threshold_gbm_aug_0.60_unrestricted",
+      "family": "fixed_metrics_confidence_extension",
+      "model": "gbm",
+      "feature_set": "aug",
+      "threshold": 0.6,
+      "regime": "unrestricted",
+      "selection_candidate": true,
+      "score_is_calibrated_win_probability": false,
+      "previous_study_threshold": true
+    },
+    {
+      "id": "metrics_threshold_gbm_aug_0.64_exhaustion",
+      "family": "fixed_metrics_confidence_extension",
+      "model": "gbm",
+      "feature_set": "aug",
+      "threshold": 0.64,
+      "regime": "exhaustion",
+      "selection_candidate": true,
+      "score_is_calibrated_win_probability": false,
+      "previous_study_threshold": false
+    },
+    {
+      "id": "metrics_threshold_gbm_aug_0.64_unrestricted",
+      "family": "fixed_metrics_confidence_extension",
+      "model": "gbm",
+      "feature_set": "aug",
+      "threshold": 0.64,
+      "regime": "unrestricted",
+      "selection_candidate": true,
+      "score_is_calibrated_win_probability": false,
+      "previous_study_threshold": false
+    },
+    {
+      "id": "metrics_threshold_gbm_aug_0.68_exhaustion",
+      "family": "fixed_metrics_confidence_extension",
+      "model": "gbm",
+      "feature_set": "aug",
+      "threshold": 0.68,
+      "regime": "exhaustion",
+      "selection_candidate": true,
+      "score_is_calibrated_win_probability": false,
+      "previous_study_threshold": false
+    },
+    {
+      "id": "metrics_threshold_gbm_aug_0.68_unrestricted",
+      "family": "fixed_metrics_confidence_extension",
+      "model": "gbm",
+      "feature_set": "aug",
+      "threshold": 0.68,
+      "regime": "unrestricted",
+      "selection_candidate": true,
+      "score_is_calibrated_win_probability": false,
+      "previous_study_threshold": false
+    }
+  ],
+  "matched_controls": [
+    {
+      "id": "metrics_threshold_logistic_base_0.56_exhaustion",
+      "family": "fixed_metrics_confidence_extension",
+      "model": "logistic",
+      "feature_set": "base",
+      "threshold": 0.56,
+      "regime": "exhaustion",
+      "selection_candidate": false,
+      "score_is_calibrated_win_probability": false,
+      "previous_study_threshold": true
+    },
+    {
+      "id": "metrics_threshold_logistic_base_0.56_unrestricted",
+      "family": "fixed_metrics_confidence_extension",
+      "model": "logistic",
+      "feature_set": "base",
+      "threshold": 0.56,
+      "regime": "unrestricted",
+      "selection_candidate": false,
+      "score_is_calibrated_win_probability": false,
+      "previous_study_threshold": true
+    },
+    {
+      "id": "metrics_threshold_logistic_base_0.60_exhaustion",
+      "family": "fixed_metrics_confidence_extension",
+      "model": "logistic",
+      "feature_set": "base",
+      "threshold": 0.6,
+      "regime": "exhaustion",
+      "selection_candidate": false,
+      "score_is_calibrated_win_probability": false,
+      "previous_study_threshold": true
+    },
+    {
+      "id": "metrics_threshold_logistic_base_0.60_unrestricted",
+      "family": "fixed_metrics_confidence_extension",
+      "model": "logistic",
+      "feature_set": "base",
+      "threshold": 0.6,
+      "regime": "unrestricted",
+      "selection_candidate": false,
+      "score_is_calibrated_win_probability": false,
+      "previous_study_threshold": true
+    },
+    {
+      "id": "metrics_threshold_logistic_base_0.64_exhaustion",
+      "family": "fixed_metrics_confidence_extension",
+      "model": "logistic",
+      "feature_set": "base",
+      "threshold": 0.64,
+      "regime": "exhaustion",
+      "selection_candidate": false,
+      "score_is_calibrated_win_probability": false,
+      "previous_study_threshold": false
+    },
+    {
+      "id": "metrics_threshold_logistic_base_0.64_unrestricted",
+      "family": "fixed_metrics_confidence_extension",
+      "model": "logistic",
+      "feature_set": "base",
+      "threshold": 0.64,
+      "regime": "unrestricted",
+      "selection_candidate": false,
+      "score_is_calibrated_win_probability": false,
+      "previous_study_threshold": false
+    },
+    {
+      "id": "metrics_threshold_logistic_base_0.68_exhaustion",
+      "family": "fixed_metrics_confidence_extension",
+      "model": "logistic",
+      "feature_set": "base",
+      "threshold": 0.68,
+      "regime": "exhaustion",
+      "selection_candidate": false,
+      "score_is_calibrated_win_probability": false,
+      "previous_study_threshold": false
+    },
+    {
+      "id": "metrics_threshold_logistic_base_0.68_unrestricted",
+      "family": "fixed_metrics_confidence_extension",
+      "model": "logistic",
+      "feature_set": "base",
+      "threshold": 0.68,
+      "regime": "unrestricted",
+      "selection_candidate": false,
+      "score_is_calibrated_win_probability": false,
+      "previous_study_threshold": false
+    },
+    {
+      "id": "metrics_threshold_gbm_base_0.56_exhaustion",
+      "family": "fixed_metrics_confidence_extension",
+      "model": "gbm",
+      "feature_set": "base",
+      "threshold": 0.56,
+      "regime": "exhaustion",
+      "selection_candidate": false,
+      "score_is_calibrated_win_probability": false,
+      "previous_study_threshold": true
+    },
+    {
+      "id": "metrics_threshold_gbm_base_0.56_unrestricted",
+      "family": "fixed_metrics_confidence_extension",
+      "model": "gbm",
+      "feature_set": "base",
+      "threshold": 0.56,
+      "regime": "unrestricted",
+      "selection_candidate": false,
+      "score_is_calibrated_win_probability": false,
+      "previous_study_threshold": true
+    },
+    {
+      "id": "metrics_threshold_gbm_base_0.60_exhaustion",
+      "family": "fixed_metrics_confidence_extension",
+      "model": "gbm",
+      "feature_set": "base",
+      "threshold": 0.6,
+      "regime": "exhaustion",
+      "selection_candidate": false,
+      "score_is_calibrated_win_probability": false,
+      "previous_study_threshold": true
+    },
+    {
+      "id": "metrics_threshold_gbm_base_0.60_unrestricted",
+      "family": "fixed_metrics_confidence_extension",
+      "model": "gbm",
+      "feature_set": "base",
+      "threshold": 0.6,
+      "regime": "unrestricted",
+      "selection_candidate": false,
+      "score_is_calibrated_win_probability": false,
+      "previous_study_threshold": true
+    },
+    {
+      "id": "metrics_threshold_gbm_base_0.64_exhaustion",
+      "family": "fixed_metrics_confidence_extension",
+      "model": "gbm",
+      "feature_set": "base",
+      "threshold": 0.64,
+      "regime": "exhaustion",
+      "selection_candidate": false,
+      "score_is_calibrated_win_probability": false,
+      "previous_study_threshold": false
+    },
+    {
+      "id": "metrics_threshold_gbm_base_0.64_unrestricted",
+      "family": "fixed_metrics_confidence_extension",
+      "model": "gbm",
+      "feature_set": "base",
+      "threshold": 0.64,
+      "regime": "unrestricted",
+      "selection_candidate": false,
+      "score_is_calibrated_win_probability": false,
+      "previous_study_threshold": false
+    },
+    {
+      "id": "metrics_threshold_gbm_base_0.68_exhaustion",
+      "family": "fixed_metrics_confidence_extension",
+      "model": "gbm",
+      "feature_set": "base",
+      "threshold": 0.68,
+      "regime": "exhaustion",
+      "selection_candidate": false,
+      "score_is_calibrated_win_probability": false,
+      "previous_study_threshold": false
+    },
+    {
+      "id": "metrics_threshold_gbm_base_0.68_unrestricted",
+      "family": "fixed_metrics_confidence_extension",
+      "model": "gbm",
+      "feature_set": "base",
+      "threshold": 0.68,
+      "regime": "unrestricted",
+      "selection_candidate": false,
+      "score_is_calibrated_win_probability": false,
+      "previous_study_threshold": false
+    }
+  ],
+  "selection_candidate_count": 16,
+  "matched_control_count": 16,
+  "total_disclosed_rules": 32,
+  "thresholds": [
+    0.56,
+    0.6,
+    0.64,
+    0.68
+  ],
+  "old_threshold_candidate_count": 8,
+  "new_threshold_candidate_count": 8,
+  "models": {
+    "logistic": {
+      "family": "logistic",
+      "sample_minutes": 30,
+      "parameters": {
+        "C": 0.1,
+        "max_iter": 400,
+        "solver": "lbfgs",
+        "random_state": 17
+      }
+    },
+    "gbm": {
+      "family": "gbm",
+      "sample_minutes": 5,
+      "parameters": {
+        "max_iter": 140,
+        "max_depth": 3,
+        "min_samples_leaf": 300,
+        "l2_regularization": 20.0,
+        "learning_rate": 0.035,
+        "early_stopping": false,
+        "random_state": 17
+      }
+    }
+  },
+  "added_features": [
+    "metrics_oi_log_change_30",
+    "metrics_oi_log_change_60",
+    "metrics_oi_log_change_240",
+    "metrics_log_top_account_ratio",
+    "metrics_log_top_position_ratio",
+    "metrics_log_global_account_ratio",
+    "metrics_log_taker_buy_sell_ratio",
+    "metrics_oi_price_interaction_60"
+  ],
+  "discovery_start_utc": "2024-05-07",
+  "discovery_end_exclusive_utc": "2025-05-07",
+  "validation_end_exclusive_utc": "2026-08-09",
+  "confirmation_end_exclusive_utc": "2026-11-12",
+  "capital": {
+    "payout": 0.85,
+    "fee": 0.0,
+    "initial_bankroll": 1000.0,
+    "stake": 5.0,
+    "max_open_positions": 1,
+    "daily_loss_limit": 25.0,
+    "adverse_bps": 0.0
+  },
+  "known_unavailable_dates": [
+    "2026-01-17",
+    "2026-01-18",
+    "2026-01-19",
+    "2026-01-24",
+    "2026-01-25"
+  ],
+  "selection": "Exactly once on discovery: >=500 decisive, >=100 each BTC/ETH, >=58% point win, positive net; maximum Bonferroni-Wilson lower over16 augmented candidates, lexical tie. Controls never selected.",
+  "later_gates": "Validation>=400 and confirmation>=100, each>=58% and positive; continuous weekly win lower>1/1.85 and weekly net lower>0; all fits converged and training labels strictly settled.",
+  "execution_gates": "2bp adverse-entry net positive and minimum settled bankroll>=5 in validation,confirmation,continuous later periods.",
+  "incremental_gate": "Selected-minus-exact-control continuous weekly net lower95>0 is a separate incremental-evidence flag.",
+  "cache_policy": "Numeric completed stage7 predictions only; verify exact source/identity/paired row-label proof/SHA contracts. No training, raw feature reload, network or cache writes.",
+  "later_read_barrier": "Stage7 complete result must exist and validate frozen source/plan before any later cache is evaluated.",
+  "stage7_plan_sha256": "9a22ee98ed75b9a8004d8d8c0bd40e897dfb6756c7b3dc4e9f076cab9d92efd9",
+  "stage7_source_sha256": "4786a7be51fac549a3b30ebd6575e8dcb75f870d57df08dbcea807b383142f2b",
+  "rules_source_sha256": "a684241217cd0311b29a5ea6fb63052120975101dd192a4d91d1f769e80c76e0",
+  "evaluator_source_policy": "Freeze evaluator implementation hash in a separate implementation record before opening discovery cache; never overwrite this plan.",
+  "prior_related_search": true,
+  "historical_data_previously_researched": true,
+  "pristine_holdout": false,
+  "forward_validated": false,
+  "post_selection_changes_allowed": false,
+  "later_winner_reselection_allowed": false,
+  "local_only": true,
+  "publish_or_deploy": false,
+  "live_approved": false,
+  "metrics_availability_assumption": {
+    "record_delay_minutes": 10,
+    "available_age_minutes": "[0,5)",
+    "point_in_time_proven": false
+  },
+  "frozen_at_utc": "2026-11-13T03:51:02.626437+00:00"
+}

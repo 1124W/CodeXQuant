@@ -1,0 +1,115 @@
+{
+  "version": 1,
+  "discovery_start_utc": "2024-05-07",
+  "discovery_end_exclusive_utc": "2025-05-07",
+  "validation_end_exclusive_utc": "2026-08-09",
+  "confirmation_end_exclusive_utc": "2026-11-12",
+  "symbols": [
+    "BTCUSDT",
+    "ETHUSDT"
+  ],
+  "scan_minutes": 1,
+  "holding_minutes": 30,
+  "entry_delay_minutes": 1,
+  "model": "unchanged60feature regularized logistic",
+  "train_days": 180,
+  "refit_days": 30,
+  "training_sample_minutes": 30,
+  "score_is_calibrated_probability": false,
+  "rules": [
+    {
+      "id": "baseline",
+      "label": "原始分钟反转规则"
+    },
+    {
+      "id": "score_058",
+      "label": "方向分数至少0.58",
+      "threshold": 0.58
+    },
+    {
+      "id": "score_060",
+      "label": "方向分数至少0.60",
+      "threshold": 0.6
+    },
+    {
+      "id": "score_062",
+      "label": "方向分数至少0.62",
+      "threshold": 0.62
+    },
+    {
+      "id": "score_064",
+      "label": "方向分数至少0.64",
+      "threshold": 0.64
+    },
+    {
+      "id": "volatility_cap_100",
+      "label": "短期波动不高于60分钟波动"
+    },
+    {
+      "id": "exhaustion_150",
+      "label": "60分钟标准化偏离至少1.5"
+    },
+    {
+      "id": "avoid_strong_opposing_trend",
+      "label": "避开强烈反向4小时趋势"
+    },
+    {
+      "id": "align_4h_trend",
+      "label": "与4小时趋势同向"
+    },
+    {
+      "id": "price_turn_3m",
+      "label": "近3分钟价格确认反转"
+    },
+    {
+      "id": "flow_turn",
+      "label": "短期主动买卖流确认反转"
+    },
+    {
+      "id": "candle_confirmation",
+      "label": "最新分钟收盘位置确认方向"
+    },
+    {
+      "id": "peer_flow_confirmation",
+      "label": "另一币种主动买卖流同向"
+    },
+    {
+      "id": "contrarian_premium",
+      "label": "溢价方向支持反向交易"
+    },
+    {
+      "id": "persistent_2m",
+      "label": "连续两分钟同方向满足原始规则"
+    },
+    {
+      "id": "price_and_flow_turn",
+      "label": "3分钟价格与主动买卖流同时确认"
+    }
+  ],
+  "candidate_count": 16,
+  "selection": "discovery only; minimum500 accepted decisive trades and100perasset; maximum Bonferroni-Wilson lower bound; lexical tie break",
+  "minimum_validation_trades": 400,
+  "minimum_confirmation_trades": 100,
+  "target_win_rate": 0.58,
+  "capital": {
+    "payout": 0.85,
+    "fee": 0.0,
+    "initial_bankroll": 1000.0,
+    "stake": 5.0,
+    "max_open_positions": 1,
+    "daily_loss_limit": 25.0,
+    "adverse_bps": 0.0
+  },
+  "simulation": "signal-time pending-risk reservation; settle only expiry<signal",
+  "all_filter_signals_resimulated": true,
+  "joint_asset_feature_availability_required": true,
+  "post_selection_tuning_allowed": false,
+  "historical_data_previously_researched": true,
+  "pristine_holdout": false,
+  "forward_validation": false,
+  "local_only": true,
+  "publish_or_deploy": false,
+  "chunk_days": 90,
+  "source_sha256": "16ad20bd7b7eb26bd98884c32da5b94e3bcb583d49768919b88d2bca202d80b6",
+  "frozen_at_utc": "2026-11-13T02:26:25.129352+00:00"
+}

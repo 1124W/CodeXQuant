@@ -1,0 +1,12 @@
+{
+  "plan_sha256": "e77799ca90fc813e09eda242a6f0e52d6c89d567fb733a7cb651dc41501987b4",
+  "implementation_sha256": "9b5d27cca189dba0e3abf70136106f53ebc0af70bd09a72be7827e2f1ebe9ccd",
+  "source_identities": {
+    "feature_store_identity": "23bca3789809ec41f920ec3b9ef5afde5f7357792f4c980b5ee94fe0f82eed71",
+    "metrics_store_identity": "c3b8c697793937080d50601068e67377561bedb7094f76894ac3e82cca2a407f",
+    "base_manifest_sha256": "859f29b5271cba05da45021292effb016f6082e0c5132ae9431cba326ae809a6",
+    "metrics_manifest_sha256": "a241aa55bb3f647e7cf3ed0f76aade1a5e8701bff3042f89d6854bd45433516d"
+  },
+  "cache_policy": "read-only validated numeric arrays; no fit path or fallback",
+  "frozen_at_utc": "2026-11-13T03:53:59.313913+00:00"
+}

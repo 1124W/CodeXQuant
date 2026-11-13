@@ -1,0 +1,279 @@
+{
+  "version": 1,
+  "rules": [
+    {
+      "id": "metrics_logistic_aug_0.56_exhaustion",
+      "family": "metrics_feature_ablation",
+      "model": "logistic",
+      "feature_set": "aug",
+      "threshold": 0.56,
+      "regime": "exhaustion",
+      "selection_candidate": true,
+      "score_is_calibrated_win_probability": false,
+      "label": "logistic / 60+8持仓特征 / 分数≥0.56 / exhaustion"
+    },
+    {
+      "id": "metrics_logistic_aug_0.56_unrestricted",
+      "family": "metrics_feature_ablation",
+      "model": "logistic",
+      "feature_set": "aug",
+      "threshold": 0.56,
+      "regime": "unrestricted",
+      "selection_candidate": true,
+      "score_is_calibrated_win_probability": false,
+      "label": "logistic / 60+8持仓特征 / 分数≥0.56 / unrestricted"
+    },
+    {
+      "id": "metrics_logistic_aug_0.60_exhaustion",
+      "family": "metrics_feature_ablation",
+      "model": "logistic",
+      "feature_set": "aug",
+      "threshold": 0.6,
+      "regime": "exhaustion",
+      "selection_candidate": true,
+      "score_is_calibrated_win_probability": false,
+      "label": "logistic / 60+8持仓特征 / 分数≥0.60 / exhaustion"
+    },
+    {
+      "id": "metrics_logistic_aug_0.60_unrestricted",
+      "family": "metrics_feature_ablation",
+      "model": "logistic",
+      "feature_set": "aug",
+      "threshold": 0.6,
+      "regime": "unrestricted",
+      "selection_candidate": true,
+      "score_is_calibrated_win_probability": false,
+      "label": "logistic / 60+8持仓特征 / 分数≥0.60 / unrestricted"
+    },
+    {
+      "id": "metrics_gbm_aug_0.56_exhaustion",
+      "family": "metrics_feature_ablation",
+      "model": "gbm",
+      "feature_set": "aug",
+      "threshold": 0.56,
+      "regime": "exhaustion",
+      "selection_candidate": true,
+      "score_is_calibrated_win_probability": false,
+      "label": "gbm / 60+8持仓特征 / 分数≥0.56 / exhaustion"
+    },
+    {
+      "id": "metrics_gbm_aug_0.56_unrestricted",
+      "family": "metrics_feature_ablation",
+      "model": "gbm",
+      "feature_set": "aug",
+      "threshold": 0.56,
+      "regime": "unrestricted",
+      "selection_candidate": true,
+      "score_is_calibrated_win_probability": false,
+      "label": "gbm / 60+8持仓特征 / 分数≥0.56 / unrestricted"
+    },
+    {
+      "id": "metrics_gbm_aug_0.60_exhaustion",
+      "family": "metrics_feature_ablation",
+      "model": "gbm",
+      "feature_set": "aug",
+      "threshold": 0.6,
+      "regime": "exhaustion",
+      "selection_candidate": true,
+      "score_is_calibrated_win_probability": false,
+      "label": "gbm / 60+8持仓特征 / 分数≥0.60 / exhaustion"
+    },
+    {
+      "id": "metrics_gbm_aug_0.60_unrestricted",
+      "family": "metrics_feature_ablation",
+      "model": "gbm",
+      "feature_set": "aug",
+      "threshold": 0.6,
+      "regime": "unrestricted",
+      "selection_candidate": true,
+      "score_is_calibrated_win_probability": false,
+      "label": "gbm / 60+8持仓特征 / 分数≥0.60 / unrestricted"
+    }
+  ],
+  "matched_controls": [
+    {
+      "id": "metrics_logistic_base_0.56_exhaustion",
+      "family": "metrics_feature_ablation",
+      "model": "logistic",
+      "feature_set": "base",
+      "threshold": 0.56,
+      "regime": "exhaustion",
+      "selection_candidate": false,
+      "score_is_calibrated_win_probability": false,
+      "label": "logistic / 60特征配对对照 / 分数≥0.56 / exhaustion"
+    },
+    {
+      "id": "metrics_logistic_base_0.56_unrestricted",
+      "family": "metrics_feature_ablation",
+      "model": "logistic",
+      "feature_set": "base",
+      "threshold": 0.56,
+      "regime": "unrestricted",
+      "selection_candidate": false,
+      "score_is_calibrated_win_probability": false,
+      "label": "logistic / 60特征配对对照 / 分数≥0.56 / unrestricted"
+    },
+    {
+      "id": "metrics_logistic_base_0.60_exhaustion",
+      "family": "metrics_feature_ablation",
+      "model": "logistic",
+      "feature_set": "base",
+      "threshold": 0.6,
+      "regime": "exhaustion",
+      "selection_candidate": false,
+      "score_is_calibrated_win_probability": false,
+      "label": "logistic / 60特征配对对照 / 分数≥0.60 / exhaustion"
+    },
+    {
+      "id": "metrics_logistic_base_0.60_unrestricted",
+      "family": "metrics_feature_ablation",
+      "model": "logistic",
+      "feature_set": "base",
+      "threshold": 0.6,
+      "regime": "unrestricted",
+      "selection_candidate": false,
+      "score_is_calibrated_win_probability": false,
+      "label": "logistic / 60特征配对对照 / 分数≥0.60 / unrestricted"
+    },
+    {
+      "id": "metrics_gbm_base_0.56_exhaustion",
+      "family": "metrics_feature_ablation",
+      "model": "gbm",
+      "feature_set": "base",
+      "threshold": 0.56,
+      "regime": "exhaustion",
+      "selection_candidate": false,
+      "score_is_calibrated_win_probability": false,
+      "label": "gbm / 60特征配对对照 / 分数≥0.56 / exhaustion"
+    },
+    {
+      "id": "metrics_gbm_base_0.56_unrestricted",
+      "family": "metrics_feature_ablation",
+      "model": "gbm",
+      "feature_set": "base",
+      "threshold": 0.56,
+      "regime": "unrestricted",
+      "selection_candidate": false,
+      "score_is_calibrated_win_probability": false,
+      "label": "gbm / 60特征配对对照 / 分数≥0.56 / unrestricted"
+    },
+    {
+      "id": "metrics_gbm_base_0.60_exhaustion",
+      "family": "metrics_feature_ablation",
+      "model": "gbm",
+      "feature_set": "base",
+      "threshold": 0.6,
+      "regime": "exhaustion",
+      "selection_candidate": false,
+      "score_is_calibrated_win_probability": false,
+      "label": "gbm / 60特征配对对照 / 分数≥0.60 / exhaustion"
+    },
+    {
+      "id": "metrics_gbm_base_0.60_unrestricted",
+      "family": "metrics_feature_ablation",
+      "model": "gbm",
+      "feature_set": "base",
+      "threshold": 0.6,
+      "regime": "unrestricted",
+      "selection_candidate": false,
+      "score_is_calibrated_win_probability": false,
+      "label": "gbm / 60特征配对对照 / 分数≥0.60 / unrestricted"
+    }
+  ],
+  "candidate_count": 8,
+  "selection_candidate_count": 8,
+  "control_count": 8,
+  "total_evaluated_rule_count": 16,
+  "previously_researched_configurations": 113,
+  "models": {
+    "logistic": {
+      "family": "logistic",
+      "sample_minutes": 30,
+      "parameters": {
+        "C": 0.1,
+        "max_iter": 400,
+        "solver": "lbfgs",
+        "random_state": 17
+      }
+    },
+    "gbm": {
+      "family": "gbm",
+      "sample_minutes": 5,
+      "parameters": {
+        "max_iter": 140,
+        "max_depth": 3,
+        "min_samples_leaf": 300,
+        "l2_regularization": 20.0,
+        "learning_rate": 0.035,
+        "early_stopping": false,
+        "random_state": 17
+      }
+    }
+  },
+  "base_feature_count": 60,
+  "added_features": [
+    "metrics_oi_log_change_30",
+    "metrics_oi_log_change_60",
+    "metrics_oi_log_change_240",
+    "metrics_log_top_account_ratio",
+    "metrics_log_top_position_ratio",
+    "metrics_log_global_account_ratio",
+    "metrics_log_taker_buy_sell_ratio",
+    "metrics_oi_price_interaction_60"
+  ],
+  "hypothesis": "Position build/unwind and trader positioning provide information absent from price/volume/premium/funding features.",
+  "discovery_start_utc": "2024-05-07",
+  "discovery_end_exclusive_utc": "2025-05-07",
+  "validation_end_exclusive_utc": "2026-08-09",
+  "confirmation_end_exclusive_utc": "2026-11-12",
+  "symbols": [
+    "BTCUSDT",
+    "ETHUSDT"
+  ],
+  "entry_delay_minutes": 1,
+  "holding_minutes": 30,
+  "scan_minutes": 1,
+  "train_days": 180,
+  "refit_days": 30,
+  "metrics_availability_assumption": {
+    "record_lag_minutes": 10,
+    "available_age_minutes_inclusive_min": 0,
+    "available_age_minutes_exclusive_max": 5,
+    "point_in_time_proven": false,
+    "stock_change_endpoints": "Exact timestamps; missing intermediate snapshots do not invent or change stock endpoints.",
+    "raw_warmup_policy": "Clamp to fixed 2023-11-09 coverage; incomplete first 4h10m drops from both paired fits."
+  },
+  "paired_ablation": "Per model, both feature arms share exact training timestamp/label hashes and identical inference rows; same estimator, parameters, seed and settled-label purge.",
+  "selection": "Eight augmented rules only; discovery >=500 decisive, >=100 each asset, >=58% win and positive net; maximum Bonferroni-Wilson lower over eight then lexical ID.",
+  "baseline_policy": "The selected candidate is compared only with its same-model/threshold/regime base60 control fitted in the same paired cache.",
+  "incremental_evidence": "Separate historical flag requires selected-minus-control weekly net lower95 >0; profitability alone is not evidence that metrics add information.",
+  "execution_robustness_gates": "Selected 2bp adverse-entry net positive in validation, confirmation and continuous later history; each stressed bankroll must still fund one stake.",
+  "later_disclosure": "All eight augmented candidates and eight matched controls, including continuous2bp stresses; no later reselection.",
+  "feature_policy": "Read-only verified existing base feature store and completed verified metrics archive; never download or rebuild in this runner.",
+  "known_unavailable_dates": [
+    "2026-01-17",
+    "2026-01-18",
+    "2026-01-19",
+    "2026-01-24",
+    "2026-01-25"
+  ],
+  "calendar_applies_to_both_arms": true,
+  "joint_asset_feature_availability_required": true,
+  "capital": {
+    "payout": 0.85,
+    "fee": 0.0,
+    "initial_bankroll": 1000.0,
+    "stake": 5.0,
+    "max_open_positions": 1,
+    "daily_loss_limit": 25.0,
+    "adverse_bps": 0.0
+  },
+  "historical_data_previously_researched": true,
+  "pristine_holdout": false,
+  "forward_validated": false,
+  "post_selection_changes_allowed": false,
+  "local_only": true,
+  "publish_or_deploy": false,
+  "source_sha256": "4786a7be51fac549a3b30ebd6575e8dcb75f870d57df08dbcea807b383142f2b",
+  "frozen_at_utc": "2026-11-13T03:45:18.763038+00:00"
+}

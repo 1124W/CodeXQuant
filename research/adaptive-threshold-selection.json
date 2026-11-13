@@ -1,0 +1,620 @@
+{
+  "selected_rule": null,
+  "ranking": [
+    {
+      "rule": {
+        "id": "adaptive_logistic_halfhour_90d_exhaustion",
+        "family": "weekly_adaptive_threshold",
+        "model": "logistic_halfhour",
+        "lookback_days": 90,
+        "regime": "exhaustion",
+        "thresholds": [
+          0.56,
+          0.6,
+          0.64,
+          0.68
+        ],
+        "min_decisive": 120,
+        "target_win_rate": 0.58,
+        "break_even": 0.5405405405405405,
+        "one_sided_alpha": 0.05,
+        "within_week_comparisons": 8,
+        "sample_minutes": 30,
+        "update_weekday_utc": "Monday",
+        "score_is_calibrated_win_probability": false,
+        "label": "logistic_halfhour / 90天已结算样本 / 每周自适应门槛 / exhaustion"
+      },
+      "discovery": {
+        "signals": 84,
+        "wins": 53,
+        "losses": 31,
+        "refunds": 0,
+        "decisive_trades": 84,
+        "win_rate": 0.6309523809523809,
+        "per_day": 0.45652173913043476,
+        "win_rate_lower_95": 0.5241504160580661,
+        "win_rate_upper_95": 0.7263003954025629,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": 70.25,
+        "max_drawdown_units": 22.25,
+        "profit_factor": 1.4532258064516128,
+        "expectancy_per_trade": 0.8363095238095238,
+        "raw_opportunities": 963,
+        "by_symbol_counts": {
+          "BTCUSDT": 0,
+          "ETHUSDT": 84
+        }
+      },
+      "eligible": false,
+      "adjusted_lower": null
+    },
+    {
+      "rule": {
+        "id": "adaptive_logistic_halfhour_90d_unrestricted",
+        "family": "weekly_adaptive_threshold",
+        "model": "logistic_halfhour",
+        "lookback_days": 90,
+        "regime": "unrestricted",
+        "thresholds": [
+          0.56,
+          0.6,
+          0.64,
+          0.68
+        ],
+        "min_decisive": 120,
+        "target_win_rate": 0.58,
+        "break_even": 0.5405405405405405,
+        "one_sided_alpha": 0.05,
+        "within_week_comparisons": 8,
+        "sample_minutes": 30,
+        "update_weekday_utc": "Monday",
+        "score_is_calibrated_win_probability": false,
+        "label": "logistic_halfhour / 90天已结算样本 / 每周自适应门槛 / unrestricted"
+      },
+      "discovery": {
+        "signals": 0,
+        "wins": 0,
+        "losses": 0,
+        "refunds": 0,
+        "decisive_trades": 0,
+        "win_rate": null,
+        "per_day": 0.0,
+        "win_rate_lower_95": null,
+        "win_rate_upper_95": null,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": null,
+        "net_units": 0.0,
+        "max_drawdown_units": 0.0,
+        "profit_factor": null,
+        "expectancy_per_trade": null,
+        "raw_opportunities": 0,
+        "by_symbol_counts": {
+          "BTCUSDT": 0,
+          "ETHUSDT": 0
+        }
+      },
+      "eligible": false,
+      "adjusted_lower": null
+    },
+    {
+      "rule": {
+        "id": "adaptive_logistic_halfhour_180d_exhaustion",
+        "family": "weekly_adaptive_threshold",
+        "model": "logistic_halfhour",
+        "lookback_days": 180,
+        "regime": "exhaustion",
+        "thresholds": [
+          0.56,
+          0.6,
+          0.64,
+          0.68
+        ],
+        "min_decisive": 120,
+        "target_win_rate": 0.58,
+        "break_even": 0.5405405405405405,
+        "one_sided_alpha": 0.05,
+        "within_week_comparisons": 8,
+        "sample_minutes": 30,
+        "update_weekday_utc": "Monday",
+        "score_is_calibrated_win_probability": false,
+        "label": "logistic_halfhour / 180天已结算样本 / 每周自适应门槛 / exhaustion"
+      },
+      "discovery": {
+        "signals": 226,
+        "wins": 126,
+        "losses": 100,
+        "refunds": 0,
+        "decisive_trades": 226,
+        "win_rate": 0.5575221238938053,
+        "per_day": 1.2282608695652173,
+        "win_rate_lower_95": 0.4923411417128877,
+        "win_rate_upper_95": 0.6207802427536319,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": 35.5,
+        "max_drawdown_units": 67.75,
+        "profit_factor": 1.071,
+        "expectancy_per_trade": 0.1570796460176991,
+        "raw_opportunities": 2491,
+        "by_symbol_counts": {
+          "BTCUSDT": 0,
+          "ETHUSDT": 226
+        }
+      },
+      "eligible": false,
+      "adjusted_lower": null
+    },
+    {
+      "rule": {
+        "id": "adaptive_logistic_halfhour_180d_unrestricted",
+        "family": "weekly_adaptive_threshold",
+        "model": "logistic_halfhour",
+        "lookback_days": 180,
+        "regime": "unrestricted",
+        "thresholds": [
+          0.56,
+          0.6,
+          0.64,
+          0.68
+        ],
+        "min_decisive": 120,
+        "target_win_rate": 0.58,
+        "break_even": 0.5405405405405405,
+        "one_sided_alpha": 0.05,
+        "within_week_comparisons": 8,
+        "sample_minutes": 30,
+        "update_weekday_utc": "Monday",
+        "score_is_calibrated_win_probability": false,
+        "label": "logistic_halfhour / 180天已结算样本 / 每周自适应门槛 / unrestricted"
+      },
+      "discovery": {
+        "signals": 0,
+        "wins": 0,
+        "losses": 0,
+        "refunds": 0,
+        "decisive_trades": 0,
+        "win_rate": null,
+        "per_day": 0.0,
+        "win_rate_lower_95": null,
+        "win_rate_upper_95": null,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": null,
+        "net_units": 0.0,
+        "max_drawdown_units": 0.0,
+        "profit_factor": null,
+        "expectancy_per_trade": null,
+        "raw_opportunities": 0,
+        "by_symbol_counts": {
+          "BTCUSDT": 0,
+          "ETHUSDT": 0
+        }
+      },
+      "eligible": false,
+      "adjusted_lower": null
+    },
+    {
+      "rule": {
+        "id": "adaptive_logistic_1m_90d_exhaustion",
+        "family": "weekly_adaptive_threshold",
+        "model": "logistic_1m",
+        "lookback_days": 90,
+        "regime": "exhaustion",
+        "thresholds": [
+          0.56,
+          0.6,
+          0.64,
+          0.68
+        ],
+        "min_decisive": 120,
+        "target_win_rate": 0.58,
+        "break_even": 0.5405405405405405,
+        "one_sided_alpha": 0.05,
+        "within_week_comparisons": 8,
+        "sample_minutes": 30,
+        "update_weekday_utc": "Monday",
+        "score_is_calibrated_win_probability": false,
+        "label": "logistic_1m / 90天已结算样本 / 每周自适应门槛 / exhaustion"
+      },
+      "discovery": {
+        "signals": 258,
+        "wins": 150,
+        "losses": 108,
+        "refunds": 0,
+        "decisive_trades": 258,
+        "win_rate": 0.5813953488372093,
+        "per_day": 1.4021739130434783,
+        "win_rate_lower_95": 0.5204341870728209,
+        "win_rate_upper_95": 0.6399681324974846,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": 97.5,
+        "max_drawdown_units": 71.0,
+        "profit_factor": 1.1805555555555556,
+        "expectancy_per_trade": 0.37790697674418605,
+        "raw_opportunities": 2694,
+        "by_symbol_counts": {
+          "BTCUSDT": 0,
+          "ETHUSDT": 258
+        }
+      },
+      "eligible": false,
+      "adjusted_lower": null
+    },
+    {
+      "rule": {
+        "id": "adaptive_logistic_1m_90d_unrestricted",
+        "family": "weekly_adaptive_threshold",
+        "model": "logistic_1m",
+        "lookback_days": 90,
+        "regime": "unrestricted",
+        "thresholds": [
+          0.56,
+          0.6,
+          0.64,
+          0.68
+        ],
+        "min_decisive": 120,
+        "target_win_rate": 0.58,
+        "break_even": 0.5405405405405405,
+        "one_sided_alpha": 0.05,
+        "within_week_comparisons": 8,
+        "sample_minutes": 30,
+        "update_weekday_utc": "Monday",
+        "score_is_calibrated_win_probability": false,
+        "label": "logistic_1m / 90天已结算样本 / 每周自适应门槛 / unrestricted"
+      },
+      "discovery": {
+        "signals": 287,
+        "wins": 147,
+        "losses": 140,
+        "refunds": 0,
+        "decisive_trades": 287,
+        "win_rate": 0.5121951219512195,
+        "per_day": 1.559782608695652,
+        "win_rate_lower_95": 0.45458665159475053,
+        "win_rate_upper_95": 0.56948143220069,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": -75.25,
+        "max_drawdown_units": 83.0,
+        "profit_factor": 0.8925,
+        "expectancy_per_trade": -0.2621951219512195,
+        "raw_opportunities": 8185,
+        "by_symbol_counts": {
+          "BTCUSDT": 214,
+          "ETHUSDT": 73
+        }
+      },
+      "eligible": false,
+      "adjusted_lower": null
+    },
+    {
+      "rule": {
+        "id": "adaptive_logistic_1m_180d_exhaustion",
+        "family": "weekly_adaptive_threshold",
+        "model": "logistic_1m",
+        "lookback_days": 180,
+        "regime": "exhaustion",
+        "thresholds": [
+          0.56,
+          0.6,
+          0.64,
+          0.68
+        ],
+        "min_decisive": 120,
+        "target_win_rate": 0.58,
+        "break_even": 0.5405405405405405,
+        "one_sided_alpha": 0.05,
+        "within_week_comparisons": 8,
+        "sample_minutes": 30,
+        "update_weekday_utc": "Monday",
+        "score_is_calibrated_win_probability": false,
+        "label": "logistic_1m / 180天已结算样本 / 每周自适应门槛 / exhaustion"
+      },
+      "discovery": {
+        "signals": 0,
+        "wins": 0,
+        "losses": 0,
+        "refunds": 0,
+        "decisive_trades": 0,
+        "win_rate": null,
+        "per_day": 0.0,
+        "win_rate_lower_95": null,
+        "win_rate_upper_95": null,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": null,
+        "net_units": 0.0,
+        "max_drawdown_units": 0.0,
+        "profit_factor": null,
+        "expectancy_per_trade": null,
+        "raw_opportunities": 0,
+        "by_symbol_counts": {
+          "BTCUSDT": 0,
+          "ETHUSDT": 0
+        }
+      },
+      "eligible": false,
+      "adjusted_lower": null
+    },
+    {
+      "rule": {
+        "id": "adaptive_logistic_1m_180d_unrestricted",
+        "family": "weekly_adaptive_threshold",
+        "model": "logistic_1m",
+        "lookback_days": 180,
+        "regime": "unrestricted",
+        "thresholds": [
+          0.56,
+          0.6,
+          0.64,
+          0.68
+        ],
+        "min_decisive": 120,
+        "target_win_rate": 0.58,
+        "break_even": 0.5405405405405405,
+        "one_sided_alpha": 0.05,
+        "within_week_comparisons": 8,
+        "sample_minutes": 30,
+        "update_weekday_utc": "Monday",
+        "score_is_calibrated_win_probability": false,
+        "label": "logistic_1m / 180天已结算样本 / 每周自适应门槛 / unrestricted"
+      },
+      "discovery": {
+        "signals": 144,
+        "wins": 73,
+        "losses": 71,
+        "refunds": 0,
+        "decisive_trades": 144,
+        "win_rate": 0.5069444444444444,
+        "per_day": 0.782608695652174,
+        "win_rate_lower_95": 0.42617292171311405,
+        "win_rate_upper_95": 0.5873550704081834,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": -44.75,
+        "max_drawdown_units": 72.75,
+        "profit_factor": 0.8739436619718309,
+        "expectancy_per_trade": -0.3107638888888889,
+        "raw_opportunities": 3648,
+        "by_symbol_counts": {
+          "BTCUSDT": 144,
+          "ETHUSDT": 0
+        }
+      },
+      "eligible": false,
+      "adjusted_lower": null
+    },
+    {
+      "rule": {
+        "id": "adaptive_gbm_deeper_5m_90d_exhaustion",
+        "family": "weekly_adaptive_threshold",
+        "model": "gbm_deeper_5m",
+        "lookback_days": 90,
+        "regime": "exhaustion",
+        "thresholds": [
+          0.56,
+          0.6,
+          0.64,
+          0.68
+        ],
+        "min_decisive": 120,
+        "target_win_rate": 0.58,
+        "break_even": 0.5405405405405405,
+        "one_sided_alpha": 0.05,
+        "within_week_comparisons": 8,
+        "sample_minutes": 30,
+        "update_weekday_utc": "Monday",
+        "score_is_calibrated_win_probability": false,
+        "label": "gbm_deeper_5m / 90天已结算样本 / 每周自适应门槛 / exhaustion"
+      },
+      "discovery": {
+        "signals": 622,
+        "wins": 356,
+        "losses": 266,
+        "refunds": 0,
+        "decisive_trades": 622,
+        "win_rate": 0.572347266881029,
+        "per_day": 3.380434782608696,
+        "win_rate_lower_95": 0.5331392488600978,
+        "win_rate_upper_95": 0.6106671072530147,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": 183.0,
+        "max_drawdown_units": 71.75,
+        "profit_factor": 1.137593984962406,
+        "expectancy_per_trade": 0.2942122186495177,
+        "raw_opportunities": 7908,
+        "by_symbol_counts": {
+          "BTCUSDT": 0,
+          "ETHUSDT": 622
+        }
+      },
+      "eligible": false,
+      "adjusted_lower": null
+    },
+    {
+      "rule": {
+        "id": "adaptive_gbm_deeper_5m_90d_unrestricted",
+        "family": "weekly_adaptive_threshold",
+        "model": "gbm_deeper_5m",
+        "lookback_days": 90,
+        "regime": "unrestricted",
+        "thresholds": [
+          0.56,
+          0.6,
+          0.64,
+          0.68
+        ],
+        "min_decisive": 120,
+        "target_win_rate": 0.58,
+        "break_even": 0.5405405405405405,
+        "one_sided_alpha": 0.05,
+        "within_week_comparisons": 8,
+        "sample_minutes": 30,
+        "update_weekday_utc": "Monday",
+        "score_is_calibrated_win_probability": false,
+        "label": "gbm_deeper_5m / 90天已结算样本 / 每周自适应门槛 / unrestricted"
+      },
+      "discovery": {
+        "signals": 70,
+        "wins": 35,
+        "losses": 35,
+        "refunds": 0,
+        "decisive_trades": 70,
+        "win_rate": 0.5,
+        "per_day": 0.3804347826086957,
+        "win_rate_lower_95": 0.3859551898733622,
+        "win_rate_upper_95": 0.6140448101266378,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": -26.25,
+        "max_drawdown_units": 47.25,
+        "profit_factor": 0.85,
+        "expectancy_per_trade": -0.375,
+        "raw_opportunities": 2635,
+        "by_symbol_counts": {
+          "BTCUSDT": 0,
+          "ETHUSDT": 70
+        }
+      },
+      "eligible": false,
+      "adjusted_lower": null
+    },
+    {
+      "rule": {
+        "id": "adaptive_gbm_deeper_5m_180d_exhaustion",
+        "family": "weekly_adaptive_threshold",
+        "model": "gbm_deeper_5m",
+        "lookback_days": 180,
+        "regime": "exhaustion",
+        "thresholds": [
+          0.56,
+          0.6,
+          0.64,
+          0.68
+        ],
+        "min_decisive": 120,
+        "target_win_rate": 0.58,
+        "break_even": 0.5405405405405405,
+        "one_sided_alpha": 0.05,
+        "within_week_comparisons": 8,
+        "sample_minutes": 30,
+        "update_weekday_utc": "Monday",
+        "score_is_calibrated_win_probability": false,
+        "label": "gbm_deeper_5m / 180天已结算样本 / 每周自适应门槛 / exhaustion"
+      },
+      "discovery": {
+        "signals": 1348,
+        "wins": 759,
+        "losses": 589,
+        "refunds": 0,
+        "decisive_trades": 1348,
+        "win_rate": 0.5630563798219584,
+        "per_day": 7.326086956521739,
+        "win_rate_lower_95": 0.53643534241597,
+        "win_rate_upper_95": 0.5893190359076441,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": 280.75,
+        "max_drawdown_units": 96.75,
+        "profit_factor": 1.0953310696095075,
+        "expectancy_per_trade": 0.20827151335311572,
+        "raw_opportunities": 17805,
+        "by_symbol_counts": {
+          "BTCUSDT": 132,
+          "ETHUSDT": 1216
+        }
+      },
+      "eligible": false,
+      "adjusted_lower": null
+    },
+    {
+      "rule": {
+        "id": "adaptive_gbm_deeper_5m_180d_unrestricted",
+        "family": "weekly_adaptive_threshold",
+        "model": "gbm_deeper_5m",
+        "lookback_days": 180,
+        "regime": "unrestricted",
+        "thresholds": [
+          0.56,
+          0.6,
+          0.64,
+          0.68
+        ],
+        "min_decisive": 120,
+        "target_win_rate": 0.58,
+        "break_even": 0.5405405405405405,
+        "one_sided_alpha": 0.05,
+        "within_week_comparisons": 8,
+        "sample_minutes": 30,
+        "update_weekday_utc": "Monday",
+        "score_is_calibrated_win_probability": false,
+        "label": "gbm_deeper_5m / 180天已结算样本 / 每周自适应门槛 / unrestricted"
+      },
+      "discovery": {
+        "signals": 337,
+        "wins": 194,
+        "losses": 143,
+        "refunds": 0,
+        "decisive_trades": 337,
+        "win_rate": 0.5756676557863502,
+        "per_day": 1.8315217391304348,
+        "win_rate_lower_95": 0.5223369515066937,
+        "win_rate_upper_95": 0.6272926711684726,
+        "block_bootstrap_lower_95": null,
+        "block_bootstrap_upper_95": null,
+        "block_bootstrap_net_lower_95": null,
+        "block_bootstrap_net_upper_95": null,
+        "effective_break_even_win_rate": 0.5405405405405405,
+        "net_units": 109.5,
+        "max_drawdown_units": 49.0,
+        "profit_factor": 1.1531468531468532,
+        "expectancy_per_trade": 0.3249258160237389,
+        "raw_opportunities": 7285,
+        "by_symbol_counts": {
+          "BTCUSDT": 238,
+          "ETHUSDT": 99
+        }
+      },
+      "eligible": false,
+      "adjusted_lower": null
+    }
+  ],
+  "selection_cutoff_ms": 1746576000000,
+  "locked_at_utc": "2026-11-13T03:02:28.846010+00:00",
+  "plan_sha256": "253ebb5bd01733d3002b4ebf913595e47a884d9d68f92105768119705dea9005"
+}
