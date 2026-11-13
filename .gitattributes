@@ -2,6 +2,9 @@
 research/*.json -text whitespace=cr-at-eol
 research/*.csv -text whitespace=cr-at-eol
 research/*.txt -text whitespace=cr-at-eol
+research/**/*.json -text whitespace=cr-at-eol
+research/**/*.csv -text whitespace=cr-at-eol
+research/**/*.txt -text whitespace=cr-at-eol
 # Keep source hashes and shell scripts stable across Windows/Linux checkouts.
 *.py text eol=lf
 *.js text eol=lf

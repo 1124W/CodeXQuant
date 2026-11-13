@@ -132,7 +132,11 @@
     if(!paper || !Number.isFinite(paper.settled))return '等待服务器模拟记录';
     const rate=Number.isFinite(paper.win_rate)?(paper.win_rate*100).toFixed(2)+'%':'暂无已决胜负';
     return paper.settled+' 笔已结算 · '+Number(paper.wins || 0)+' 胜 / '+Number(paper.losses || 0)+' 负 / '+Number(paper.refunds || 0)+' 平 · 胜率 '+rate+
-      (Number.isFinite(paper.net_usdt)?' · '+money(paper.net_usdt):'')+' · '+Number(paper.pending || 0)+' 笔待结算';
+      (Number.isFinite(paper.net_usdt)?' · '+money(paper.net_usdt):'')+' · '+Number(paper.pending || 0)+' 笔待结算'+
+      (Number.isFinite(paper.stake_usdt)?' · 新信号每笔 '+paper.stake_usdt.toFixed(2)+' USDT':'')+
+      (Number.isFinite(paper.daily_loss_limit_usdt)?' · 每日风险 '+paper.daily_loss_limit_usdt.toFixed(2)+' USDT':'')+
+      (Number.isFinite(paper.initial_capital_usdt)?' · 线上模拟初始本金 '+paper.initial_capital_usdt.toFixed(2)+' USDT':'')+
+      ' · 历史按每笔实际模拟金额汇总';
   }
 
   function scanText(scan) {
@@ -258,7 +262,7 @@
           rows.replaceChildren();
           for(const row of state.settlements.filter(row=>SYMBOLS.includes(row.symbol)).slice(0,10)){
             const tr=document.createElement('tr');
-            const values=[row.symbol.slice(0,3)+' '+(row.direction===1?'多':'空'),Number.isFinite(row.entry_ms)?utc(row.entry_ms):'—',Number.isFinite(row.entry_price)?price(row.entry_price):'—',Number.isFinite(row.settlement_ms)?utc(row.settlement_ms):'—',Number.isFinite(row.exit_price)?price(row.exit_price):'—',Number.isFinite(row.net_usdt)?money(row.net_usdt):'待结算'];
+            const values=[row.symbol.slice(0,3)+' '+(row.direction===1?'多':'空'),Number.isFinite(row.entry_ms)?utc(row.entry_ms):'—',Number.isFinite(row.entry_price)?price(row.entry_price):'—',Number.isFinite(row.settlement_ms)?utc(row.settlement_ms):'—',Number.isFinite(row.exit_price)?price(row.exit_price):'—',(Number.isFinite(row.stake_usdt)?row.stake_usdt:5).toFixed(2)+' USDT',Number.isFinite(row.net_usdt)?money(row.net_usdt):'待结算'];
             for(const value of values){const td=document.createElement('td');td.textContent=value;tr.append(td);}rows.append(tr);
           }
         }

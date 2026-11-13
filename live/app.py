@@ -12,12 +12,14 @@ import shutil
 import sqlite3
 import threading
 import time
+from urllib.parse import urlsplit
 
 from flask import Flask,abort,jsonify,send_file
 
 from .market import BinanceMarket,SYMBOLS
 from .notify import WeComNotifier
 from .predictor import Predictor
+from .stakes import PaperSettings,amount_cents,settlement_cents,PAYOUT_BPS
 
 ROOT=Path(__file__).resolve().parents[1]
 MINUTE=60000
@@ -26,8 +28,11 @@ HOUR=3600000
 
 
 class Worker:
-    def __init__(self,model_dir,state_dir,webhook='',market=None):
+    def __init__(self,model_dir,state_dir,webhook='',market=None,paper_settings=None):
         from .history import FeatureHistory
+        self.paper_settings=paper_settings or PaperSettings.from_env()
+        hold_path=os.environ.get('CODEXQUANT_PUBLICATION_HOLD_FILE')
+        self.publication_hold_file=Path(hold_path) if hold_path else None
         self.model_dir=Path(model_dir)
         self.state_dir=Path(state_dir);self.state_dir.mkdir(parents=True,exist_ok=True)
         self.predictor=Predictor(model_dir)
@@ -66,6 +71,26 @@ class Worker:
                 CREATE INDEX IF NOT EXISTS outbox_time ON settlement_outbox(signal_ms DESC);
                 CREATE INDEX IF NOT EXISTS outbox_pending ON settlement_outbox(queued,signal_ms);
             ''')
+            # Keep the original seven-column table intact. Terms live beside
+            # each admission, so old rows and queued notifications retain 5U.
+            con.execute('BEGIN IMMEDIATE')
+            con.execute('''CREATE TABLE IF NOT EXISTS admission_terms (
+                symbol TEXT NOT NULL,signal_ms INTEGER NOT NULL,
+                stake_cents INTEGER NOT NULL DEFAULT 500,
+                payout_bps INTEGER NOT NULL DEFAULT 8500,
+                PRIMARY KEY(symbol,signal_ms))''')
+            con.execute('''INSERT OR IGNORE INTO admission_terms(symbol,signal_ms,stake_cents,payout_bps)
+                SELECT symbol,signal_ms,500,8500 FROM admissions''')
+            con.commit()
+
+    def paper_config(self):
+        if not hasattr(self,'paper_settings'):
+            self.paper_settings=PaperSettings.from_env()
+        return self.paper_settings
+
+    def publication_held(self):
+        path=getattr(self,'publication_hold_file',None)
+        return path is not None and path.exists()
 
     def snapshot(self):
         with self.lock:
@@ -79,6 +104,9 @@ class Worker:
         value['notifications']=self.notifier.status()
         value['scan_stats']=self.scan_stats(now)
         value['paper_performance']=self.paper_performance()
+        value['publication_hold']=self.publication_held()
+        historical=self.historical_research()
+        value['historical_research']={'available':historical is not None,**(historical or {})}
         value['recent_settlements']=self.recent_settlements()
         with self.lock:
             if self.history_status_cache is None or now-self.history_status_at>=MINUTE:
@@ -102,17 +130,65 @@ class Worker:
 
     def paper_performance(self):
         with closing(sqlite3.connect(self.db,isolation_level=None)) as con:
-            rows=con.execute('SELECT outcome,count(*),coalesce(sum(net),0) FROM admissions GROUP BY outcome').fetchall()
-        counts={row[0]:row[1] for row in rows};net=sum(row[2] for row in rows)
+            rows=con.execute('''SELECT a.outcome,a.net,coalesce(t.stake_cents,500)
+                FROM admissions a LEFT JOIN admission_terms t USING(symbol,signal_ms)''').fetchall()
+        counts={};net_cents=0;amounts={}
+        for outcome,net,stake in rows:
+            counts[outcome]=counts.get(outcome,0)+1
+            net_cents+=amount_cents(net or 0)
+            amounts[stake]=amounts.get(stake,0)+1
+        config=self.paper_config().public();net=net_cents/100
         wins=counts.get('win',0);losses=counts.get('loss',0);refunds=counts.get('refund',0)
         return {'total':sum(counts.values()),'settled':wins+losses+refunds,'pending':counts.get(None,0),
                 'wins':wins,'losses':losses,'refunds':refunds,'win_rate':wins/(wins+losses) if wins+losses else None,
-                'net_usdt':net,'balance_usdt':1000+net,'stake_usdt':5,'payout':.85,'source':'forward_paper_simulation'}
+                'net_usdt':net,'balance_usdt':config['initial_capital_usdt']+net,
+                **config,'mixed_stakes':len(amounts)>1,
+                'stake_history':[{'stake_usdt':stake/100,'trades':count} for stake,count in sorted(amounts.items())],
+                'source':'forward_paper_simulation'}
 
     def recent_settlements(self):
         with closing(sqlite3.connect(self.db,isolation_level=None)) as con:
             rows=con.execute('SELECT payload FROM settlement_outbox ORDER BY signal_ms DESC,symbol LIMIT 10').fetchall()
         return [json.loads(row[0]) for row in rows]
+
+    def historical_research(self):
+        """Small, explicit historical disclosure; absence never blocks scanning."""
+        now=time.monotonic()
+        if now-getattr(self,'historical_research_loaded_at',float('-inf'))<60:
+            return getattr(self,'historical_research_cache',None)
+        value=None
+        try:
+            path=ROOT/'research'/'recent-public.json'
+            if path.stat().st_size>16*1024*1024:raise ValueError('Oversized research payload')
+            data=json.loads(path.read_text(encoding='utf-8'))
+            a=data['assumptions'];strategy=data['strategy']
+            stats=data['published']['recent_six_months']['stats']
+            period=next(p for p in data['periods'] if p['id']=='recent_six_months')
+            if (data['schema_version']!=1 or a['default_stake']!=30 or a['initial_capital']!=10000
+                    or a['net_payout']!=.85 or a['fee']!=0
+                    or strategy['is_live_strategy'] is not False or strategy['posthoc'] is not True
+                    or strategy['forward_validated'] is not False):
+                raise ValueError('Unsupported recent research provenance')
+            rate=stats['win_rate'];net=stats['net_usdt']
+            if (not isinstance(stats['signals'],int) or stats['signals']<=0
+                    or not math.isfinite(rate) or not 0<=rate<=1 or not math.isfinite(net)):
+                raise ValueError('Invalid recent research statistics')
+            base=os.environ.get('CODEXQUANT_PUBLIC_BASE_URL','http://38.76.182.201').rstrip('/')
+            url=urlsplit(base)
+            if (url.scheme not in ('http','https') or not url.hostname or url.username or url.password
+                    or url.query or url.fragment or any(c in base for c in '[]()\r\n')):
+                raise ValueError('Invalid public research URL')
+            value={'strategy':strategy['label'],'rule_id':strategy['rule_id'],
+                   'start_utc':period['start_utc'],'end_exclusive_utc':period['end_exclusive_utc'],
+                   'signals':stats['signals'],'win_rate':rate,'net_usdt':net,
+                   'stake_usdt':a['default_stake'],'initial_capital_usdt':a['initial_capital'],
+                   'posthoc':True,'is_live_strategy':False,'forward_validated':False,
+                   'url':base+'/demo/recent.html'}
+        except (OSError,ValueError,KeyError,TypeError,StopIteration):
+            value=None
+        self.historical_research_loaded_at=now
+        self.historical_research_cache=value
+        return value
 
     def _record_decisions(self,decisions):
         with closing(sqlite3.connect(self.db,isolation_level=None)) as con:
@@ -130,20 +206,32 @@ class Worker:
     def admit(self,signal):
         """Causal paper budget: reserve all as-yet-unsettled loss risk at alert time."""
         entry=int(signal['entry_due_ms']);day=entry//86400000
+        if self.publication_held():return False,'research_publication_hold'
+        settings=self.paper_config();stake=settings.stake_cents
         with closing(sqlite3.connect(self.db,isolation_level=None)) as con:
             con.execute('BEGIN IMMEDIATE')
             if con.execute('SELECT 1 FROM admissions WHERE symbol=? AND signal_ms=?',(signal['symbol'],signal['signal_ms'])).fetchone():
                 con.rollback();return False,'duplicate_paper_signal'
-            pending=con.execute('SELECT settlement_ms FROM admissions WHERE outcome IS NULL').fetchall()
+            pending=con.execute('''SELECT a.settlement_ms,coalesce(t.stake_cents,500)
+                FROM admissions a LEFT JOIN admission_terms t USING(symbol,signal_ms)
+                WHERE a.outcome IS NULL''').fetchall()
             if any(row[0]>entry for row in pending):
                 con.rollback();return False,'paper_position_open'
-            loss=con.execute("SELECT count(*) FROM admissions WHERE outcome='loss' AND settlement_ms>=? AND settlement_ms<?",(day*86400000,(day+1)*86400000)).fetchone()[0]*5
-            if loss+len(pending)*5+5>25:
+            reserved=sum(row[1] for row in pending)
+            loss=con.execute('''SELECT coalesce(sum(coalesce(t.stake_cents,500)),0)
+                FROM admissions a LEFT JOIN admission_terms t USING(symbol,signal_ms)
+                WHERE a.outcome='loss' AND a.settlement_ms>=? AND a.settlement_ms<?''',
+                (day*86400000,(day+1)*86400000)).fetchone()[0]
+            if loss+reserved+stake>settings.daily_limit_cents:
                 con.rollback();return False,'paper_daily_risk_budget'
-            net=con.execute('SELECT coalesce(sum(net),0) FROM admissions WHERE outcome IS NOT NULL').fetchone()[0]
-            if 1000+net-len(pending)*5<5:
+            net=sum(amount_cents(row[0]) for row in con.execute('SELECT net FROM admissions WHERE outcome IS NOT NULL'))
+            if settings.initial_capital_cents+net-reserved<stake:
                 con.rollback();return False,'paper_capital_insufficient'
             con.execute('INSERT INTO admissions VALUES (?,?,?,?,?,NULL,NULL)',(signal['symbol'],signal['signal_ms'],entry,signal['expiry_due_ms'],signal['direction']))
+            con.execute('INSERT INTO admission_terms(symbol,signal_ms,stake_cents,payout_bps) VALUES(?,?,?,?)',
+                        (signal['symbol'],signal['signal_ms'],stake,PAYOUT_BPS))
+            signal.update(stake_usdt=stake/100,payout=.85,win_net_usdt=settlement_cents(stake,'win')/100,
+                          loss_net_usdt=-stake/100,daily_loss_limit_usdt=settings.daily_limit_cents/100)
             con.commit();return True,'paper_risk_admitted'
 
     def settle_admission(self,symbol,signal_ms,entry,expiry):
@@ -152,17 +240,24 @@ class Worker:
         entry,expiry=float(entry),float(expiry)
         with closing(sqlite3.connect(self.db,isolation_level=None)) as con:
             con.execute('BEGIN IMMEDIATE')
-            row=con.execute('SELECT direction,entry_ms,settlement_ms,outcome,net FROM admissions WHERE symbol=? AND signal_ms=?',(symbol,signal_ms)).fetchone()
+            row=con.execute('''SELECT a.direction,a.entry_ms,a.settlement_ms,a.outcome,a.net,
+                coalesce(t.stake_cents,500),coalesce(t.payout_bps,8500)
+                FROM admissions a LEFT JOIN admission_terms t USING(symbol,signal_ms)
+                WHERE a.symbol=? AND a.signal_ms=?''',(symbol,signal_ms)).fetchone()
             if not row:return
             change=(expiry-entry)*row[0]
             outcome='win' if change>0 else 'loss' if change<0 else 'refund'
-            net=4.25 if outcome=='win' else -5 if outcome=='loss' else 0
+            net=settlement_cents(row[5],outcome,row[6])/100
             if row[3] is not None and (row[3]!=outcome or row[4]!=net):
                 raise ValueError('Conflicting paper settlement; original result preserved')
             payload={'symbol':symbol,'signal_ms':signal_ms,'entry_ms':row[1],'settlement_ms':row[2],
-                     'direction':row[0],'entry_price':entry,'exit_price':expiry,'outcome':outcome,'net_usdt':net}
+                     'direction':row[0],'entry_price':entry,'exit_price':expiry,'outcome':outcome,'net_usdt':net,
+                     'stake_usdt':row[5]/100,'payout':row[6]/10000}
             old=con.execute('SELECT payload FROM settlement_outbox WHERE symbol=? AND signal_ms=?',(symbol,signal_ms)).fetchone()
-            if old and json.loads(old[0])!=payload:raise ValueError('Conflicting paper execution prices')
+            if old:
+                previous=json.loads(old[0])
+                normalized={**previous,'stake_usdt':previous.get('stake_usdt',5),'payout':previous.get('payout',.85)}
+                if normalized!=payload:raise ValueError('Conflicting paper execution prices')
             con.execute('UPDATE admissions SET outcome=?,net=? WHERE symbol=? AND signal_ms=?',(outcome,net,symbol,signal_ms))
             con.execute('INSERT OR IGNORE INTO settlement_outbox(symbol,signal_ms,payload) VALUES(?,?,?)',
                         (symbol,signal_ms,json.dumps(payload,ensure_ascii=False,allow_nan=False)))
@@ -274,7 +369,8 @@ class Worker:
             if len(quotes)==2 and all(abs(now-quote['price_time_ms'])<=30000 for quote in quotes.values()):
                 self.notifier.send_price_report(quotes,hour)
             self.notifier.send_research_report({'scan_stats':self.scan_stats(hour),
-                'paper_performance':self.paper_performance(),'prediction_error':prediction_error},hour)
+                'paper_performance':self.paper_performance(),'prediction_error':prediction_error,
+                'historical_research':self.historical_research()},hour)
         self.notifier.retry_pending(limit=3)
         slot=now//MINUTE*MINUTE
         # Preserve the simulator's expiry < signal rule during admission. Once
@@ -345,18 +441,19 @@ def create_app(worker=None):
     def index():return send_file(ROOT/'index.html')
     @app.get('/demo/<name>')
     def demo(name):
-        if name not in ('trades.html','quantdinger.html','research.html'):abort(404)
+        if name not in ('trades.html','quantdinger.html','research.html','recent.html'):abort(404)
         return send_file(ROOT/'demo'/name)
     @app.get('/<name>')
     def asset(name):
         if name not in ('app.js','styles.css','research.js','workbuddy.js','trade-view.js',
-                        'research-view.js','research-view.css'):abort(404)
+                        'research-view.js','research-view.css','recent-view.js','recent-view.css'):abort(404)
         return send_file(ROOT/name)
     @app.get('/research/<name>')
     def report(name):
         if name not in ('trade-chart-data.json','workbuddy-results.json','workbuddy-trades.csv',
                         'event-results.json','event-trades.csv','results.json','derivative-study-results.json',
-                        'minute-scan-results.json','high-win-public.json','high-win-public-trades.csv'):abort(404)
+                        'minute-scan-results.json','high-win-public.json','high-win-public-trades.csv',
+                        'recent-public.json','recent-public-trades.csv'):abort(404)
         return send_file(ROOT/'research'/name)
     return app
 

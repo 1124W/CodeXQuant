@@ -1,0 +1,134 @@
+{
+  "version": 1,
+  "created_at_utc": "2026-11-13T07:01:25.646168+00:00",
+  "base_report": "research/recent-window-2026-11-12/results.json",
+  "base_report_sha256": "cfcfdceec1cba9fb64812750eedab962147f5b247976de9c0d71f41c708461f5",
+  "base_plan_sha256": "2c3c2b6802ed5fd343331be6be7bcc2b0347fa3f0db5fc64fb95eb35ec0b2985",
+  "base_selection_sha256": "22f448052a115dd642cab97b80b45be89779ce58a77bc1dabd91fd46dc94c543",
+  "descriptive_rule_ids": [
+    "pair_logistic_1m_gbm_deeper_5m_0.60_unrestricted",
+    "logistic_5m_0.64_unrestricted",
+    "gbm_deeper_5m_0.60_exhaustion",
+    "logistic_1m_0.60_unrestricted",
+    "logistic_5m_0.60_exhaustion"
+  ],
+  "descriptive_rules": [
+    {
+      "id": "pair_logistic_1m_gbm_deeper_5m_0.60_unrestricted",
+      "family": "consensus",
+      "consensus_kind": "pair",
+      "members": [
+        "logistic_1m",
+        "gbm_deeper_5m"
+      ],
+      "aggregation": "minimum",
+      "threshold": 0.6,
+      "regime": "unrestricted",
+      "label": "logistic_1m + gbm_deeper_5m / 各自分数≥0.60 / 仅同方向共识",
+      "score_is_calibrated_win_probability": false,
+      "members_not_independent": true
+    },
+    {
+      "id": "logistic_5m_0.64_unrestricted",
+      "family": "model",
+      "model": "logistic_5m",
+      "threshold": 0.64,
+      "regime": "unrestricted",
+      "label": "logistic_5m / 分数≥0.64 / 仅模型分数",
+      "score_is_calibrated_win_probability": false
+    },
+    {
+      "id": "gbm_deeper_5m_0.60_exhaustion",
+      "family": "model",
+      "model": "gbm_deeper_5m",
+      "threshold": 0.6,
+      "regime": "exhaustion",
+      "label": "gbm_deeper_5m / 分数≥0.60 / 极端偏离反转",
+      "score_is_calibrated_win_probability": false
+    },
+    {
+      "id": "logistic_1m_0.60_unrestricted",
+      "family": "model",
+      "model": "logistic_1m",
+      "threshold": 0.6,
+      "regime": "unrestricted",
+      "label": "logistic_1m / 分数≥0.60 / 仅模型分数",
+      "score_is_calibrated_win_probability": false
+    },
+    {
+      "id": "logistic_5m_0.60_exhaustion",
+      "family": "model",
+      "model": "logistic_5m",
+      "threshold": 0.6,
+      "regime": "exhaustion",
+      "label": "logistic_5m / 分数≥0.60 / 极端偏离反转",
+      "score_is_calibrated_win_probability": false
+    }
+  ],
+  "frozen_selected_rule_id": "direct_reversal_2.0_unconfirmed",
+  "posthoc_descriptive_only": true,
+  "replaces_frozen_selection": false,
+  "new_independent_validation": false,
+  "no_new_parameters": true,
+  "periods": {
+    "year_to_date": {
+      "start_utc": "2026-01-01",
+      "end_exclusive_utc": "2026-11-12"
+    },
+    "recent_six_months": {
+      "start_utc": "2026-05-12",
+      "end_exclusive_utc": "2026-11-12"
+    }
+  },
+  "scenarios": [
+    {
+      "name": "baseline",
+      "adverse_bps": 0.0,
+      "fee": 0.0
+    },
+    {
+      "name": "adverse0p5bps",
+      "adverse_bps": 0.5,
+      "fee": 0.0
+    },
+    {
+      "name": "adverse1bps",
+      "adverse_bps": 1.0,
+      "fee": 0.0
+    },
+    {
+      "name": "adverse2bps",
+      "adverse_bps": 2.0,
+      "fee": 0.0
+    }
+  ],
+  "capital": {
+    "payout": 0.85,
+    "fee": 0.0,
+    "initial_bankroll": 1000.0,
+    "stake": 5.0,
+    "max_open_positions": 1,
+    "daily_loss_limit": 25.0,
+    "adverse_bps": 0.0
+  },
+  "bonferroni_family_count": 76,
+  "bonferroni_two_sided_alpha": 0.05,
+  "independent_binomial_assumption_not_established": true,
+  "prior_rounds_and_window_multiplicity_not_covered": true,
+  "each_window_and_scenario_restarts_capital": true,
+  "local_only": true,
+  "publish_or_deploy": false,
+  "forward_validated": false,
+  "source_sha256": {
+    "recent_candidate_audit.py": "51e781cb89a94fcb58bf36ff328b6c9d86593d91e56e497c64e53457eb1a4583",
+    "recent_window_research.py": "93567ab2fb0f43a91993abbbb50eaf207492944cc63b758c1ab88d17ab281a3e",
+    "recent_window_data.py": "9616c0116566550db3a42002fce40bd9f4ffdd605e57cbda0d706c1b72bdc196",
+    "model_search_research.py": "19fcd40716f14b284731fac9ecdabfb451e70aa92ae7602574d529f535bba099",
+    "model_search_rules.py": "5d360f3fac928cde508d0a6d1b2fd46c394d8e36ff1a0d7f523b6d7d28512ca4",
+    "consensus_search_rules.py": "5069ddaf4b7c311c23d3e8d6f0d7e73ed2af0cd7f9568aca0070e8a9359f8bcc",
+    "consensus_search_research.py": "cd3bd1894df88f6f6e8b26a8754b609c8ca2515a1aa5a2bbadba20d3b591518c",
+    "high_win_research.py": "661b980181f72119e57816c68f896207d1617c5388a29ff8d7626398f15fddad",
+    "event_engine.py": "c4badc0fde5cfa122b281d4bd3b41e7ddfdc6337519ecf4fa8cc8973b724f866",
+    "event_strategy_research.py": "94736194b6a211ebeb374aff817d09dca020eaeeb7c383e296ac8d85900f283f"
+  }
+}

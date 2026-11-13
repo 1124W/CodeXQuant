@@ -16,6 +16,8 @@ def build():
     files=['index.html','styles.css','app.js','research.js','workbuddy.js','trade-view.js',
            'requirements-live.txt','.env.example','demo/trades.html','demo/quantdinger.html',
            'demo/research.html','research-view.js','research-view.css',
+           'demo/recent.html','recent-view.js','recent-view.css',
+           'research/recent-public.json','research/recent-public-trades.csv',
            'research/high-win-public.json','research/high-win-public-trades.csv',
            'research/trade-chart-data.json','research/workbuddy-results.json','research/workbuddy-trades.csv',
            'research/event-results.json','research/event-trades.csv','research/results.json',

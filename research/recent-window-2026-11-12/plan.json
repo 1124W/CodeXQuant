@@ -1,0 +1,890 @@
+{
+  "version": 1,
+  "created_at_utc": "2026-11-13T06:57:14.631075+00:00",
+  "periods": {
+    "discovery": {
+      "start_utc": "2026-01-01",
+      "end_exclusive_utc": "2026-05-12"
+    },
+    "year_to_date": {
+      "start_utc": "2026-01-01",
+      "end_exclusive_utc": "2026-11-12"
+    },
+    "recent_six_months": {
+      "start_utc": "2026-05-12",
+      "end_exclusive_utc": "2026-11-12"
+    },
+    "recent_first_half": {
+      "start_utc": "2026-05-12",
+      "end_exclusive_utc": "2026-08-12"
+    },
+    "recent_second_half": {
+      "start_utc": "2026-08-12",
+      "end_exclusive_utc": "2026-11-12"
+    }
+  },
+  "cache_end_exclusive_utc": "2026-11-12",
+  "candidate_count": 76,
+  "rules": [
+    {
+      "id": "logistic_halfhour_0.56_exhaustion",
+      "family": "model",
+      "model": "logistic_halfhour",
+      "threshold": 0.56,
+      "regime": "exhaustion",
+      "label": "logistic_halfhour / 分数≥0.56 / 极端偏离反转",
+      "score_is_calibrated_win_probability": false
+    },
+    {
+      "id": "logistic_halfhour_0.56_trend_pullback",
+      "family": "model",
+      "model": "logistic_halfhour",
+      "threshold": 0.56,
+      "regime": "trend_pullback",
+      "label": "logistic_halfhour / 分数≥0.56 / 4小时趋势回调",
+      "score_is_calibrated_win_probability": false
+    },
+    {
+      "id": "logistic_halfhour_0.56_unrestricted",
+      "family": "model",
+      "model": "logistic_halfhour",
+      "threshold": 0.56,
+      "regime": "unrestricted",
+      "label": "logistic_halfhour / 分数≥0.56 / 仅模型分数",
+      "score_is_calibrated_win_probability": false
+    },
+    {
+      "id": "logistic_halfhour_0.60_exhaustion",
+      "family": "model",
+      "model": "logistic_halfhour",
+      "threshold": 0.6,
+      "regime": "exhaustion",
+      "label": "logistic_halfhour / 分数≥0.60 / 极端偏离反转",
+      "score_is_calibrated_win_probability": false
+    },
+    {
+      "id": "logistic_halfhour_0.60_trend_pullback",
+      "family": "model",
+      "model": "logistic_halfhour",
+      "threshold": 0.6,
+      "regime": "trend_pullback",
+      "label": "logistic_halfhour / 分数≥0.60 / 4小时趋势回调",
+      "score_is_calibrated_win_probability": false
+    },
+    {
+      "id": "logistic_halfhour_0.60_unrestricted",
+      "family": "model",
+      "model": "logistic_halfhour",
+      "threshold": 0.6,
+      "regime": "unrestricted",
+      "label": "logistic_halfhour / 分数≥0.60 / 仅模型分数",
+      "score_is_calibrated_win_probability": false
+    },
+    {
+      "id": "logistic_halfhour_0.64_exhaustion",
+      "family": "model",
+      "model": "logistic_halfhour",
+      "threshold": 0.64,
+      "regime": "exhaustion",
+      "label": "logistic_halfhour / 分数≥0.64 / 极端偏离反转",
+      "score_is_calibrated_win_probability": false
+    },
+    {
+      "id": "logistic_halfhour_0.64_trend_pullback",
+      "family": "model",
+      "model": "logistic_halfhour",
+      "threshold": 0.64,
+      "regime": "trend_pullback",
+      "label": "logistic_halfhour / 分数≥0.64 / 4小时趋势回调",
+      "score_is_calibrated_win_probability": false
+    },
+    {
+      "id": "logistic_halfhour_0.64_unrestricted",
+      "family": "model",
+      "model": "logistic_halfhour",
+      "threshold": 0.64,
+      "regime": "unrestricted",
+      "label": "logistic_halfhour / 分数≥0.64 / 仅模型分数",
+      "score_is_calibrated_win_probability": false
+    },
+    {
+      "id": "logistic_5m_0.56_exhaustion",
+      "family": "model",
+      "model": "logistic_5m",
+      "threshold": 0.56,
+      "regime": "exhaustion",
+      "label": "logistic_5m / 分数≥0.56 / 极端偏离反转",
+      "score_is_calibrated_win_probability": false
+    },
+    {
+      "id": "logistic_5m_0.56_trend_pullback",
+      "family": "model",
+      "model": "logistic_5m",
+      "threshold": 0.56,
+      "regime": "trend_pullback",
+      "label": "logistic_5m / 分数≥0.56 / 4小时趋势回调",
+      "score_is_calibrated_win_probability": false
+    },
+    {
+      "id": "logistic_5m_0.56_unrestricted",
+      "family": "model",
+      "model": "logistic_5m",
+      "threshold": 0.56,
+      "regime": "unrestricted",
+      "label": "logistic_5m / 分数≥0.56 / 仅模型分数",
+      "score_is_calibrated_win_probability": false
+    },
+    {
+      "id": "logistic_5m_0.60_exhaustion",
+      "family": "model",
+      "model": "logistic_5m",
+      "threshold": 0.6,
+      "regime": "exhaustion",
+      "label": "logistic_5m / 分数≥0.60 / 极端偏离反转",
+      "score_is_calibrated_win_probability": false
+    },
+    {
+      "id": "logistic_5m_0.60_trend_pullback",
+      "family": "model",
+      "model": "logistic_5m",
+      "threshold": 0.6,
+      "regime": "trend_pullback",
+      "label": "logistic_5m / 分数≥0.60 / 4小时趋势回调",
+      "score_is_calibrated_win_probability": false
+    },
+    {
+      "id": "logistic_5m_0.60_unrestricted",
+      "family": "model",
+      "model": "logistic_5m",
+      "threshold": 0.6,
+      "regime": "unrestricted",
+      "label": "logistic_5m / 分数≥0.60 / 仅模型分数",
+      "score_is_calibrated_win_probability": false
+    },
+    {
+      "id": "logistic_5m_0.64_exhaustion",
+      "family": "model",
+      "model": "logistic_5m",
+      "threshold": 0.64,
+      "regime": "exhaustion",
+      "label": "logistic_5m / 分数≥0.64 / 极端偏离反转",
+      "score_is_calibrated_win_probability": false
+    },
+    {
+      "id": "logistic_5m_0.64_trend_pullback",
+      "family": "model",
+      "model": "logistic_5m",
+      "threshold": 0.64,
+      "regime": "trend_pullback",
+      "label": "logistic_5m / 分数≥0.64 / 4小时趋势回调",
+      "score_is_calibrated_win_probability": false
+    },
+    {
+      "id": "logistic_5m_0.64_unrestricted",
+      "family": "model",
+      "model": "logistic_5m",
+      "threshold": 0.64,
+      "regime": "unrestricted",
+      "label": "logistic_5m / 分数≥0.64 / 仅模型分数",
+      "score_is_calibrated_win_probability": false
+    },
+    {
+      "id": "logistic_1m_0.56_exhaustion",
+      "family": "model",
+      "model": "logistic_1m",
+      "threshold": 0.56,
+      "regime": "exhaustion",
+      "label": "logistic_1m / 分数≥0.56 / 极端偏离反转",
+      "score_is_calibrated_win_probability": false
+    },
+    {
+      "id": "logistic_1m_0.56_trend_pullback",
+      "family": "model",
+      "model": "logistic_1m",
+      "threshold": 0.56,
+      "regime": "trend_pullback",
+      "label": "logistic_1m / 分数≥0.56 / 4小时趋势回调",
+      "score_is_calibrated_win_probability": false
+    },
+    {
+      "id": "logistic_1m_0.56_unrestricted",
+      "family": "model",
+      "model": "logistic_1m",
+      "threshold": 0.56,
+      "regime": "unrestricted",
+      "label": "logistic_1m / 分数≥0.56 / 仅模型分数",
+      "score_is_calibrated_win_probability": false
+    },
+    {
+      "id": "logistic_1m_0.60_exhaustion",
+      "family": "model",
+      "model": "logistic_1m",
+      "threshold": 0.6,
+      "regime": "exhaustion",
+      "label": "logistic_1m / 分数≥0.60 / 极端偏离反转",
+      "score_is_calibrated_win_probability": false
+    },
+    {
+      "id": "logistic_1m_0.60_trend_pullback",
+      "family": "model",
+      "model": "logistic_1m",
+      "threshold": 0.6,
+      "regime": "trend_pullback",
+      "label": "logistic_1m / 分数≥0.60 / 4小时趋势回调",
+      "score_is_calibrated_win_probability": false
+    },
+    {
+      "id": "logistic_1m_0.60_unrestricted",
+      "family": "model",
+      "model": "logistic_1m",
+      "threshold": 0.6,
+      "regime": "unrestricted",
+      "label": "logistic_1m / 分数≥0.60 / 仅模型分数",
+      "score_is_calibrated_win_probability": false
+    },
+    {
+      "id": "logistic_1m_0.64_exhaustion",
+      "family": "model",
+      "model": "logistic_1m",
+      "threshold": 0.64,
+      "regime": "exhaustion",
+      "label": "logistic_1m / 分数≥0.64 / 极端偏离反转",
+      "score_is_calibrated_win_probability": false
+    },
+    {
+      "id": "logistic_1m_0.64_trend_pullback",
+      "family": "model",
+      "model": "logistic_1m",
+      "threshold": 0.64,
+      "regime": "trend_pullback",
+      "label": "logistic_1m / 分数≥0.64 / 4小时趋势回调",
+      "score_is_calibrated_win_probability": false
+    },
+    {
+      "id": "logistic_1m_0.64_unrestricted",
+      "family": "model",
+      "model": "logistic_1m",
+      "threshold": 0.64,
+      "regime": "unrestricted",
+      "label": "logistic_1m / 分数≥0.64 / 仅模型分数",
+      "score_is_calibrated_win_probability": false
+    },
+    {
+      "id": "gbm_shallow_5m_0.56_exhaustion",
+      "family": "model",
+      "model": "gbm_shallow_5m",
+      "threshold": 0.56,
+      "regime": "exhaustion",
+      "label": "gbm_shallow_5m / 分数≥0.56 / 极端偏离反转",
+      "score_is_calibrated_win_probability": false
+    },
+    {
+      "id": "gbm_shallow_5m_0.56_trend_pullback",
+      "family": "model",
+      "model": "gbm_shallow_5m",
+      "threshold": 0.56,
+      "regime": "trend_pullback",
+      "label": "gbm_shallow_5m / 分数≥0.56 / 4小时趋势回调",
+      "score_is_calibrated_win_probability": false
+    },
+    {
+      "id": "gbm_shallow_5m_0.56_unrestricted",
+      "family": "model",
+      "model": "gbm_shallow_5m",
+      "threshold": 0.56,
+      "regime": "unrestricted",
+      "label": "gbm_shallow_5m / 分数≥0.56 / 仅模型分数",
+      "score_is_calibrated_win_probability": false
+    },
+    {
+      "id": "gbm_shallow_5m_0.60_exhaustion",
+      "family": "model",
+      "model": "gbm_shallow_5m",
+      "threshold": 0.6,
+      "regime": "exhaustion",
+      "label": "gbm_shallow_5m / 分数≥0.60 / 极端偏离反转",
+      "score_is_calibrated_win_probability": false
+    },
+    {
+      "id": "gbm_shallow_5m_0.60_trend_pullback",
+      "family": "model",
+      "model": "gbm_shallow_5m",
+      "threshold": 0.6,
+      "regime": "trend_pullback",
+      "label": "gbm_shallow_5m / 分数≥0.60 / 4小时趋势回调",
+      "score_is_calibrated_win_probability": false
+    },
+    {
+      "id": "gbm_shallow_5m_0.60_unrestricted",
+      "family": "model",
+      "model": "gbm_shallow_5m",
+      "threshold": 0.6,
+      "regime": "unrestricted",
+      "label": "gbm_shallow_5m / 分数≥0.60 / 仅模型分数",
+      "score_is_calibrated_win_probability": false
+    },
+    {
+      "id": "gbm_shallow_5m_0.64_exhaustion",
+      "family": "model",
+      "model": "gbm_shallow_5m",
+      "threshold": 0.64,
+      "regime": "exhaustion",
+      "label": "gbm_shallow_5m / 分数≥0.64 / 极端偏离反转",
+      "score_is_calibrated_win_probability": false
+    },
+    {
+      "id": "gbm_shallow_5m_0.64_trend_pullback",
+      "family": "model",
+      "model": "gbm_shallow_5m",
+      "threshold": 0.64,
+      "regime": "trend_pullback",
+      "label": "gbm_shallow_5m / 分数≥0.64 / 4小时趋势回调",
+      "score_is_calibrated_win_probability": false
+    },
+    {
+      "id": "gbm_shallow_5m_0.64_unrestricted",
+      "family": "model",
+      "model": "gbm_shallow_5m",
+      "threshold": 0.64,
+      "regime": "unrestricted",
+      "label": "gbm_shallow_5m / 分数≥0.64 / 仅模型分数",
+      "score_is_calibrated_win_probability": false
+    },
+    {
+      "id": "gbm_deeper_5m_0.56_exhaustion",
+      "family": "model",
+      "model": "gbm_deeper_5m",
+      "threshold": 0.56,
+      "regime": "exhaustion",
+      "label": "gbm_deeper_5m / 分数≥0.56 / 极端偏离反转",
+      "score_is_calibrated_win_probability": false
+    },
+    {
+      "id": "gbm_deeper_5m_0.56_trend_pullback",
+      "family": "model",
+      "model": "gbm_deeper_5m",
+      "threshold": 0.56,
+      "regime": "trend_pullback",
+      "label": "gbm_deeper_5m / 分数≥0.56 / 4小时趋势回调",
+      "score_is_calibrated_win_probability": false
+    },
+    {
+      "id": "gbm_deeper_5m_0.56_unrestricted",
+      "family": "model",
+      "model": "gbm_deeper_5m",
+      "threshold": 0.56,
+      "regime": "unrestricted",
+      "label": "gbm_deeper_5m / 分数≥0.56 / 仅模型分数",
+      "score_is_calibrated_win_probability": false
+    },
+    {
+      "id": "gbm_deeper_5m_0.60_exhaustion",
+      "family": "model",
+      "model": "gbm_deeper_5m",
+      "threshold": 0.6,
+      "regime": "exhaustion",
+      "label": "gbm_deeper_5m / 分数≥0.60 / 极端偏离反转",
+      "score_is_calibrated_win_probability": false
+    },
+    {
+      "id": "gbm_deeper_5m_0.60_trend_pullback",
+      "family": "model",
+      "model": "gbm_deeper_5m",
+      "threshold": 0.6,
+      "regime": "trend_pullback",
+      "label": "gbm_deeper_5m / 分数≥0.60 / 4小时趋势回调",
+      "score_is_calibrated_win_probability": false
+    },
+    {
+      "id": "gbm_deeper_5m_0.60_unrestricted",
+      "family": "model",
+      "model": "gbm_deeper_5m",
+      "threshold": 0.6,
+      "regime": "unrestricted",
+      "label": "gbm_deeper_5m / 分数≥0.60 / 仅模型分数",
+      "score_is_calibrated_win_probability": false
+    },
+    {
+      "id": "gbm_deeper_5m_0.64_exhaustion",
+      "family": "model",
+      "model": "gbm_deeper_5m",
+      "threshold": 0.64,
+      "regime": "exhaustion",
+      "label": "gbm_deeper_5m / 分数≥0.64 / 极端偏离反转",
+      "score_is_calibrated_win_probability": false
+    },
+    {
+      "id": "gbm_deeper_5m_0.64_trend_pullback",
+      "family": "model",
+      "model": "gbm_deeper_5m",
+      "threshold": 0.64,
+      "regime": "trend_pullback",
+      "label": "gbm_deeper_5m / 分数≥0.64 / 4小时趋势回调",
+      "score_is_calibrated_win_probability": false
+    },
+    {
+      "id": "gbm_deeper_5m_0.64_unrestricted",
+      "family": "model",
+      "model": "gbm_deeper_5m",
+      "threshold": 0.64,
+      "regime": "unrestricted",
+      "label": "gbm_deeper_5m / 分数≥0.64 / 仅模型分数",
+      "score_is_calibrated_win_probability": false
+    },
+    {
+      "id": "ensemble_5m_0.56_exhaustion",
+      "family": "model",
+      "model": "ensemble_5m",
+      "threshold": 0.56,
+      "regime": "exhaustion",
+      "label": "ensemble_5m / 分数≥0.56 / 极端偏离反转",
+      "score_is_calibrated_win_probability": false
+    },
+    {
+      "id": "ensemble_5m_0.56_trend_pullback",
+      "family": "model",
+      "model": "ensemble_5m",
+      "threshold": 0.56,
+      "regime": "trend_pullback",
+      "label": "ensemble_5m / 分数≥0.56 / 4小时趋势回调",
+      "score_is_calibrated_win_probability": false
+    },
+    {
+      "id": "ensemble_5m_0.56_unrestricted",
+      "family": "model",
+      "model": "ensemble_5m",
+      "threshold": 0.56,
+      "regime": "unrestricted",
+      "label": "ensemble_5m / 分数≥0.56 / 仅模型分数",
+      "score_is_calibrated_win_probability": false
+    },
+    {
+      "id": "ensemble_5m_0.60_exhaustion",
+      "family": "model",
+      "model": "ensemble_5m",
+      "threshold": 0.6,
+      "regime": "exhaustion",
+      "label": "ensemble_5m / 分数≥0.60 / 极端偏离反转",
+      "score_is_calibrated_win_probability": false
+    },
+    {
+      "id": "ensemble_5m_0.60_trend_pullback",
+      "family": "model",
+      "model": "ensemble_5m",
+      "threshold": 0.6,
+      "regime": "trend_pullback",
+      "label": "ensemble_5m / 分数≥0.60 / 4小时趋势回调",
+      "score_is_calibrated_win_probability": false
+    },
+    {
+      "id": "ensemble_5m_0.60_unrestricted",
+      "family": "model",
+      "model": "ensemble_5m",
+      "threshold": 0.6,
+      "regime": "unrestricted",
+      "label": "ensemble_5m / 分数≥0.60 / 仅模型分数",
+      "score_is_calibrated_win_probability": false
+    },
+    {
+      "id": "ensemble_5m_0.64_exhaustion",
+      "family": "model",
+      "model": "ensemble_5m",
+      "threshold": 0.64,
+      "regime": "exhaustion",
+      "label": "ensemble_5m / 分数≥0.64 / 极端偏离反转",
+      "score_is_calibrated_win_probability": false
+    },
+    {
+      "id": "ensemble_5m_0.64_trend_pullback",
+      "family": "model",
+      "model": "ensemble_5m",
+      "threshold": 0.64,
+      "regime": "trend_pullback",
+      "label": "ensemble_5m / 分数≥0.64 / 4小时趋势回调",
+      "score_is_calibrated_win_probability": false
+    },
+    {
+      "id": "ensemble_5m_0.64_unrestricted",
+      "family": "model",
+      "model": "ensemble_5m",
+      "threshold": 0.64,
+      "regime": "unrestricted",
+      "label": "ensemble_5m / 分数≥0.64 / 仅模型分数",
+      "score_is_calibrated_win_probability": false
+    },
+    {
+      "id": "direct_reversal_1.5_unconfirmed",
+      "family": "direct",
+      "model": null,
+      "threshold": 1.5,
+      "regime": "direct_reversal",
+      "require_price_turn": false,
+      "label": "标准化60分钟偏离≥1.5 / 直接反转",
+      "score_is_calibrated_win_probability": false
+    },
+    {
+      "id": "direct_reversal_1.5_price_turn",
+      "family": "direct",
+      "model": null,
+      "threshold": 1.5,
+      "regime": "direct_reversal",
+      "require_price_turn": true,
+      "label": "标准化60分钟偏离≥1.5 / 3分钟价格确认",
+      "score_is_calibrated_win_probability": false
+    },
+    {
+      "id": "direct_reversal_2.0_unconfirmed",
+      "family": "direct",
+      "model": null,
+      "threshold": 2.0,
+      "regime": "direct_reversal",
+      "require_price_turn": false,
+      "label": "标准化60分钟偏离≥2 / 直接反转",
+      "score_is_calibrated_win_probability": false
+    },
+    {
+      "id": "direct_reversal_2.0_price_turn",
+      "family": "direct",
+      "model": null,
+      "threshold": 2.0,
+      "regime": "direct_reversal",
+      "require_price_turn": true,
+      "label": "标准化60分钟偏离≥2 / 3分钟价格确认",
+      "score_is_calibrated_win_probability": false
+    },
+    {
+      "id": "direct_reversal_2.5_unconfirmed",
+      "family": "direct",
+      "model": null,
+      "threshold": 2.5,
+      "regime": "direct_reversal",
+      "require_price_turn": false,
+      "label": "标准化60分钟偏离≥2.5 / 直接反转",
+      "score_is_calibrated_win_probability": false
+    },
+    {
+      "id": "direct_reversal_2.5_price_turn",
+      "family": "direct",
+      "model": null,
+      "threshold": 2.5,
+      "regime": "direct_reversal",
+      "require_price_turn": true,
+      "label": "标准化60分钟偏离≥2.5 / 3分钟价格确认",
+      "score_is_calibrated_win_probability": false
+    },
+    {
+      "id": "pair_logistic_halfhour_gbm_deeper_5m_0.56_exhaustion",
+      "family": "consensus",
+      "consensus_kind": "pair",
+      "members": [
+        "logistic_halfhour",
+        "gbm_deeper_5m"
+      ],
+      "aggregation": "minimum",
+      "threshold": 0.56,
+      "regime": "exhaustion",
+      "label": "logistic_halfhour + gbm_deeper_5m / 各自分数≥0.56 / 原有极端偏离反转门槛",
+      "score_is_calibrated_win_probability": false,
+      "members_not_independent": true
+    },
+    {
+      "id": "pair_logistic_halfhour_gbm_deeper_5m_0.56_unrestricted",
+      "family": "consensus",
+      "consensus_kind": "pair",
+      "members": [
+        "logistic_halfhour",
+        "gbm_deeper_5m"
+      ],
+      "aggregation": "minimum",
+      "threshold": 0.56,
+      "regime": "unrestricted",
+      "label": "logistic_halfhour + gbm_deeper_5m / 各自分数≥0.56 / 仅同方向共识",
+      "score_is_calibrated_win_probability": false,
+      "members_not_independent": true
+    },
+    {
+      "id": "pair_logistic_halfhour_gbm_deeper_5m_0.60_exhaustion",
+      "family": "consensus",
+      "consensus_kind": "pair",
+      "members": [
+        "logistic_halfhour",
+        "gbm_deeper_5m"
+      ],
+      "aggregation": "minimum",
+      "threshold": 0.6,
+      "regime": "exhaustion",
+      "label": "logistic_halfhour + gbm_deeper_5m / 各自分数≥0.60 / 原有极端偏离反转门槛",
+      "score_is_calibrated_win_probability": false,
+      "members_not_independent": true
+    },
+    {
+      "id": "pair_logistic_halfhour_gbm_deeper_5m_0.60_unrestricted",
+      "family": "consensus",
+      "consensus_kind": "pair",
+      "members": [
+        "logistic_halfhour",
+        "gbm_deeper_5m"
+      ],
+      "aggregation": "minimum",
+      "threshold": 0.6,
+      "regime": "unrestricted",
+      "label": "logistic_halfhour + gbm_deeper_5m / 各自分数≥0.60 / 仅同方向共识",
+      "score_is_calibrated_win_probability": false,
+      "members_not_independent": true
+    },
+    {
+      "id": "pair_logistic_1m_gbm_deeper_5m_0.56_exhaustion",
+      "family": "consensus",
+      "consensus_kind": "pair",
+      "members": [
+        "logistic_1m",
+        "gbm_deeper_5m"
+      ],
+      "aggregation": "minimum",
+      "threshold": 0.56,
+      "regime": "exhaustion",
+      "label": "logistic_1m + gbm_deeper_5m / 各自分数≥0.56 / 原有极端偏离反转门槛",
+      "score_is_calibrated_win_probability": false,
+      "members_not_independent": true
+    },
+    {
+      "id": "pair_logistic_1m_gbm_deeper_5m_0.56_unrestricted",
+      "family": "consensus",
+      "consensus_kind": "pair",
+      "members": [
+        "logistic_1m",
+        "gbm_deeper_5m"
+      ],
+      "aggregation": "minimum",
+      "threshold": 0.56,
+      "regime": "unrestricted",
+      "label": "logistic_1m + gbm_deeper_5m / 各自分数≥0.56 / 仅同方向共识",
+      "score_is_calibrated_win_probability": false,
+      "members_not_independent": true
+    },
+    {
+      "id": "pair_logistic_1m_gbm_deeper_5m_0.60_exhaustion",
+      "family": "consensus",
+      "consensus_kind": "pair",
+      "members": [
+        "logistic_1m",
+        "gbm_deeper_5m"
+      ],
+      "aggregation": "minimum",
+      "threshold": 0.6,
+      "regime": "exhaustion",
+      "label": "logistic_1m + gbm_deeper_5m / 各自分数≥0.60 / 原有极端偏离反转门槛",
+      "score_is_calibrated_win_probability": false,
+      "members_not_independent": true
+    },
+    {
+      "id": "pair_logistic_1m_gbm_deeper_5m_0.60_unrestricted",
+      "family": "consensus",
+      "consensus_kind": "pair",
+      "members": [
+        "logistic_1m",
+        "gbm_deeper_5m"
+      ],
+      "aggregation": "minimum",
+      "threshold": 0.6,
+      "regime": "unrestricted",
+      "label": "logistic_1m + gbm_deeper_5m / 各自分数≥0.60 / 仅同方向共识",
+      "score_is_calibrated_win_probability": false,
+      "members_not_independent": true
+    },
+    {
+      "id": "pair_gbm_shallow_5m_gbm_deeper_5m_0.56_exhaustion",
+      "family": "consensus",
+      "consensus_kind": "pair",
+      "members": [
+        "gbm_shallow_5m",
+        "gbm_deeper_5m"
+      ],
+      "aggregation": "minimum",
+      "threshold": 0.56,
+      "regime": "exhaustion",
+      "label": "gbm_shallow_5m + gbm_deeper_5m / 各自分数≥0.56 / 原有极端偏离反转门槛",
+      "score_is_calibrated_win_probability": false,
+      "members_not_independent": true
+    },
+    {
+      "id": "pair_gbm_shallow_5m_gbm_deeper_5m_0.56_unrestricted",
+      "family": "consensus",
+      "consensus_kind": "pair",
+      "members": [
+        "gbm_shallow_5m",
+        "gbm_deeper_5m"
+      ],
+      "aggregation": "minimum",
+      "threshold": 0.56,
+      "regime": "unrestricted",
+      "label": "gbm_shallow_5m + gbm_deeper_5m / 各自分数≥0.56 / 仅同方向共识",
+      "score_is_calibrated_win_probability": false,
+      "members_not_independent": true
+    },
+    {
+      "id": "pair_gbm_shallow_5m_gbm_deeper_5m_0.60_exhaustion",
+      "family": "consensus",
+      "consensus_kind": "pair",
+      "members": [
+        "gbm_shallow_5m",
+        "gbm_deeper_5m"
+      ],
+      "aggregation": "minimum",
+      "threshold": 0.6,
+      "regime": "exhaustion",
+      "label": "gbm_shallow_5m + gbm_deeper_5m / 各自分数≥0.60 / 原有极端偏离反转门槛",
+      "score_is_calibrated_win_probability": false,
+      "members_not_independent": true
+    },
+    {
+      "id": "pair_gbm_shallow_5m_gbm_deeper_5m_0.60_unrestricted",
+      "family": "consensus",
+      "consensus_kind": "pair",
+      "members": [
+        "gbm_shallow_5m",
+        "gbm_deeper_5m"
+      ],
+      "aggregation": "minimum",
+      "threshold": 0.6,
+      "regime": "unrestricted",
+      "label": "gbm_shallow_5m + gbm_deeper_5m / 各自分数≥0.60 / 仅同方向共识",
+      "score_is_calibrated_win_probability": false,
+      "members_not_independent": true
+    },
+    {
+      "id": "unanimous_five_0.56_exhaustion",
+      "family": "consensus",
+      "consensus_kind": "unanimous_five",
+      "members": [
+        "logistic_halfhour",
+        "logistic_5m",
+        "logistic_1m",
+        "gbm_shallow_5m",
+        "gbm_deeper_5m"
+      ],
+      "aggregation": "mean",
+      "threshold": 0.56,
+      "regime": "exhaustion",
+      "label": "5个训练模型方向一致 / 平均方向分数≥0.56 / 原有极端偏离反转门槛",
+      "score_is_calibrated_win_probability": false,
+      "members_not_independent": true
+    },
+    {
+      "id": "unanimous_five_0.56_unrestricted",
+      "family": "consensus",
+      "consensus_kind": "unanimous_five",
+      "members": [
+        "logistic_halfhour",
+        "logistic_5m",
+        "logistic_1m",
+        "gbm_shallow_5m",
+        "gbm_deeper_5m"
+      ],
+      "aggregation": "mean",
+      "threshold": 0.56,
+      "regime": "unrestricted",
+      "label": "5个训练模型方向一致 / 平均方向分数≥0.56 / 仅同方向共识",
+      "score_is_calibrated_win_probability": false,
+      "members_not_independent": true
+    },
+    {
+      "id": "unanimous_five_0.60_exhaustion",
+      "family": "consensus",
+      "consensus_kind": "unanimous_five",
+      "members": [
+        "logistic_halfhour",
+        "logistic_5m",
+        "logistic_1m",
+        "gbm_shallow_5m",
+        "gbm_deeper_5m"
+      ],
+      "aggregation": "mean",
+      "threshold": 0.6,
+      "regime": "exhaustion",
+      "label": "5个训练模型方向一致 / 平均方向分数≥0.60 / 原有极端偏离反转门槛",
+      "score_is_calibrated_win_probability": false,
+      "members_not_independent": true
+    },
+    {
+      "id": "unanimous_five_0.60_unrestricted",
+      "family": "consensus",
+      "consensus_kind": "unanimous_five",
+      "members": [
+        "logistic_halfhour",
+        "logistic_5m",
+        "logistic_1m",
+        "gbm_shallow_5m",
+        "gbm_deeper_5m"
+      ],
+      "aggregation": "mean",
+      "threshold": 0.6,
+      "regime": "unrestricted",
+      "label": "5个训练模型方向一致 / 平均方向分数≥0.60 / 仅同方向共识",
+      "score_is_calibrated_win_probability": false,
+      "members_not_independent": true
+    }
+  ],
+  "comparator_ids": [
+    "logistic_halfhour_0.56_exhaustion",
+    "logistic_halfhour_0.64_exhaustion",
+    "gbm_deeper_5m_0.60_exhaustion",
+    "pair_logistic_halfhour_gbm_deeper_5m_0.60_unrestricted"
+  ],
+  "capital": {
+    "payout": 0.85,
+    "fee": 0.0,
+    "initial_bankroll": 1000.0,
+    "stake": 5.0,
+    "max_open_positions": 1,
+    "daily_loss_limit": 25.0,
+    "adverse_bps": 0.0
+  },
+  "selection": {
+    "period": "discovery",
+    "min_decisive": 200,
+    "min_each_asset": 50,
+    "min_win_rate": 0.58,
+    "net_positive": true,
+    "ranking": "Bonferroni Wilson lower, then lexical rule ID"
+  },
+  "validation": {
+    "period": "recent_six_months",
+    "min_decisive": 200,
+    "min_each_asset": 50,
+    "each_three_month_min": 75,
+    "each_three_month_win_rate": 0.58,
+    "weekly_net_lower_positive": true,
+    "adverse_2bps_positive": true
+  },
+  "known_unavailable_dates_utc": [
+    "2026-01-17",
+    "2026-01-18",
+    "2026-01-19",
+    "2026-01-24",
+    "2026-01-25"
+  ],
+  "train_days": 180,
+  "refit_days": 30,
+  "no_new_training": true,
+  "primary_windows_restart_capital": true,
+  "quarter_diagnostics": "partition continuous half-year by settlement time",
+  "year_to_date_contains_discovery": true,
+  "windows_overlap": true,
+  "historical_data_previously_researched": true,
+  "pristine_holdout": false,
+  "forward_validated": false,
+  "local_only": true,
+  "publish_or_deploy": false,
+  "source_sha256": {
+    "recent_window_research.py": "93567ab2fb0f43a91993abbbb50eaf207492944cc63b758c1ab88d17ab281a3e",
+    "recent_window_data.py": "9616c0116566550db3a42002fce40bd9f4ffdd605e57cbda0d706c1b72bdc196",
+    "model_search_research.py": "19fcd40716f14b284731fac9ecdabfb451e70aa92ae7602574d529f535bba099",
+    "model_search_rules.py": "5d360f3fac928cde508d0a6d1b2fd46c394d8e36ff1a0d7f523b6d7d28512ca4",
+    "consensus_search_rules.py": "5069ddaf4b7c311c23d3e8d6f0d7e73ed2af0cd7f9568aca0070e8a9359f8bcc",
+    "consensus_search_research.py": "cd3bd1894df88f6f6e8b26a8754b609c8ca2515a1aa5a2bbadba20d3b591518c",
+    "high_win_research.py": "661b980181f72119e57816c68f896207d1617c5388a29ff8d7626398f15fddad",
+    "event_engine.py": "c4badc0fde5cfa122b281d4bd3b41e7ddfdc6337519ecf4fa8cc8973b724f866",
+    "event_strategy_research.py": "94736194b6a211ebeb374aff817d09dca020eaeeb7c383e296ac8d85900f283f"
+  }
+}

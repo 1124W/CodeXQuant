@@ -14,6 +14,7 @@ from types import SimpleNamespace
 from unittest.mock import Mock,patch
 
 from live.app import Worker,create_app
+from live.stakes import PaperSettings
 
 
 class PublicWorker:
@@ -131,6 +132,8 @@ class WorkerAdmissionTests(unittest.TestCase):
         # before Windows attempts to unlink this test's private database file.
         self.addCleanup(gc.collect)
         self.worker=Worker.__new__(Worker)
+        # This suite preserves the original 5U research-risk regression cases.
+        self.worker.paper_settings=PaperSettings.for_stake(5)
         self.worker.db=Path(self.directory.name)/'worker.sqlite3'
         with closing(sqlite3.connect(self.worker.db)) as con:
             con.execute('CREATE TABLE processed (slot INTEGER PRIMARY KEY,state TEXT NOT NULL)')

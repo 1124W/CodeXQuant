@@ -1,0 +1,7 @@
+{
+  "ledgers_verified": 20,
+  "ledger_rows_verified": 17472,
+  "period_partitions_reconciled": true,
+  "new_tests_passed": 14,
+  "local_only": true
+}

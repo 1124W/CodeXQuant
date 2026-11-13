@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="CodeXQuant BTC/ETH 30分钟事件研究：近半年及年初以来回测，默认每笔30 USDT，支持5至250 USDT资金模拟。">
+  <title>CodeXQuant · 新周期研究与金额模拟</title>
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="../recent-view.css">
+</head>
+<body class="recent-page">
+  <header class="topbar">
+    <a class="brand" href="../index.html"><span class="brand-mark">CX</span><span><strong>CodeXQuant</strong><small>research notebook</small></span></a>
+    <nav aria-label="页面导航"><a href="../index.html">行情首页</a><a href="trades.html">实时信号</a><a href="research.html">旧 1,262 笔研究</a></nav>
+  </header>
+  <main id="recentView" data-research-url="../research/recent-public.json">
+    <section class="recent-hero">
+      <p class="eyebrow">BTC / ETH · 30 MINUTE EVENT RESEARCH</p>
+      <h1>新的周期。<br><em>按你的金额，重新回测。</em></h1>
+      <p class="intro">近半年与年初以来，观察 Logistic 与 GBM 的同方向信号。公开结果以每笔 <strong>30 USDT</strong> 重算；调整金额后，持仓、资金及每日风险会一起重新模拟。</p>
+      <p id="recentState" role="status" class="load-state">正在读取并核验研究数据…</p>
+      <p id="recentError" role="alert" class="error" hidden></p>
+      <button id="recentRetry" type="button" hidden>重新载入</button>
+      <p class="note"><a href="../research/recent-public-trades.csv" download>下载默认 30U 的两区间账本 CSV</a></p>
+      <noscript><p class="error">请启用 JavaScript 使用金额模拟；默认 30U 账本可直接下载。</p></noscript>
+    </section>
+
+    <div id="recentContent" hidden>
+      <section class="panel recent-panel settings-panel" aria-labelledby="settingsTitle">
+        <div class="section-heading"><div><p class="eyebrow">YOUR RESEARCH SCENARIO</p><h2 id="settingsTitle">每笔金额，由你设定</h2></div><span class="tag">研究模拟 · 不提交订单</span></div>
+        <form id="stakeForm" novalidate>
+          <div class="settings-grid">
+            <label for="recentPeriod">研究区间<select id="recentPeriod"><option value="recent_six_months">近半年</option><option value="year_to_date">年初以来</option></select></label>
+            <label for="recentStake">每笔金额（USDT）<input id="recentStake" type="number" inputmode="decimal" min="5" max="250" step="0.01" value="30" required aria-describedby="stakeHint stakeError"></label>
+            <button id="applyStake" class="primary-button" type="submit">应用金额并重算</button>
+            <button id="resetStake" type="button">恢复 30U</button>
+          </div>
+          <p id="stakeError" class="error" role="alert" hidden></p>
+          <p id="stakeHint" class="note">范围 5–250 USDT，最多两位小数。设置仅保存在当前浏览器，影响本页研究模拟；群机器人使用服务器配置，不随这里的金额改变。</p>
+        </form>
+        <p id="scenarioText" class="scenario-text" aria-live="polite"></p>
+        <div id="riskSummary" class="risk-summary"></div>
+        <p id="periodText" class="note"></p>
+      </section>
+
+      <section class="panel recent-panel" aria-labelledby="resultsTitle">
+        <div class="section-heading"><div><p class="eyebrow">REPLAYED FROM RAW OPPORTUNITIES</p><h2 id="resultsTitle">当前金额的模拟表现</h2></div><span id="amountBadge" class="tag"></span></div>
+        <div id="recentCards" class="metric-cards"></div>
+        <p id="admissionText" class="note"></p>
+        <div class="table-scroll"><table><thead><tr><th scope="col">区间（UTC，截止日不含）</th><th scope="col">笔数</th><th scope="col">胜率</th><th scope="col">净收益 USDT</th><th scope="col">最大回撤 USDT</th></tr></thead><tbody id="recentPeriodRows"></tbody></table></div>
+        <p class="note">两个区间分别从初始本金开始，且互相重叠。年初以来包含先前筛选时段，不能视为两份独立验证。每笔金额变化可能改变资金准入，因此收益不一定按比例变化。</p>
+        <div id="assetCards" class="asset-cards"></div>
+      </section>
+
+      <section class="panel recent-panel" aria-labelledby="stressTitle">
+        <div class="section-heading"><div><p class="eyebrow">PUBLISHED 30U RESEARCH CHECKS</p><h2 id="stressTitle">默认 30U 的价格偏差检查</h2></div><span class="tag">固定 30U · 不随自选金额缩放</span></div>
+        <p id="uncertaintyText" class="caution"></p>
+        <div class="table-scroll"><table><thead><tr><th scope="col">开仓价不利偏差</th><th scope="col">笔数</th><th scope="col">胜率</th><th scope="col">净收益 USDT</th><th scope="col">7 日块净收益 95% 区间</th></tr></thead><tbody id="stressRows"></tbody></table></div>
+        <p class="note">本节始终采用每笔 30U 和当前所选区间。0.01% 即 1bp 的不利开仓报价，零额外手续费不变；每个压力情景都重新判定胜负、持仓与风险。收益区间不是多轮择优后的无偏保证。</p>
+        <details><summary>查看默认 30U 的逐月表现</summary><div class="table-scroll"><table><thead><tr><th scope="col">月份（UTC，首尾可不足整月）</th><th scope="col">笔数</th><th scope="col">胜率</th><th scope="col">净收益 USDT</th></tr></thead><tbody id="monthlyRows"></tbody></table></div></details>
+      </section>
+
+      <section class="panel recent-panel" aria-labelledby="explorerTitle">
+        <div class="section-heading"><div><p class="eyebrow">EQUITY & TRADE LEDGER</p><h2 id="explorerTitle">权益曲线与开仓、到期价格</h2></div><button id="downloadRecent" type="button">下载当前模拟账本 CSV ↓</button></div>
+        <div class="ledger-controls">
+          <label for="recentSymbol">账本币种<select id="recentSymbol"><option value="ALL">BTC + ETH</option><option value="BTCUSDT">BTC</option><option value="ETHUSDT">ETH</option></select></label>
+          <label for="recentTimezone">显示时区<select id="recentTimezone"><option value="UTC">UTC</option><option value="Asia/Shanghai">北京时间 UTC+8</option></select></label>
+        </div>
+        <p id="ledgerScope" class="note"></p>
+        <div class="equity-frame"><svg id="recentEquity" viewBox="0 0 1000 290" role="group" tabindex="0" aria-label="已结算模拟权益图，左右方向键查看交易"></svg></div>
+        <p class="note">曲线显示已结算权益；待结算本金用于风控预留。选择表格编号或在曲线上移动，可查看完整价格精度。</p>
+        <div id="recentSelected" class="selected-trade" aria-live="polite"></div>
+        <div class="table-scroll ledger-scroll" tabindex="0" role="region" aria-label="可横向滚动的交易账本">
+          <table class="trade-ledger"><thead><tr><th scope="col">编号</th><th scope="col">币种 / 方向</th><th scope="col">信号时间</th><th scope="col">开仓时间</th><th scope="col">开仓指数</th><th scope="col">到期时间</th><th scope="col">到期指数</th><th scope="col">本金</th><th scope="col">结果</th><th scope="col">净收益</th></tr></thead><tbody id="recentTradeRows"></tbody></table>
+        </div>
+        <div class="pagination"><button id="recentPrevious" type="button">上一页</button><span id="recentPage" aria-live="polite"></span><button id="recentNext" type="button">下一页</button></div>
+        <p class="note">表格价格显示两位小数；胜负按原始指数精度判断。CSV 对应当前金额、区间和币种筛选，含 UTC 原始时间与完整价格。</p>
+      </section>
+
+      <section class="panel recent-panel" aria-labelledby="methodTitle">
+        <p class="eyebrow">HOW TO READ THIS RESULT</p><h2 id="methodTitle">研究结果与线上信号分开看</h2>
+        <p id="strategyText" class="intro"></p>
+        <p class="caution">这是查看历史对比后发现的候选，不代表已经证明稳定达到 58%。页面金额模拟不替换线上模型，也不把历史收益加入服务器前向模拟账户。</p>
+        <ul id="recentLimitations" class="limitations"></ul>
+        <p class="note">默认金额数据版本：<span id="recentVersion"></span>。<a href="trades.html">查看实际服务器的提醒状态与前向模拟</a>；<a href="research.html">查看旧 1,262 笔研究</a>。</p>
+      </section>
+    </div>
+  </main>
+  <script src="../recent-view.js" defer></script>
+</body>
+</html>

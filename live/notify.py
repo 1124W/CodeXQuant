@@ -18,6 +18,8 @@ import time
 from urllib import error, parse, request
 import uuid
 
+from .stakes import amount_cents,stake_cents,settlement_cents
+
 
 CST = timezone(timedelta(hours=8))
 SYMBOLS = ("BTCUSDT", "ETHUSDT")
@@ -102,11 +104,17 @@ def format_signal(signal):
     if isinstance(score, bool) or score is None or not math.isfinite(float(score)) or not .5 <= float(score) <= 1:
         raise ValueError("Invalid directional model score")
     direction = "看涨 / 做多" if side == "LONG" else "看跌 / 做空"
+    stake=stake_cents(signal.get('stake_usdt',5))
+    if signal.get('payout',.85)!=.85:raise ValueError('Only 85% paper payout is supported')
+    daily=amount_cents(signal.get('daily_loss_limit_usdt',stake/100*5),minimum=1)
     text = [f"## {symbol[:-4]} 30分钟事件信号 · {direction}",
             f"信号时间：{_time(signal_ms)}",
             f"计划开仓：{_time(entry_ms)}",
             f"计划到期：{_time(expiry_ms)}",
-            f"模型方向分数：{float(score):.2%}（未经胜率校准）"]
+            f"模型方向分数：{float(score):.2%}（未经胜率校准）",
+            f"本笔模拟本金：**{stake/100:.2f} USDT**；净赔付85%；无额外手续费。",
+            f"判赢净收益 +{settlement_cents(stake,'win')/100:.2f} USDT；判输 -{stake/100:.2f} USDT；平价退还本金。",
+            f"当前每日亏损及待结算风险预算：{daily/100:.2f} USDT。"]
     if signal.get("index_price") is not None:
         text.append(f"提醒时参考指数：{_price(signal['index_price']):,.2f} USDT")
     if signal.get("model_id"):
@@ -145,7 +153,9 @@ def format_settlement(result):
     entry,exit_price=_price(result["entry_price"]),_price(result["exit_price"])
     change=(exit_price-entry)*direction
     outcome="win" if change>0 else "loss" if change<0 else "refund"
-    net=4.25 if outcome=="win" else -5. if outcome=="loss" else 0.
+    stake=stake_cents(result.get('stake_usdt',5))
+    if result.get('payout',.85)!=.85:raise ValueError('Only 85% paper payout is supported')
+    net=settlement_cents(stake,outcome)/100
     if result.get("outcome")!=outcome or result.get("net_usdt")!=net:
         raise ValueError("Settlement outcome must match the observed index prices")
     label={"win":"盈利","loss":"亏损","refund":"平价退款"}[outcome]
@@ -155,7 +165,7 @@ def format_settlement(result):
         f"信号时间：{_time(signal_ms)}",
         f"模拟开仓：{_time(entry_ms)} · {entry:,.2f} USDT",
         f"模拟到期：{_time(expiry_ms)} · {exit_price:,.2f} USDT",
-        f"固定本金：5.00 USDT；净赔付：85%；额外手续费：0",
+        f"本笔固定本金：{stake/100:.2f} USDT；净赔付：85%；额外手续费：0",
         f"本笔模拟盈亏：**{net:+.2f} USDT**",
         "价格来自币安指数分钟开盘价；这是前向模拟结算，不代表实际下单或成交。"
     ])
@@ -169,7 +179,7 @@ def format_research_report(report,slot_ms):
     reasons={"model_score_below_0.56":"模型方向分数不足", "model_does_not_oppose_60m_move":"未满足反转方向",
              "60m_move_not_extreme":"60分钟波动不够极端", "short_volatility_expanding":"短期波动扩张",
              "paper_position_open":"已有模拟持仓", "paper_daily_risk_budget":"达到当日风险预算",
-             "paper_capital_insufficient":"模拟资金不足"}
+             "paper_capital_insufficient":"模拟资金不足","research_publication_hold":"更新校验期间暂停新模拟入场"}
     counts={**scan.get("reasons",{}),**scan.get("risk_blocks",{})}
     skipped=[f"{reasons.get(key,_safe_label(key))} {int(value)}次" for key,value in sorted(counts.items(),key=lambda item:-item[1])[:4] if key!="signal"]
     rate=paper.get("win_rate")
@@ -180,11 +190,34 @@ def format_research_report(report,slot_ms):
     if skipped:text.append("未提醒原因："+"；".join(skipped))
     if not scan['admitted']:text.append("本小时无新准入信号；未人为降低门槛补足信号。")
     if report.get("prediction_error"):text.append("扫描异常："+_safe_label(report['prediction_error']))
-    text.extend([f"累计前向模拟：{int(paper['settled'])} 笔已结算，{int(paper['pending'])} 笔待结算；"
+    stake=stake_cents(paper.get('stake_usdt',5))
+    daily=amount_cents(paper.get('daily_loss_limit_usdt',stake/100*5),minimum=1)
+    initial=amount_cents(paper.get('initial_capital_usdt',1000),minimum=1)
+    text.extend([f"当前新信号默认本金：{stake/100:.2f} USDT；每日亏损及待结算风险预算：{daily/100:.2f} USDT。",
+                 f"服务前向模拟初始本金：{initial/100:,.2f} USDT；判赢净收益 +{settlement_cents(stake,'win')/100:.2f} USDT，判输 -{stake/100:.2f} USDT。",
+                 f"累计前向模拟：{int(paper['settled'])} 笔已结算，{int(paper['pending'])} 笔待结算；"
                  f"胜 {int(paper['wins'])} / 负 {int(paper['losses'])} / 平 {int(paper['refunds'])}。",
                  f"已决胜率（不含平价）：{rate_text}；累计模拟盈亏：**{float(paper['net_usdt']):+.2f} USDT**。",
-                 "以上为本程序真实留存的前向模拟记录，不是历史回测胜率；固定每笔5 USDT，85%净赔付，无额外手续费。"])
+                 "以上为本程序真实留存的前向模拟记录，不是历史回测胜率；85%净赔付，无额外手续费。",
+                 "累计盈亏按每笔原始本金计算，保留旧5U交易；调整默认金额不会重算历史盈亏。"])
+    historical=report.get('historical_research')
+    if historical:
+        text.extend(format_historical_research(historical))
     return "\n".join(text)
+
+
+def format_historical_research(historical):
+    """An explicitly separate, frozen historical comparator, never live stats."""
+    rate=float(historical['win_rate']); net=float(historical['net_usdt'])
+    if not math.isfinite(rate) or not 0<=rate<=1 or not math.isfinite(net):
+        raise ValueError('Invalid historical research statistics')
+    stake=stake_cents(historical['stake_usdt'])
+    capital=amount_cents(historical['initial_capital_usdt'],minimum=1)
+    return ["", "### 近期历史研究对照（非当前线上模型）",
+            f"区间：{_safe_label(historical['start_utc'])} 至 {_safe_label(historical['end_exclusive_utc'])} UTC，结束时刻不含。",
+            f"固定研究本金 {capital/100:,.2f} USDT，每笔 {stake/100:.2f} USDT；{int(historical['signals'])} 笔，历史胜率 {rate:.2%}，模拟净收益 {net:+.2f} USDT。",
+            "该策略是看过历史后的研究候选，尚未完成前瞻验证；不并入上方服务器前向统计。",
+            f"[研究明细与金额测算]({historical['url']})"]
 
 
 class _NoRedirect(request.HTTPRedirectHandler):

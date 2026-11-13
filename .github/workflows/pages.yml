@@ -37,6 +37,9 @@ jobs:
           cp demo/quantdinger.html _site/demo/
           cp demo/trades.html _site/demo/
           cp demo/research.html _site/demo/
+          cp demo/recent.html _site/demo/
+          cp recent-view.js recent-view.css _site/
+          cp research/recent-public.json research/recent-public-trades.csv _site/research/
           cp research-view.js research-view.css _site/
           cp research/high-win-public.json research/high-win-public-trades.csv _site/research/
           cp research/trade-chart-data.json _site/research/
