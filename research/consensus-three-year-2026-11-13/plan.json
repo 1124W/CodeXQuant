@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "start_utc": "2023-11-12",
+  "end_exclusive_utc": "2026-11-12",
+  "reason_for_cutoff": "same verified data boundary as the published recent comparison",
+  "rule": {
+    "id": "pair_logistic_1m_gbm_deeper_5m_0.60_unrestricted",
+    "family": "consensus",
+    "consensus_kind": "pair",
+    "members": [
+      "logistic_1m",
+      "gbm_deeper_5m"
+    ],
+    "aggregation": "minimum",
+    "threshold": 0.6,
+    "regime": "unrestricted",
+    "label": "logistic_1m + gbm_deeper_5m / 各自分数≥0.60 / 仅同方向共识",
+    "score_is_calibrated_win_probability": false,
+    "members_not_independent": true
+  },
+  "candidate_count": 1,
+  "selection_performed": false,
+  "models": {
+    "logistic_1m": {
+      "family": "logistic",
+      "sample_minutes": 1,
+      "parameters": {
+        "C": 0.0033333333333333335,
+        "max_iter": 400,
+        "solver": "lbfgs",
+        "random_state": 17
+      }
+    },
+    "gbm_deeper_5m": {
+      "family": "gbm",
+      "sample_minutes": 5,
+      "parameters": {
+        "max_iter": 140,
+        "max_depth": 3,
+        "min_samples_leaf": 300,
+        "l2_regularization": 20.0,
+        "learning_rate": 0.035,
+        "early_stopping": false,
+        "random_state": 17
+      }
+    }
+  },
+  "train_days": 180,
+  "refit_days": 30,
+  "preserve_original_fold_clock": true,
+  "early_prediction_extension_end_exclusive_utc": "2024-05-07",
+  "stake_usdt": 30,
+  "initial_capital_usdt": 10000,
+  "daily_risk_limit_usdt": 150,
+  "net_payout": 0.85,
+  "fee": 0,
+  "max_open_positions": 1,
+  "entry_delay_minutes": 1,
+  "horizon_minutes": 30,
+  "known_unavailable_dates_utc": [
+    "2026-01-17",
+    "2026-01-18",
+    "2026-01-19",
+    "2026-01-24",
+    "2026-01-25"
+  ],
+  "stress_adverse_entry_bps": [
+    0,
+    0.5,
+    1,
+    2
+  ],
+  "main_account": "continuous across all three years; no yearly balance or risk reset",
+  "partition_policy": "attribute continuous ledger by settlement time; carry opening equity",
+  "recent_reference": "independent 10000U restart only to reconcile the already published comparison",
+  "historical_selection_bias_remains": true,
+  "pristine_holdout": false,
+  "forward_validated": false,
+  "local_only": true,
+  "publish_or_deploy": false,
+  "frozen_source_sha256": {
+    "research/consensus_search_rules.py": "5069ddaf4b7c311c23d3e8d6f0d7e73ed2af0cd7f9568aca0070e8a9359f8bcc",
+    "research/consensus_search_research.py": "cd3bd1894df88f6f6e8b26a8754b609c8ca2515a1aa5a2bbadba20d3b591518c",
+    "research/model_search_models.py": "f8068190a8df631a16a10e7aee6004a30bd4a535688ae4d91f2ddc474d038aaa",
+    "research/model_search_data.py": "04717773499835698e1226f448c9c7237d15765a543432ebe0c92d37bad7428f",
+    "research/stake_sizing_engine.py": "978f94433108ea9a702d793d705d8e8f486d64ccd3bfc95b8265561cbcb44dd8",
+    "research/public_stake_engine.py": "d2b5d478ea211da9c7630c952dafae3fc5c21d622b16ad389124991b4282952b",
+    "research/event_engine.py": "c4badc0fde5cfa122b281d4bd3b41e7ddfdc6337519ecf4fa8cc8973b724f866",
+    "research/event_strategy_research.py": "94736194b6a211ebeb374aff817d09dca020eaeeb7c383e296ac8d85900f283f",
+    "live/features.py": "d8ed0ac485d5d9896c32dfdbd834044294ee7e3d48868e3cb3f6a4c619789808"
+  },
+  "frozen_at_utc": "2026-11-13T08:06:30.930207+00:00"
+}

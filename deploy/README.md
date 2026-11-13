@@ -1,5 +1,13 @@
 # CodeXQuant 部署包
 
+## 当前：双模型共识与域名
+
+公开入口 `https://nightsleep.eu.org/demo/consensus.html`，实时状态页 `/demo/trades.html`。当前研究提醒策略为Logistic 1分钟样本与GBM 5分钟样本同向、各自分数至少0.60，保留原60特征、180天训练、30天更新。设置 `CODEXQUANT_STRATEGY=consensus`、`CODEXQUANT_MODEL_DIR` 为新schema2模型目录、`CODEXQUANT_PUBLIC_BASE_URL=https://nightsleep.eu.org`。
+
+部署程序 `deploy/publish_consensus.py` 只切换已核验代码、公开研究投影与新模型，保留现有模拟账本、未到期交易和通知数据库。新密集种子提前导入独立 `history-consensus.sqlite3`，不覆盖旧历史；新策略的每笔身份用旁表记录，前向成绩单独展示。就绪验证期间暂停新准入，保留旧仓位结算；出错恢复配置与代码，不倒退数据库。显式研究说明使用持久去重键，在域名、策略和公网数据确认后发送一次。
+
+三年回测1,892笔、56.18%、+2,236.50U、最大回撤895.50U；2024自然年-373.50U，2bp不利报价情景-447U。线上启用是用户选择继续前向研究，不代表策略已通过稳定58%或盈利验证。以下旧版本章节保留为部署历史；当前执行规则以上述双模型说明为准。
+
 ## 30U 推送与近周期自选金额
 
 新入口 `/demo/recent.html` 展示半年 / 年初研究，公开默认30U账本和原始候选机会。浏览器支持5–250U（0.01U步长），按10,000U研究本金、五倍日风险重新模拟。该页面设置只保存在当前浏览器。
@@ -16,14 +24,14 @@
 
 程序提供 BTC/ETH 30 分钟事件研究信号、指数行情、企业微信提醒和 442 笔历史交易图，不提交真实订单。历史的 56.79% 是指定阶段的回测表现；服务器持续模拟结果单独统计，增加扫描频率不代表胜率已经提高。
 
-## Ubuntu 24.04 直接部署
+## Ubuntu 24.04 全新安装
 
 1. 服务器安装 Python 3.12、python3-venv、curl。将 `codexquant-deploy.tgz`、`deploy/install.sh` 上传服务器。
 2. 将桌面包里的 `runtime.env` 私下上传到 `/etc/codexquant.env`，权限设为 `600`。不要上传到代码仓库。
 3. 执行 `sudo bash /路径/install.sh /路径/codexquant-deploy.tgz`。
 4. 访问 `http://服务器IP/demo/trades.html`，状态接口为 `/api/live/status`，健康接口 `/health`。
 
-安装器会先在 8088 端口检查图表和模型，再备份现有 `ecq` 服务及其程序目录，最后切换 80 端口。443 端口服务不做改动。启动失败会恢复原服务。备份保存在 `/var/backups/codexquant/时间戳`；新版本目录的 `deploy/rollback.sh` 可手动回退。
+安装器仅用于没有现有 `ecq` 服务、程序和历史状态的服务器；会先验证图表、模型和训练种子，再启用80端口服务。已有部署必须使用上文的 `publish_consensus.py`，保留历史账本并核验切换条件；不要使用旧版安装器或回滚脚本覆盖正在运行的实例。
 
 ## 运行规则
 

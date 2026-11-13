@@ -88,6 +88,11 @@
   }
 
   const REASONS = {
+    model_directions_disagree:'两个模型方向不一致', neutral_model_direction:'至少一个模型方向中性',
+    'consensus_score_below_0.60':'至少一个模型方向分数不足 0.60',
+    consensus_disagreement:'两个模型方向不一致', consensus_score_below_0_60:'至少一个模型方向分数不足 0.60',
+    consensus_score_below_0_6:'至少一个模型方向分数不足 0.60', consensus_score_below_threshold:'至少一个模型方向分数不足门槛',
+    research_publication_hold:'策略更新校验中，暂停新模拟准入',
     'model_score_below_0.56':'模型分数未达门槛',
     model_does_not_oppose_60m_move:'方向不满足反转条件', '60m_move_not_extreme':'近 60 分钟波动未达门槛',
     short_volatility_expanding:'短期波动正在扩张', paper_position_open:'已有模拟持仓',
@@ -102,7 +107,31 @@
     const reason = decision.paper_risk_status || decision.reason;
     const score = Number(decision.confidence_score);
     return label + ' · ' + (REASONS[reason] || '等待策略判断') +
-      (Number.isFinite(score) && score >= .5 && score <= 1 ? ' · 方向分数 ' + (score*100).toFixed(1) + '%' : '');
+      (Number.isFinite(score) && score >= .5 && score <= 1 ? ' · 方向分数 ' + (score*100).toFixed(1) + '%' : '')+
+      (modelScoresText(decision.model_scores)?' · '+modelScoresText(decision.model_scores):'');
+  }
+
+  function modelScoresText(scores) {
+    if(!scores || typeof scores!=='object')return '';
+    return [['logistic_1m','Logistic'],['gbm_deeper_5m','GBM']].map(([key,label])=>{
+      const value=scores[key];
+      return Number.isFinite(value)&&value>=0&&value<=1?
+        label+' '+(value>.5?'看涨':value<.5?'看跌':'中性')+' '+(Math.max(value,1-value)*100).toFixed(1)+'%':'暂无 '+label+' 分数';
+    }).join(' / ')+'（各自方向分数）';
+  }
+
+  function strategyText(strategy) {
+    if(!strategy || !strategy.rule_id)return '等待服务器返回实际启用策略';
+    if(strategy.mode==='consensus')return 'Logistic + GBM 双模型同向 · 各自方向分数 ≥ 0.60 · 前向研究验证中';
+    return strategy.label || strategy.rule_id;
+  }
+
+  function currentStrategyText(paper) {
+    const row=paper && paper.current_strategy;
+    if(!row || !Number.isFinite(row.settled))return '暂无当前策略独立前向记录，不能用旧账户胜率替代';
+    const rate=Number.isFinite(row.win_rate)?(row.win_rate*100).toFixed(2)+'%':'暂无已决胜负';
+    return Number(row.settled)+' 笔已结算 · '+Number(row.wins || 0)+' 胜 / '+Number(row.losses || 0)+' 负 / '+Number(row.refunds || 0)+' 平 · 胜率 '+rate+
+      (Number.isFinite(row.net_usdt)?' · '+money(row.net_usdt):'')+' · '+Number(row.pending || 0)+' 笔待结算 · 仅当前策略，未计入历史回测或旧策略';
   }
 
   function notificationText(value) {
@@ -167,7 +196,7 @@
       notifications:state.notifications || state.notifier || {}, updatedAt:state.updated_at_ms || null,
       lastPrediction:state.last_prediction_ms || null, decisions:Array.isArray(state.last_decisions)?state.last_decisions.filter(row=>row&&SYMBOLS.includes(row.symbol)):[],
       predictionSchedule:state.prediction_schedule || '', dataHealth:state.data_health || 'unknown', lastError:state.last_error || null,
-      scan:state.scan_stats || {}, paper:state.paper_performance || {}, settlements:Array.isArray(state.recent_settlements)?state.recent_settlements:[]};
+      strategy:state.strategy || {}, scan:state.scan_stats || {}, paper:state.paper_performance || {}, settlements:Array.isArray(state.recent_settlements)?state.recent_settlements:[]};
   }
 
   async function mount(document) {
@@ -238,7 +267,7 @@
     if(!mode)return;
     let timer=null,pending=false,stopped=false;
     const setText=(id,text)=>{const element=document.getElementById(id);if(element)element.textContent=text;};
-    function staticMode(){stopped=true;mode.textContent='静态回测，实时预测需要服务端';model.textContent='静态回测';signal.textContent='部署预测服务后显示';notify.textContent='由服务器后台执行';note.textContent='历史图表可正常浏览。每分钟扫描、模拟结算和群推送仅由部署后的后台运行。';setText('liveScan','静态页面不执行预测');setText('livePaper','连接服务器后显示模拟统计');}
+    function staticMode(){stopped=true;mode.textContent='静态回测，实时预测需要服务端';model.textContent='静态回测';signal.textContent='部署预测服务后显示';notify.textContent='由服务器后台执行';note.textContent='历史图表可正常浏览。每分钟扫描、模拟结算和群推送仅由部署后的后台运行。';setText('liveScan','静态页面不执行预测');setText('livePaper','连接服务器后显示模拟统计');setText('liveCurrentPaper','前往服务器查看当前策略独立前向记录');setText('liveStrategy','静态页面不读取实际启用状态');}
     if(window.location.hostname.endsWith('github.io')||window.location.protocol==='file:'){staticMode();return;}
     async function poll(){
       if(pending||stopped)return;pending=true;
@@ -254,6 +283,8 @@
         setText('liveScanTime',state.lastPrediction?'最近成功判断：'+utc(state.lastPrediction):'尚未完成本轮预测');
         for(const [symbol,prefix]of [['BTCUSDT','Btc'],['ETHUSDT','Eth']])setText('live'+prefix+'Decision',decisionText(state.decisions.find(row=>row.symbol===symbol)));
         setText('livePaper',paperText(state.paper));
+        setText('liveCurrentPaper',currentStrategyText(state.paper));
+        setText('liveStrategy',strategyText(state.strategy));
         setText('liveSettlement',settlementText(state.settlements[0]));
         const kinds=n.sent_by_kind || {};
         setText('liveNotifyKinds',n.enabled?'已确认发送：信号 '+Number(kinds.signal || 0)+' · 结算 '+Number(kinds.settlement || 0)+' · 研究播报 '+Number(kinds.research_report || 0)+' · 行情 '+Number(kinds.price || 0):'推送分类统计等待服务端');
@@ -273,5 +304,5 @@
     window.addEventListener('pagehide',()=>{stopped=true;window.clearTimeout(timer);});poll();
   }
 
-  return {validateData,cohort,buildTraces,focusRange,normalizeStatus,signalText,decisionText,notificationText,settlementText,paperText,scanText,monitorText,mount};
+  return {validateData,cohort,buildTraces,focusRange,normalizeStatus,signalText,decisionText,modelScoresText,strategyText,currentStrategyText,notificationText,settlementText,paperText,scanText,monitorText,mount};
 });

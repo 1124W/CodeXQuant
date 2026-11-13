@@ -18,7 +18,7 @@
     <a class="brand" href="../index.html"><span class="brand-mark">CX</span><span><strong>CodeXQuant</strong><small>30m event research</small></span></a>
     <a href="../index.html">行情首页 ↗</a>
   </header>
-  <main><p class="intro"><a href="recent.html">最新半年 / 年初研究 · 默认30U，可自设5–250U →</a> · <a href="research.html">历史1,262笔研究</a></p>
+  <main><p class="intro"><a href="consensus.html">双模型完整三年研究 · 默认30U，可自设5–250U →</a> · <a href="recent.html">半年 / 年初研究</a> · <a href="research.html">历史1,262笔研究</a> · <a href="https://nightsleep.eu.org/demo/trades.html">服务器实时状态</a></p>
     <h1>交易位置与研究信号</h1>
     <p class="intro">BTC / ETH · 30 分钟到期 · 85% 净赔付 · 研究信号提醒，自动下单关闭</p>
     <section class="panel" id="liveMonitor" aria-labelledby="liveTitle">
@@ -28,13 +28,13 @@
         <div class="live-price"><span>ETH / USDT 指数</span><strong id="liveEthPrice">—</strong><small id="liveEthTime">等待真实行情</small></div>
       </div>
       <div class="status-grid">
-        <div><span>当前模型</span><strong id="liveModel">等待模型状态</strong></div>
+        <div><span>当前模型</span><strong id="liveModel">等待模型状态</strong><p class="monitor-note" id="liveStrategy">等待服务器返回实际启用策略</p></div>
         <div><span>最近研究信号</span><strong id="liveSignal">暂无信号记录</strong></div>
         <div><span>企业微信群通知</span><strong id="liveNotify">等待推送状态</strong></div>
       </div>
       <div class="scan-grid">
         <div><span>机会扫描 · 仅用已收盘分钟数据</span><strong id="liveScan">等待扫描统计</strong><small id="liveScanTime">尚未完成本轮预测</small><small id="liveBtcDecision">BTC · 等待本轮扫描</small><small id="liveEthDecision">ETH · 等待本轮扫描</small></div>
-        <div><span>服务器持续模拟 · 每笔 5 USDT</span><strong id="livePaper">等待服务器模拟记录</strong><small id="liveSettlement">暂无已结算模拟信号</small><small id="liveNotifyKinds">等待通知分类统计</small></div>
+        <div><span>当前策略前向记录 · 历史回测不计入</span><strong id="liveCurrentPaper">等待当前策略独立统计</strong><small>全历史账户（含旧策略、旧金额）</small><strong id="livePaper">等待服务器模拟记录</strong><small id="liveSettlement">暂无已结算模拟信号</small><small id="liveNotifyKinds">等待通知分类统计</small></div>
       </div>
       <details class="settlements"><summary>查看最近 10 笔模拟结算与准确指数价格</summary><div class="settlement-scroll"><table class="settlement-table"><thead><tr><th scope="col">币种 / 方向</th><th scope="col">计划开仓</th><th scope="col">开仓指数</th><th scope="col">到期时刻</th><th scope="col">到期指数</th><th scope="col">本笔金额</th><th scope="col">模拟盈亏</th></tr></thead><tbody id="liveSettlementRows"></tbody></table></div></details>
       <p class="monitor-note" id="liveNote">每分钟检查机会，条件满足才提醒；入场后持有 30 分钟，结算后播报模拟结果。北京时间每小时整点播报行情与研究汇总。此处每 10 秒同步服务状态。</p>

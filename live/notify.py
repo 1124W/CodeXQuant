@@ -23,6 +23,8 @@ from .stakes import amount_cents,stake_cents,settlement_cents
 
 CST = timezone(timedelta(hours=8))
 SYMBOLS = ("BTCUSDT", "ETHUSDT")
+CONSENSUS_RULE = 'pair_logistic_1m_gbm_deeper_5m_0.60_unrestricted'
+CONSENSUS_MEMBERS = ('logistic_1m','gbm_deeper_5m')
 REQUEST_TIMEOUT_SECONDS = 8
 MAX_ATTEMPTS = 3
 MAX_REQUESTS_PER_MINUTE = 20
@@ -115,6 +117,21 @@ def format_signal(signal):
             f"本笔模拟本金：**{stake/100:.2f} USDT**；净赔付85%；无额外手续费。",
             f"判赢净收益 +{settlement_cents(stake,'win')/100:.2f} USDT；判输 -{stake/100:.2f} USDT；平价退还本金。",
             f"当前每日亏损及待结算风险预算：{daily/100:.2f} USDT。"]
+    if signal.get('rule_id')==CONSENSUS_RULE or 'model_scores' in signal:
+        scores=signal.get('model_scores')
+        if not isinstance(scores,dict) or set(scores)!=set(CONSENSUS_MEMBERS):
+            raise ValueError('Consensus alerts require both model scores')
+        directional=[]
+        for name in CONSENSUS_MEMBERS:
+            value=scores[name]
+            if isinstance(value,bool) or not isinstance(value,(int,float)) or not math.isfinite(value) or not 0<=value<=1:
+                raise ValueError('Invalid consensus member score')
+            sided=value if side=='LONG' else 1-value
+            if sided<.60:raise ValueError('Both models must confirm the alerted direction at 0.60')
+            directional.append(sided)
+        if not math.isclose(float(score),min(directional),rel_tol=0,abs_tol=1e-12):
+            raise ValueError('Consensus score must equal the weaker directional score')
+        text.append(f"双模型同向确认：Logistic {directional[0]:.2%} / GBM {directional[1]:.2%}（各自方向分数，均≥60%，不是胜率）。")
     if signal.get("index_price") is not None:
         text.append(f"提醒时参考指数：{_price(signal['index_price']):,.2f} USDT")
     if signal.get("model_id"):
@@ -162,6 +179,8 @@ def format_settlement(result):
     side="做多" if direction==1 else "做空"
     return "\n".join([
         f"## {symbol[:-4]} 30分钟模拟复盘 · {side} · {label}"+("（延迟补报）" if result.get('delayed_report') else ""),
+        *(["归属策略："+('Logistic + GBM 双模型同向确认' if result['rule_id']==CONSENSUS_RULE else '原单模型策略（保留原入场记录）')]
+          if result.get('rule_id') else []),
         f"信号时间：{_time(signal_ms)}",
         f"模拟开仓：{_time(entry_ms)} · {entry:,.2f} USDT",
         f"模拟到期：{_time(expiry_ms)} · {exit_price:,.2f} USDT",
@@ -179,7 +198,9 @@ def format_research_report(report,slot_ms):
     reasons={"model_score_below_0.56":"模型方向分数不足", "model_does_not_oppose_60m_move":"未满足反转方向",
              "60m_move_not_extreme":"60分钟波动不够极端", "short_volatility_expanding":"短期波动扩张",
              "paper_position_open":"已有模拟持仓", "paper_daily_risk_budget":"达到当日风险预算",
-             "paper_capital_insufficient":"模拟资金不足","research_publication_hold":"更新校验期间暂停新模拟入场"}
+             "paper_capital_insufficient":"模拟资金不足","research_publication_hold":"更新校验期间暂停新模拟入场",
+             "model_directions_disagree":"双模型方向不同","consensus_score_below_0.60":"双模型最小分数不足60%",
+             "neutral_model_direction":"模型未给出明确方向"}
     counts={**scan.get("reasons",{}),**scan.get("risk_blocks",{})}
     skipped=[f"{reasons.get(key,_safe_label(key))} {int(value)}次" for key,value in sorted(counts.items(),key=lambda item:-item[1])[:4] if key!="signal"]
     rate=paper.get("win_rate")
@@ -200,6 +221,13 @@ def format_research_report(report,slot_ms):
                  f"已决胜率（不含平价）：{rate_text}；累计模拟盈亏：**{float(paper['net_usdt']):+.2f} USDT**。",
                  "以上为本程序真实留存的前向模拟记录，不是历史回测胜率；85%净赔付，无额外手续费。",
                  "累计盈亏按每笔原始本金计算，保留旧5U交易；调整默认金额不会重算历史盈亏。"])
+    cohort=paper.get('current_strategy')
+    if cohort and cohort.get('rule_id')==CONSENSUS_RULE:
+        rate=cohort['win_rate'];shown=f'{rate:.2%}' if rate is not None else '暂无已决样本'
+        text.extend(['', '### 当前双模型策略的独立前向记录',
+                     f"已结算 {int(cohort['settled'])} 笔，待结算 {int(cohort['pending'])} 笔；胜 {int(cohort['wins'])} / 负 {int(cohort['losses'])} / 平 {int(cohort['refunds'])}。",
+                     f"当前策略胜率：{shown}；模拟盈亏：{float(cohort['net_usdt']):+.2f} USDT。",
+                     '上方累计账户含旧策略；本段仅统计双模型启用后准入的记录，不能把旧策略业绩算给新策略。'])
     historical=report.get('historical_research')
     if historical:
         text.extend(format_historical_research(historical))
@@ -213,11 +241,64 @@ def format_historical_research(historical):
         raise ValueError('Invalid historical research statistics')
     stake=stake_cents(historical['stake_usdt'])
     capital=amount_cents(historical['initial_capital_usdt'],minimum=1)
-    return ["", "### 近期历史研究对照（非当前线上模型）",
+    current=historical.get('is_live_strategy') is True
+    title='当前策略三年历史对照' if current else ('三年历史研究对照（非当前线上模型）' if historical.get('scope')=='three_year' else '近期历史研究对照（非当前线上模型）')
+    output=["", "### "+title,
             f"区间：{_safe_label(historical['start_utc'])} 至 {_safe_label(historical['end_exclusive_utc'])} UTC，结束时刻不含。",
             f"固定研究本金 {capital/100:,.2f} USDT，每笔 {stake/100:.2f} USDT；{int(historical['signals'])} 笔，历史胜率 {rate:.2%}，模拟净收益 {net:+.2f} USDT。",
+            "该规则来自历史择优，尚未完成前瞻验证；历史收益不并入上方服务器前向统计。" if current else
             "该策略是看过历史后的研究候选，尚未完成前瞻验证；不并入上方服务器前向统计。",
             f"[研究明细与金额测算]({historical['url']})"]
+    if historical.get('scope')=='three_year':
+        yearly=next((r for r in historical.get('yearly',[]) if str(r.get('year',r.get('label')))=='2024'),None)
+        stress=next((r for r in historical.get('stress',[]) if r.get('adverse_bps')==2),None)
+        if yearly and stress:
+            output.insert(-1,f"2024自然年 {float(yearly['net_usdt']):+.2f}U；2bp不利开仓 {float(stress['stats']['net_usdt']):+.2f}U，未证实稳定58%。")
+    return output
+
+
+def _public_url(value):
+    if not isinstance(value,str):raise ValueError('Require a public research URL')
+    url=parse.urlsplit(value)
+    if (url.scheme not in ('https','http') or not url.hostname or url.username or url.password
+            or url.query or url.fragment or any(char in value for char in '[]()\r\n')):
+        raise ValueError('Invalid public research URL')
+    return value
+
+
+def format_strategy_update(report,url):
+    """One explicit deployment explanation, built from the audited public report."""
+    url=_public_url(url)
+    if (report.get('schema_version')!=1 or report['strategy']['rule_id']!=CONSENSUS_RULE
+            or report['strategy']['posthoc'] is not True or report['strategy']['forward_validated'] is not False):
+        raise ValueError('Require the frozen consensus historical report')
+    stats=report['stats'];period=report['period'];assumptions=report['assumptions']
+    if (assumptions['default_stake']!=30 or assumptions['initial_capital']!=10000
+            or assumptions['net_payout']!=.85 or assumptions['fee']!=0):
+        raise ValueError('Unexpected strategy publication assumptions')
+    for key in ('win_rate','net_usdt','max_drawdown_usdt'):
+        if isinstance(stats[key],bool) or not math.isfinite(float(stats[key])):raise ValueError('Invalid strategy statistic')
+    if not 0<=stats['win_rate']<=1 or type(stats['signals']) is not int or stats['signals']<=0:
+        raise ValueError('Invalid strategy counts')
+    yearly=next(r for r in report['yearly'] if str(r.get('year',r.get('label')))=='2024')
+    stress=next(r for r in report['stress'] if r['adverse_bps']==2)['stats']
+    text='\n'.join([
+        '## BTC / ETH 双模型策略已启用 · 研究提醒',
+        '规则：Logistic（1分钟训练采样）与 GBM（5分钟训练采样）方向一致，且各自方向分数至少60%。分数不等于胜率。',
+        '每分钟扫描，满足条件才提醒；计划下一分钟模拟开仓，持有30分钟。过去180天训练，每30天更新两个模型。',
+        '新模拟信号每笔30U；判赢+25.50U、判输-30U；净赔付85%，无额外手续费。每日亏损及待结算风险上限150U，两币共享最多1笔持仓。',
+        '', '### 三年历史回测（不是新策略前向业绩）',
+        f"{_safe_label(period['start_utc'])} 至 {_safe_label(period['end_exclusive_utc'])} UTC，结束时刻不含。",
+        f"研究初始本金10,000U；{stats['signals']:,}笔，胜率{stats['win_rate']:.2%}，净收益{stats['net_usdt']:+,.2f}U，最大回撤{stats['max_drawdown_usdt']:,.2f}U。",
+        f"2024自然年：{int(yearly['signals'])}笔、胜率{float(yearly['win_rate']):.2%}、净收益{float(yearly['net_usdt']):+,.2f}U。",
+        f"开仓报价不利偏差0.02%（2bp）：胜率{float(stress['win_rate']):.2%}、净收益{float(stress['net_usdt']):+,.2f}U；不是新增手续费。",
+        '三年未达到58%目标；近期约60%的表现未在三年稳定保持。规则来自历史择优，仍需独立前向验证。',
+        '', '### 后续群内播报',
+        '信号注明BTC/ETH、多/空、两模型分数及本笔金额；到期核实指数后复盘；每小时整点报价格与研究状态。',
+        '旧策略/旧金额记录原样保留，新双模型单独统计；历史回测不计入服务器前向收益。网页自选金额仅影响浏览器研究测算。',
+        '本程序只发研究提醒和模拟结算，不自动下单。',f'[三年明细与金额测算]({url})'])
+    if len(text.encode('utf-8'))>4096:raise ValueError('Strategy update exceeds WeCom limit')
+    return text
 
 
 class _NoRedirect(request.HTTPRedirectHandler):
@@ -294,6 +375,12 @@ class WeComNotifier:
 
     def send_research_report(self,report,slot_ms):
         return self._send(f"research_report:{int(slot_ms)}","research_report",format_research_report(report,slot_ms))
+
+    def send_strategy_update(self,report,key):
+        if not isinstance(key,str) or not key.strip():raise ValueError('Strategy update requires a stable deduplication key')
+        text=format_strategy_update(report,report.get('url','https://nightsleep.eu.org/demo/consensus.html'))
+        identifier=hashlib.sha256(key.encode('utf-8')).hexdigest()
+        return self._send('strategy_update:'+identifier,'strategy_update',text)
 
     def send_status(self, text, key=None):
         if not isinstance(text, str) or not text.strip():

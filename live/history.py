@@ -175,12 +175,34 @@ class FeatureHistory:
         output={}
         with self._db() as db:
             for symbol in SYMBOLS:
-                rows=db.execute("""SELECT * FROM feature_history WHERE symbol=? AND signal_ms>=?
-                    AND signal_ms<? AND settlement_ms<? AND y IS NOT NULL AND signal_ms % ?=0
-                    ORDER BY signal_ms""",(symbol,cutoff-days*DAY_MS,cutoff,cutoff,sample_interval_minutes*MINUTE_MS)).fetchall()
-                records=[json.loads(row["features_json"])+[row["signal_ms"],row["settlement_ms"],row["y"],bool(row["is_flat"])] for row in rows]
-                frame=pd.DataFrame(records,columns=ROW_COLUMNS)
-                frame=frame.astype({"signal_ms":"int64","settlement_ms":"int64","y":"int8","is_flat":"bool"})
+                where='''WHERE symbol=? AND signal_ms>=? AND signal_ms<? AND settlement_ms<?
+                    AND y IS NOT NULL AND signal_ms % ?=0'''
+                arguments=(symbol,cutoff-days*DAY_MS,cutoff,cutoff,sample_interval_minutes*MINUTE_MS)
+                capacity=max(1,db.execute('SELECT count(*) FROM feature_history '+where,arguments).fetchone()[0])
+                matrix=np.empty((capacity,len(FEATURES)),dtype=np.float64)
+                clocks=np.empty((capacity,2),dtype=np.int64);labels=np.empty((capacity,2),dtype=np.int8)
+                count=0;last_signal=cutoff-days*DAY_MS-MINUTE_MS
+                while True:
+                    cursor=db.execute('SELECT signal_ms,settlement_ms,y,is_flat,features_json FROM feature_history '+where+
+                                      ' AND signal_ms>? ORDER BY signal_ms LIMIT 512',arguments+(last_signal,))
+                    batch=cursor.fetchmany(512);cursor.close()
+                    if not batch:break
+                    last_signal=batch[-1]['signal_ms']
+                    # Labels may arrive between COUNT and a page read.
+                    # Growing a few rows is preferable to a long read transaction
+                    # blocking the minute worker while dense JSON is decoded.
+                    if count+len(batch)>capacity:
+                        capacity=max(count+len(batch),capacity+1024)
+                        matrix.resize((capacity,len(FEATURES)),refcheck=False)
+                        clocks.resize((capacity,2),refcheck=False);labels.resize((capacity,2),refcheck=False)
+                    for row in batch:
+                        values=json.loads(row['features_json'])
+                        if len(values)!=len(FEATURES):raise ValueError('Corrupt stored training vector')
+                        matrix[count]=values;clocks[count]=(row['signal_ms'],row['settlement_ms'])
+                        labels[count]=(row['y'],row['is_flat']);count+=1
+                frame=pd.DataFrame(matrix[:count],columns=FEATURES,copy=False)
+                frame['signal_ms']=clocks[:count,0];frame['settlement_ms']=clocks[:count,1]
+                frame['y']=labels[:count,0];frame['is_flat']=labels[:count,1].astype(bool)
                 frame.attrs["features"]=FEATURES.copy()
                 output[symbol]=frame
         return output
@@ -196,6 +218,11 @@ class FeatureHistory:
         if not isinstance(manifest,dict) or manifest.get("features")!=FEATURES:
             raise ValueError("Seed manifest has a different feature contract")
         cutoff=_ms(manifest.get("training_cutoff_ms"),"seed training cutoff")
+        sampling=manifest.get('training_sampling_minutes',30)
+        if isinstance(sampling,bool) or type(sampling) is not int or sampling not in (1,30):
+            raise ValueError('Seed sampling interval must be 1 or 30 minutes')
+        if manifest.get('schema_version')==2 and sampling!=1:
+            raise ValueError('Consensus schema requires a dense one-minute training seed')
         if set(manifest.get("models",{}))!=set(SYMBOLS):
             raise ValueError("Seed manifest must include exactly BTCUSDT and ETHUSDT")
         result={}
@@ -218,53 +245,62 @@ class FeatureHistory:
             if prior is not None:
                 result[symbol]={"inserted":0,"already_imported":True,"seed_rows":prior["row_count"]}
                 continue
-            frame=pd.read_csv(path,float_precision="round_trip")
-            if list(frame.columns)!=ROW_COLUMNS or frame.empty:
-                raise ValueError("Training seed CSV schema or population is invalid")
-            matrix=frame[FEATURES].to_numpy(dtype=float)
-            if not np.isfinite(matrix).all():
-                raise ValueError("Nonfinite training seed features")
-            times=frame.signal_ms.to_numpy()
-            settles=frame.settlement_ms.to_numpy()
-            if (not np.isfinite(times).all() or np.any(times!=times.astype(np.int64))
-                    or np.any(times<=0) or np.any(times%(30*MINUTE_MS))
-                    or np.any(np.diff(times)<=0) or np.any(settles!=times+31*MINUTE_MS)
-                    or np.any(settles>=cutoff)):
-                raise ValueError("Seed timestamps must be unique, settled, and before its cutoff")
-            if not frame.y.isin([0,1]).all() or not frame.is_flat.isin([True,False]).all():
-                raise ValueError("Invalid training seed outcomes")
-            if ((frame.is_flat.astype(bool))&(frame.y!=0)).any():
-                raise ValueError("A flat index observation cannot have an up label")
-            prepared.append((symbol,actual,frame))
+            count=0;previous=None
+            for frame in pd.read_csv(path,float_precision="round_trip",chunksize=1024):
+                if list(frame.columns)!=ROW_COLUMNS or frame.empty:
+                    raise ValueError("Training seed CSV schema or population is invalid")
+                if not np.isfinite(frame[FEATURES].to_numpy(dtype=float)).all():
+                    raise ValueError("Nonfinite training seed features")
+                times=frame.signal_ms.to_numpy();settles=frame.settlement_ms.to_numpy()
+                if (not np.isfinite(times).all() or np.any(times!=times.astype(np.int64))
+                        or np.any(times<=0) or np.any(times%(sampling*MINUTE_MS))
+                        or np.any(np.diff(times)<=0) or (previous is not None and times[0]<=previous)
+                        or np.any(settles!=times+31*MINUTE_MS) or np.any(settles>=cutoff)):
+                    raise ValueError("Seed timestamps must be unique, settled, and before its cutoff")
+                if not frame.y.isin([0,1]).all() or not frame.is_flat.isin([True,False]).all():
+                    raise ValueError("Invalid training seed outcomes")
+                if ((frame.is_flat.astype(bool))&(frame.y!=0)).any():
+                    raise ValueError("A flat index observation cannot have an up label")
+                previous=times[-1];count+=len(frame)
+            if not count:raise ValueError('Training seed is empty')
+            prepared.append((symbol,actual,path,count))
         # Validate every input file before adding any previously unseen seed.
         with self._db() as db:
             db.execute("BEGIN IMMEDIATE")
-            for symbol,sha,frame in prepared:
+            for symbol,sha,path,count in prepared:
                 # Another worker may have imported it since the file read.
                 prior=db.execute("SELECT row_count FROM feature_seed_imports WHERE symbol=? AND sha256=?",(symbol,sha)).fetchone()
                 if prior is not None:
                     result[symbol]={"inserted":0,"already_imported":True,"seed_rows":prior["row_count"]}
                     continue
                 inserted=0
-                for row in frame.itertuples(index=False,name=None):
-                    vector=[float(value) for value in row[:len(FEATURES)]]
-                    signal,settlement,y,flat=row[len(FEATURES):]
-                    old=db.execute("SELECT features_json,y,is_flat FROM feature_history WHERE symbol=? AND signal_ms=?",(symbol,int(signal))).fetchone()
-                    if old is not None:
-                        if not _same_features(old["features_json"],vector):
-                            raise ValueError("Training seed conflicts with recorded historical features")
-                        if old["y"] is not None and (old["y"]!=int(y) or old["is_flat"]!=int(flat)):
-                            raise ValueError("Training seed conflicts with a recorded historical label")
-                        if old["y"] is None:
-                            db.execute("UPDATE feature_history SET y=?,is_flat=?,label_source='verified_training_seed' WHERE symbol=? AND signal_ms=?",
-                                       (int(y),int(flat),symbol,int(signal)))
-                        continue
-                    db.execute("""INSERT INTO feature_history(symbol,signal_ms,settlement_ms,features_json,y,is_flat,label_source)
-                        VALUES(?,?,?,?,?,?,'verified_training_seed')""",
-                               (symbol,int(signal),int(settlement),json.dumps(vector,separators=(",",":"),allow_nan=False),int(y),int(flat)))
-                    inserted+=1
-                db.execute("INSERT INTO feature_seed_imports VALUES(?,?,?,?)",(symbol,sha,len(frame),cutoff))
-                result[symbol]={"inserted":inserted,"already_imported":False,"seed_rows":len(frame)}
+                # Re-read only after every source has passed validation. Hash
+                # both sides of the import so a concurrent file edit rolls back.
+                if hashlib.sha256(path.read_bytes()).hexdigest()!=sha:raise ValueError('Training seed changed before import')
+                imported=0
+                for frame in pd.read_csv(path,float_precision="round_trip",chunksize=1024):
+                    for row in frame.itertuples(index=False,name=None):
+                        vector=[float(value) for value in row[:len(FEATURES)]]
+                        signal,settlement,y,flat=row[len(FEATURES):]
+                        old=db.execute("SELECT features_json,y,is_flat FROM feature_history WHERE symbol=? AND signal_ms=?",(symbol,int(signal))).fetchone()
+                        if old is not None:
+                            if not _same_features(old["features_json"],vector):
+                                raise ValueError("Training seed conflicts with recorded historical features")
+                            if old["y"] is not None and (old["y"]!=int(y) or old["is_flat"]!=int(flat)):
+                                raise ValueError("Training seed conflicts with a recorded historical label")
+                            if old["y"] is None:
+                                db.execute("UPDATE feature_history SET y=?,is_flat=?,label_source='verified_training_seed' WHERE symbol=? AND signal_ms=?",
+                                           (int(y),int(flat),symbol,int(signal)))
+                        else:
+                            db.execute("""INSERT INTO feature_history(symbol,signal_ms,settlement_ms,features_json,y,is_flat,label_source)
+                                VALUES(?,?,?,?,?,?,'verified_training_seed')""",
+                                       (symbol,int(signal),int(settlement),json.dumps(vector,separators=(",",":"),allow_nan=False),int(y),int(flat)))
+                            inserted+=1
+                        imported+=1
+                if imported!=count or hashlib.sha256(path.read_bytes()).hexdigest()!=sha:
+                    raise ValueError('Training seed changed during import')
+                db.execute("INSERT INTO feature_seed_imports VALUES(?,?,?,?)",(symbol,sha,count,cutoff))
+                result[symbol]={"inserted":inserted,"already_imported":False,"seed_rows":count}
             db.commit()
         return result
 

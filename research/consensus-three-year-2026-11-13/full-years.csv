@@ -1,0 +1,4 @@
+﻿start_utc,end_exclusive_utc,opening_balance,source,signals,wins,losses,refunds,decisive_trades,win_rate,net_usdt,ending_balance,initial_bankroll,max_drawdown_usdt,max_drawdown_pct,max_drawdown_initial_pct,minimum_balance,longest_losing_streak,losing_streak_refund_policy
+2023-11-12,2024-11-12,10000.0,partition_of_continuous_ledger,1037,572,465,0,1037,0.5515911282545806,636.0,10636.0,10000.0,895.5,0.08034272384712005,0.08955,9940.0,7,reset
+2024-11-12,2025-11-12,10636.0,partition_of_continuous_ledger,405,220,185,0,405,0.5432098765432098,60.0,10696.0,10636.0,303.0,0.02824121539752074,0.028488153441143287,10426.0,6,reset
+2025-11-12,2026-11-12,10696.0,partition_of_continuous_ledger,450,271,179,0,450,0.6022222222222222,1540.5,12236.5,10696.0,327.0,0.02981092147030409,0.03057217651458489,10544.5,10,reset

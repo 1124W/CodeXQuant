@@ -25,6 +25,18 @@ ROOT=Path(__file__).resolve().parents[1]
 MINUTE=60000
 HALF_HOUR=1800000
 HOUR=3600000
+LEGACY_RULE='both_regularized_logistic'
+CONSENSUS_RULE='pair_logistic_1m_gbm_deeper_5m_0.60_unrestricted'
+
+
+def strategy_mode(environ=None):
+    value=(os.environ if environ is None else environ).get('CODEXQUANT_STRATEGY','legacy')
+    if value not in ('legacy','consensus'):raise ValueError('Unsupported configured strategy')
+    return value
+
+
+def model_pointer(state_dir,mode):
+    return Path(state_dir)/('active-consensus-model.txt' if mode=='consensus' else 'active-model.txt')
 
 
 class Worker:
@@ -35,8 +47,13 @@ class Worker:
         self.publication_hold_file=Path(hold_path) if hold_path else None
         self.model_dir=Path(model_dir)
         self.state_dir=Path(state_dir);self.state_dir.mkdir(parents=True,exist_ok=True)
-        self.predictor=Predictor(model_dir)
-        self.history=FeatureHistory(self.state_dir/'history.sqlite3')
+        self.strategy_mode=strategy_mode()
+        if self.strategy_mode=='consensus':
+            from .consensus import ConsensusPredictor
+            self.predictor=ConsensusPredictor(model_dir)
+        else:self.predictor=Predictor(model_dir)
+        history_name='history-consensus.sqlite3' if self.strategy_mode=='consensus' else 'history.sqlite3'
+        self.history=FeatureHistory(self.state_dir/history_name)
         self.history.import_seed(self.model_dir,self.predictor.manifest)
         self.notifier=WeComNotifier(webhook,self.state_dir/'notifications.sqlite3')
         self.market=market or BinanceMarket()
@@ -81,7 +98,29 @@ class Worker:
                 PRIMARY KEY(symbol,signal_ms))''')
             con.execute('''INSERT OR IGNORE INTO admission_terms(symbol,signal_ms,stake_cents,payout_bps)
                 SELECT symbol,signal_ms,500,8500 FROM admissions''')
+            con.execute('''CREATE TABLE IF NOT EXISTS admission_strategy (
+                symbol TEXT NOT NULL,signal_ms INTEGER NOT NULL,rule_id TEXT NOT NULL,
+                model_id TEXT NOT NULL,PRIMARY KEY(symbol,signal_ms))''')
+            # Records predating this migration belong to the old rule, even
+            # when their stake was already changed to 30U.
+            con.execute('''INSERT OR IGNORE INTO admission_strategy(symbol,signal_ms,rule_id,model_id)
+                SELECT symbol,signal_ms,?,'legacy_untracked' FROM admissions''',(LEGACY_RULE,))
             con.commit()
+
+    def strategy_description(self):
+        predictor=getattr(self,'predictor',None)
+        manifest=getattr(predictor,'manifest',{})
+        if not isinstance(manifest,dict):manifest={}
+        rule=manifest.get('rule_id',CONSENSUS_RULE if getattr(self,'strategy_mode','legacy')=='consensus' else LEGACY_RULE)
+        consensus=rule==CONSENSUS_RULE
+        return {'rule_id':rule,'model_id':manifest.get('model_version','legacy_untracked'),
+                'mode':'consensus' if consensus else 'legacy',
+                'label':'Logistic + GBM 双模型同向确认' if consensus else '原单模型反转策略',
+                'threshold':.60 if consensus else .56,
+                'members':['logistic_1m','gbm_deeper_5m'] if consensus else ['regularized_logistic'],
+                'training_sampling_minutes':1 if consensus else 30,
+                'train_days':180,'refit_days':30,'forward_validated':False,
+                'description':'两模型方向相同且各自方向分数至少0.60；每分钟扫描' if consensus else '单模型分数与极端偏离反转过滤'}
 
     def paper_config(self):
         if not hasattr(self,'paper_settings'):
@@ -101,6 +140,7 @@ class Worker:
         value['model']={'id':predictor.manifest['model_version'],
                         'trained_at':predictor.manifest['training_cutoff_utc'],
                         'rule_id':predictor.manifest['rule_id'],'max_age_days':35}
+        value['strategy']=self.strategy_description()
         value['notifications']=self.notifier.status()
         value['scan_stats']=self.scan_stats(now)
         value['paper_performance']=self.paper_performance()
@@ -130,20 +170,37 @@ class Worker:
 
     def paper_performance(self):
         with closing(sqlite3.connect(self.db,isolation_level=None)) as con:
-            rows=con.execute('''SELECT a.outcome,a.net,coalesce(t.stake_cents,500)
-                FROM admissions a LEFT JOIN admission_terms t USING(symbol,signal_ms)''').fetchall()
+            rows=con.execute('''SELECT a.outcome,a.net,coalesce(t.stake_cents,500),
+                coalesce(s.rule_id,?),coalesce(s.model_id,'legacy_untracked')
+                FROM admissions a LEFT JOIN admission_terms t USING(symbol,signal_ms)
+                LEFT JOIN admission_strategy s USING(symbol,signal_ms)''',(LEGACY_RULE,)).fetchall()
         counts={};net_cents=0;amounts={}
-        for outcome,net,stake in rows:
+        for outcome,net,stake,rule,model in rows:
             counts[outcome]=counts.get(outcome,0)+1
             net_cents+=amount_cents(net or 0)
             amounts[stake]=amounts.get(stake,0)+1
         config=self.paper_config().public();net=net_cents/100
         wins=counts.get('win',0);losses=counts.get('loss',0);refunds=counts.get('refund',0)
+        current=self.strategy_description()
+        def cohort(selected):
+            outcomes={};total_net=0
+            for outcome,net,stake,rule,model in selected:
+                outcomes[outcome]=outcomes.get(outcome,0)+1;total_net+=amount_cents(net or 0)
+            w,l,r=(outcomes.get(key,0) for key in ('win','loss','refund'))
+            return {'total':len(selected),'settled':w+l+r,'pending':outcomes.get(None,0),
+                    'wins':w,'losses':l,'refunds':r,'win_rate':w/(w+l) if w+l else None,
+                    'net_usdt':total_net/100}
+        rules=sorted({row[3] for row in rows})
+        current_rows=[row for row in rows if row[3]==current['rule_id']]
         return {'total':sum(counts.values()),'settled':wins+losses+refunds,'pending':counts.get(None,0),
                 'wins':wins,'losses':losses,'refunds':refunds,'win_rate':wins/(wins+losses) if wins+losses else None,
                 'net_usdt':net,'balance_usdt':config['initial_capital_usdt']+net,
                 **config,'mixed_stakes':len(amounts)>1,
                 'stake_history':[{'stake_usdt':stake/100,'trades':count} for stake,count in sorted(amounts.items())],
+                'mixed_strategies':len(rules)>1,'all_history_is_current_strategy':all(rule==current['rule_id'] for rule in rules),
+                'all_history':cohort(rows),
+                'current_strategy':{**current,**cohort(current_rows),'source':'current_strategy_forward_paper_only'},
+                'strategy_history':[{'rule_id':rule,**cohort([row for row in rows if row[3]==rule])} for rule in rules],
                 'source':'forward_paper_simulation'}
 
     def recent_settlements(self):
@@ -158,17 +215,22 @@ class Worker:
             return getattr(self,'historical_research_cache',None)
         value=None
         try:
-            path=ROOT/'research'/'recent-public.json'
+            path=ROOT/'research'/'consensus-public.json'
+            three_year=path.is_file()
+            if not three_year:path=ROOT/'research'/'recent-public.json'
             if path.stat().st_size>16*1024*1024:raise ValueError('Oversized research payload')
             data=json.loads(path.read_text(encoding='utf-8'))
             a=data['assumptions'];strategy=data['strategy']
-            stats=data['published']['recent_six_months']['stats']
-            period=next(p for p in data['periods'] if p['id']=='recent_six_months')
+            stats=data['stats'] if three_year else data['published']['recent_six_months']['stats']
+            period=data['period'] if three_year else next(p for p in data['periods'] if p['id']=='recent_six_months')
             if (data['schema_version']!=1 or a['default_stake']!=30 or a['initial_capital']!=10000
                     or a['net_payout']!=.85 or a['fee']!=0
-                    or strategy['is_live_strategy'] is not False or strategy['posthoc'] is not True
+                    or strategy['is_live_strategy'] is not three_year or strategy['posthoc'] is not True
                     or strategy['forward_validated'] is not False):
                 raise ValueError('Unsupported recent research provenance')
+            if three_year and (strategy['rule_id']!=CONSENSUS_RULE or
+                    period.get('start_utc')!='2023-11-12' or period.get('end_exclusive_utc')!='2026-11-12'):
+                raise ValueError('Unsupported three-year rule or interval')
             rate=stats['win_rate'];net=stats['net_usdt']
             if (not isinstance(stats['signals'],int) or stats['signals']<=0
                     or not math.isfinite(rate) or not 0<=rate<=1 or not math.isfinite(net)):
@@ -182,8 +244,13 @@ class Worker:
                    'start_utc':period['start_utc'],'end_exclusive_utc':period['end_exclusive_utc'],
                    'signals':stats['signals'],'win_rate':rate,'net_usdt':net,
                    'stake_usdt':a['default_stake'],'initial_capital_usdt':a['initial_capital'],
-                   'posthoc':True,'is_live_strategy':False,'forward_validated':False,
-                   'url':base+'/demo/recent.html'}
+                   'posthoc':True,'is_live_strategy':three_year and self.strategy_description()['rule_id']==CONSENSUS_RULE,
+                   'forward_validated':False,'scope':'three_year' if three_year else 'recent_six_months',
+                   'url':base+('/demo/consensus.html' if three_year else '/demo/recent.html')}
+            if three_year:
+                value.update(max_drawdown_usdt=stats['max_drawdown_usdt'],
+                             yearly=data.get('yearly',[]),stress=data.get('stress',[]))
+            value['matches_current_strategy']=value['is_live_strategy']
         except (OSError,ValueError,KeyError,TypeError,StopIteration):
             value=None
         self.historical_research_loaded_at=now
@@ -230,8 +297,15 @@ class Worker:
             con.execute('INSERT INTO admissions VALUES (?,?,?,?,?,NULL,NULL)',(signal['symbol'],signal['signal_ms'],entry,signal['expiry_due_ms'],signal['direction']))
             con.execute('INSERT INTO admission_terms(symbol,signal_ms,stake_cents,payout_bps) VALUES(?,?,?,?)',
                         (signal['symbol'],signal['signal_ms'],stake,PAYOUT_BPS))
+            strategy=self.strategy_description()
+            rule=signal.get('rule_id',strategy['rule_id']);model=signal.get('model_id',strategy['model_id'])
+            if rule!=strategy['rule_id'] or not isinstance(model,str) or not model:
+                raise ValueError('Admission strategy does not match its predictor')
+            con.execute('INSERT INTO admission_strategy(symbol,signal_ms,rule_id,model_id) VALUES(?,?,?,?)',
+                        (signal['symbol'],signal['signal_ms'],rule,model))
             signal.update(stake_usdt=stake/100,payout=.85,win_net_usdt=settlement_cents(stake,'win')/100,
-                          loss_net_usdt=-stake/100,daily_loss_limit_usdt=settings.daily_limit_cents/100)
+                          loss_net_usdt=-stake/100,daily_loss_limit_usdt=settings.daily_limit_cents/100,
+                          rule_id=rule,model_id=model)
             con.commit();return True,'paper_risk_admitted'
 
     def settle_admission(self,symbol,signal_ms,entry,expiry):
@@ -241,9 +315,11 @@ class Worker:
         with closing(sqlite3.connect(self.db,isolation_level=None)) as con:
             con.execute('BEGIN IMMEDIATE')
             row=con.execute('''SELECT a.direction,a.entry_ms,a.settlement_ms,a.outcome,a.net,
-                coalesce(t.stake_cents,500),coalesce(t.payout_bps,8500)
+                coalesce(t.stake_cents,500),coalesce(t.payout_bps,8500),
+                coalesce(s.rule_id,?),coalesce(s.model_id,'legacy_untracked')
                 FROM admissions a LEFT JOIN admission_terms t USING(symbol,signal_ms)
-                WHERE a.symbol=? AND a.signal_ms=?''',(symbol,signal_ms)).fetchone()
+                LEFT JOIN admission_strategy s USING(symbol,signal_ms)
+                WHERE a.symbol=? AND a.signal_ms=?''',(LEGACY_RULE,symbol,signal_ms)).fetchone()
             if not row:return
             change=(expiry-entry)*row[0]
             outcome='win' if change>0 else 'loss' if change<0 else 'refund'
@@ -252,11 +328,12 @@ class Worker:
                 raise ValueError('Conflicting paper settlement; original result preserved')
             payload={'symbol':symbol,'signal_ms':signal_ms,'entry_ms':row[1],'settlement_ms':row[2],
                      'direction':row[0],'entry_price':entry,'exit_price':expiry,'outcome':outcome,'net_usdt':net,
-                     'stake_usdt':row[5]/100,'payout':row[6]/10000}
+                     'stake_usdt':row[5]/100,'payout':row[6]/10000,'rule_id':row[7],'model_id':row[8]}
             old=con.execute('SELECT payload FROM settlement_outbox WHERE symbol=? AND signal_ms=?',(symbol,signal_ms)).fetchone()
             if old:
                 previous=json.loads(old[0])
-                normalized={**previous,'stake_usdt':previous.get('stake_usdt',5),'payout':previous.get('payout',.85)}
+                normalized={**previous,'stake_usdt':previous.get('stake_usdt',5),'payout':previous.get('payout',.85),
+                            'rule_id':previous.get('rule_id',LEGACY_RULE),'model_id':previous.get('model_id','legacy_untracked')}
                 if normalized!=payload:raise ValueError('Conflicting paper execution prices')
             con.execute('UPDATE admissions SET outcome=?,net=? WHERE symbol=? AND signal_ms=?',(outcome,net,symbol,signal_ms))
             con.execute('INSERT OR IGNORE INTO settlement_outbox(symbol,signal_ms,payload) VALUES(?,?,?)',
@@ -321,6 +398,7 @@ class Worker:
                 last=None
                 for signal in decisions:
                     signal['model_id']=predictor.manifest['model_version']
+                    signal['rule_id']=predictor.manifest.get('rule_id',self.strategy_description()['rule_id'])
                     quote=self.state['symbols'].get(signal['symbol'],{})
                     if ('index_price' in quote and abs(actual_now-quote.get('price_time_ms',0))<=30000):
                         signal['index_price']=quote['index_price']
@@ -394,20 +472,25 @@ class Worker:
 
     def _refresh_model(self,now):
         try:
-            from .predictor import retrain_from_rows
+            mode=getattr(self,'strategy_mode','legacy')
+            if mode=='consensus':
+                from .consensus import retrain_from_rows,ConsensusPredictor
+                predictor_class=ConsensusPredictor;sampling=1
+            else:
+                from .predictor import retrain_from_rows
+                predictor_class=Predictor;sampling=30
             day=now//86400000*86400000
-            target=self.state_dir/'models'/f'refresh-{day}'
-            # Match the frozen model's original half-hour training population;
-            # minute scans are collected for research, not silently overweighted.
-            retrain_from_rows(target,self.history.training_rows(day,sample_interval_minutes=30),day,progress=lambda _:None)
-            replacement=Predictor(target)
-            pointer=self.state_dir/'active-model.tmp'
+            target=self.state_dir/('models-consensus' if mode=='consensus' else 'models')/f'refresh-{day}'
+            retrain_from_rows(target,self.history.training_rows(day,sample_interval_minutes=sampling),day,progress=lambda _:None)
+            replacement=predictor_class(target)
+            destination=model_pointer(self.state_dir,mode);pointer=destination.with_suffix('.tmp')
             pointer.write_text(str(target),encoding='utf-8')
-            pointer.replace(self.state_dir/'active-model.txt')
+            pointer.replace(destination)
             with self.lock:
                 self.predictor=replacement;self.model_dir=target
                 self.state['model_refresh_error']=None
-            self.notifier.send_status('研究模型已按最近180天已结算样本更新。',key=f'model-refresh-{day}')
+            label='双模型共识' if mode=='consensus' else '原单模型'
+            self.notifier.send_status(f'{label}研究模型已按最近180天已结算样本更新。',key=f'model-refresh-{mode}-{day}')
         except Exception as error:
             with self.lock:
                 self.state['model_refresh_error']='模型更新未完成：'+type(error).__name__
@@ -441,19 +524,20 @@ def create_app(worker=None):
     def index():return send_file(ROOT/'index.html')
     @app.get('/demo/<name>')
     def demo(name):
-        if name not in ('trades.html','quantdinger.html','research.html','recent.html'):abort(404)
+        if name not in ('trades.html','quantdinger.html','research.html','recent.html','consensus.html'):abort(404)
         return send_file(ROOT/'demo'/name)
     @app.get('/<name>')
     def asset(name):
         if name not in ('app.js','styles.css','research.js','workbuddy.js','trade-view.js',
-                        'research-view.js','research-view.css','recent-view.js','recent-view.css'):abort(404)
+                        'research-view.js','research-view.css','recent-view.js','recent-view.css',
+                        'consensus-view.js','consensus-view.css'):abort(404)
         return send_file(ROOT/name)
     @app.get('/research/<name>')
     def report(name):
         if name not in ('trade-chart-data.json','workbuddy-results.json','workbuddy-trades.csv',
                         'event-results.json','event-trades.csv','results.json','derivative-study-results.json',
                         'minute-scan-results.json','high-win-public.json','high-win-public-trades.csv',
-                        'recent-public.json','recent-public-trades.csv'):abort(404)
+                        'recent-public.json','recent-public-trades.csv','consensus-public.json','consensus-public-trades.csv'):abort(404)
         return send_file(ROOT/'research'/name)
     return app
 
@@ -472,7 +556,7 @@ def main():
     if args.env_file:read_env(args.env_file)
     state_dir=Path(os.environ.get('CODEXQUANT_STATE_DIR',str(ROOT/'live-state')))
     model_dir=Path(os.environ.get('CODEXQUANT_MODEL_DIR',str(ROOT/'.private'/'models')))
-    active=state_dir/'active-model.txt'
+    active=model_pointer(state_dir,strategy_mode())
     if active.exists():
         candidate=Path(active.read_text(encoding='utf-8').strip()).resolve()
         if candidate.is_relative_to(state_dir.resolve()) and candidate.is_dir():model_dir=candidate

@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="CodeXQuant BTC/ETH 30分钟事件研究：完整三年固定规则回测，默认每笔30 USDT，支持5至250 USDT资金模拟。">
+  <title>CodeXQuant · 双模型共识三年研究</title>
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="../consensus-view.css">
+</head>
+<body class="consensus-page">
+  <header class="topbar">
+    <a class="brand" href="../index.html"><span class="brand-mark">CX</span><span><strong>CodeXQuant</strong><small>research notebook</small></span></a>
+    <nav aria-label="页面导航"><a href="../index.html">行情首页</a><a href="trades.html">实时信号</a><a href="recent.html">半年 / 年初研究</a><a href="research.html">旧 1,262 笔研究</a></nav>
+  </header>
+  <main id="consensusView" data-research-url="../research/consensus-public.json">
+    <section class="consensus-hero">
+      <p class="eyebrow">BTC / ETH · 30 MINUTE EVENT RESEARCH</p>
+      <h1>双模型，同向确认。<br><em>放进完整三年里检验。</em></h1>
+      <p class="intro">2023-11-12 至 2026-11-12，固定 Logistic + GBM 同向规则，连续模拟 BTC 与 ETH 30分钟事件。公开结果以每笔 <strong>30 USDT</strong> 重算；调整金额后，持仓、资金及每日风险会一起重新模拟。</p>
+      <p class="caution">默认30U研究：1,892笔 · 胜率56.18% · 净收益+2,236.50U · 最大回撤895.50U。<strong>2024自然年亏损373.50U；2bp不利报价下三年亏损447U。</strong>尚未证明稳定达到58%。</p>
+      <p class="note">已选定用于前向研究提醒，实际启用状态见 <a href="https://nightsleep.eu.org/demo/trades.html">服务器状态</a>。历史研究与新策略前向记录分别统计。</p>
+      <p id="consensusState" role="status" class="load-state">正在读取并核验研究数据…</p>
+      <p id="consensusError" role="alert" class="error" hidden></p>
+      <button id="consensusRetry" type="button" hidden>重新载入</button>
+      <p class="note"><a href="../research/consensus-public-trades.csv" download>下载默认 30U 的三年账本 CSV</a></p>
+      <noscript><p class="error">请启用 JavaScript 使用金额模拟；默认 30U 账本可直接下载。</p></noscript>
+    </section>
+
+    <div id="consensusContent" hidden>
+      <section class="panel consensus-panel settings-panel" aria-labelledby="settingsTitle">
+        <div class="section-heading"><div><p class="eyebrow">YOUR RESEARCH SCENARIO</p><h2 id="settingsTitle">每笔金额，由你设定</h2></div><span class="tag">研究模拟 · 不提交订单</span></div>
+        <form id="stakeForm" novalidate>
+          <div class="settings-grid">
+            <label for="consensusPeriod">研究区间<select id="consensusPeriod"><option value="three_years">完整三年 · 连续账户</option></select></label>
+            <label for="consensusStake">每笔金额（USDT）<input id="consensusStake" type="number" inputmode="decimal" min="5" max="250" step="0.01" value="30" required aria-describedby="stakeHint stakeError"></label>
+            <button id="applyStake" class="primary-button" type="submit">应用金额并重算</button>
+            <button id="resetStake" type="button">恢复 30U</button>
+          </div>
+          <p id="stakeError" class="error" role="alert" hidden></p>
+          <p id="stakeHint" class="note">范围 5–250 USDT，最多两位小数。设置仅保存在当前浏览器，影响本页研究模拟；群机器人使用服务器配置，不随这里的金额改变。</p>
+        </form>
+        <p id="scenarioText" class="scenario-text" aria-live="polite"></p>
+        <div id="riskSummary" class="risk-summary"></div>
+        <p id="periodText" class="note"></p>
+      </section>
+
+      <section class="panel consensus-panel" aria-labelledby="resultsTitle">
+        <div class="section-heading"><div><p class="eyebrow">REPLAYED FROM RAW OPPORTUNITIES</p><h2 id="resultsTitle">当前金额的模拟表现</h2></div><span id="amountBadge" class="tag"></span></div>
+        <div id="consensusCards" class="metric-cards"></div>
+        <p id="admissionText" class="note"></p>
+        <div class="table-scroll"><table><thead><tr><th scope="col">区间（UTC，截止日不含）</th><th scope="col">笔数</th><th scope="col">胜率</th><th scope="col">净收益 USDT</th><th scope="col">最大回撤 USDT</th></tr></thead><tbody id="consensusPeriodRows"></tbody></table></div>
+        <p class="note">上表为当前金额的自然年表现，首尾年份不足整年。按到期时间划分同一个连续账户，跨年不重置资金、持仓或风险；金额变化会重新判断准入。</p>
+        <h3>三个完整年度 · 当前金额</h3><div class="table-scroll"><table><thead><tr><th>区间（UTC，右端不含）</th><th>笔数</th><th>胜率</th><th>净收益 USDT</th><th>区间内最大回撤 USDT</th></tr></thead><tbody id="anniversaryRows"></tbody></table></div>
+        <div id="assetCards" class="asset-cards"></div>
+      </section>
+
+      <section class="panel consensus-panel" aria-labelledby="stressTitle">
+        <div class="section-heading"><div><p class="eyebrow">PUBLISHED 30U RESEARCH CHECKS</p><h2 id="stressTitle">默认 30U 的价格偏差检查</h2></div><span class="tag">固定 30U · 不随自选金额缩放</span></div>
+        <p id="uncertaintyText" class="caution"></p>
+        <div class="table-scroll"><table><thead><tr><th scope="col">开仓价不利偏差</th><th scope="col">笔数</th><th scope="col">胜率</th><th scope="col">净收益 USDT</th><th scope="col">7 日块净收益 95% 区间</th></tr></thead><tbody id="stressRows"></tbody></table></div>
+        <p class="note">本节始终采用每笔 30U 和当前所选区间。0.01% 即 1bp 的不利开仓报价，零额外手续费不变；每个压力情景都重新判定胜负、持仓与风险。收益区间不是多轮择优后的无偏保证。</p>
+        <details><summary>查看默认 30U 的逐月表现</summary><div class="table-scroll"><table><thead><tr><th scope="col">月份（UTC，首尾可不足整月）</th><th scope="col">笔数</th><th scope="col">胜率</th><th scope="col">净收益 USDT</th></tr></thead><tbody id="monthlyRows"></tbody></table></div></details>
+      </section>
+
+      <section class="panel consensus-panel" aria-labelledby="explorerTitle">
+        <div class="section-heading"><div><p class="eyebrow">EQUITY & TRADE LEDGER</p><h2 id="explorerTitle">权益曲线与开仓、到期价格</h2></div><button id="downloadConsensus" type="button">下载当前模拟账本 CSV ↓</button></div>
+        <div class="ledger-controls">
+          <label for="consensusSymbol">账本币种<select id="consensusSymbol"><option value="ALL">BTC + ETH</option><option value="BTCUSDT">BTC</option><option value="ETHUSDT">ETH</option></select></label>
+          <label for="consensusTimezone">显示时区<select id="consensusTimezone"><option value="UTC">UTC</option><option value="Asia/Shanghai">北京时间 UTC+8</option></select></label>
+        </div>
+        <p id="ledgerScope" class="note"></p>
+        <div class="equity-frame"><svg id="consensusEquity" viewBox="0 0 1000 290" role="group" tabindex="0" aria-label="已结算模拟权益图，左右方向键查看交易"></svg></div>
+        <p class="note">曲线显示已结算权益；待结算本金用于风控预留。选择表格编号或在曲线上移动，可查看完整价格精度。</p>
+        <div id="consensusSelected" class="selected-trade" aria-live="polite"></div>
+        <div class="table-scroll ledger-scroll" tabindex="0" role="region" aria-label="可横向滚动的交易账本">
+          <table class="trade-ledger"><thead><tr><th scope="col">编号</th><th scope="col">币种 / 方向</th><th scope="col">信号时间</th><th scope="col">开仓时间</th><th scope="col">开仓指数</th><th scope="col">到期时间</th><th scope="col">到期指数</th><th scope="col">本金</th><th scope="col">结果</th><th scope="col">净收益</th></tr></thead><tbody id="consensusTradeRows"></tbody></table>
+        </div>
+        <div class="pagination"><button id="consensusPrevious" type="button">上一页</button><span id="consensusPage" aria-live="polite"></span><button id="consensusNext" type="button">下一页</button></div>
+        <p class="note">表格价格显示两位小数；胜负按原始指数精度判断。CSV 对应当前金额、区间和币种筛选，含 UTC 原始时间与完整价格。</p>
+      </section>
+
+      <section class="panel consensus-panel" aria-labelledby="methodTitle">
+        <p class="eyebrow">HOW TO READ THIS RESULT</p><h2 id="methodTitle">历史研究与前向提醒分别统计</h2>
+        <p id="strategyText" class="intro"></p>
+        <p class="caution">策略最初由近期历史择优发现；本轮固定规则延长至三年，没有重新选参。已选定用于前向研究提醒，实际启用状态见服务器；历史收益不加入服务器前向账户。</p>
+        <ul id="consensusLimitations" class="limitations"></ul>
+        <p class="note">默认金额数据版本：<span id="consensusVersion"></span>。<a href="trades.html">查看实际服务器的提醒状态与前向模拟</a>；<a href="research.html">查看旧 1,262 笔研究</a>。</p>
+      </section>
+    </div>
+  </main>
+  <script src="../consensus-view.js" defer></script>
+</body>
+</html>

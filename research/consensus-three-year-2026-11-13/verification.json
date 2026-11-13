@@ -1,0 +1,191 @@
+{
+  "status": "passed",
+  "verified_at_utc": "2026-11-13T08:14:35.547831+00:00",
+  "method": "Independent standard-library cash/risk replay of every raw opportunity; no call to production simulators",
+  "results_sha256": "297c0770df1a436262b3fdbc2eacbdd4f88539ea1946b210b9c914e4ddbdbd78",
+  "opportunities_sha256": "3e3054997b85fedd38658d069e4a57d5b776e465a75a3f6e6f56069924503494",
+  "raw_opportunity_rows": 16341,
+  "scenarios": [
+    {
+      "adverse_entry_bps": 0,
+      "independently_replayed_from_all_raw_opportunities": true,
+      "per_trade_prices_amounts_outcomes_cash_and_risk_match": true,
+      "stats": {
+        "signals": 1892,
+        "wins": 1063,
+        "losses": 829,
+        "refunds": 0,
+        "decisive_trades": 1892,
+        "win_rate": 0.5618393234672304,
+        "net_usdt": 2236.5,
+        "ending_balance": 12236.5,
+        "max_drawdown_usdt": 895.5,
+        "max_drawdown_pct": 0.08034272384712005,
+        "minimum_balance": 9940.0,
+        "longest_losing_streak": 10,
+        "skipped_overlap": 12416,
+        "skipped_daily_limit": 2033,
+        "skipped_insufficient": 0,
+        "raw_opportunities": 16341
+      },
+      "ledger": "trades.csv",
+      "ledger_sha256": "e7b4111ff0c0991a2dca7a856cdc510ee3727eeb32b56b641a3d9d2ef3f7299e"
+    },
+    {
+      "adverse_entry_bps": 0.5,
+      "independently_replayed_from_all_raw_opportunities": true,
+      "per_trade_prices_amounts_outcomes_cash_and_risk_match": true,
+      "stats": {
+        "signals": 1887,
+        "wins": 1046,
+        "losses": 841,
+        "refunds": 0,
+        "decisive_trades": 1887,
+        "win_rate": 0.5543190249072601,
+        "net_usdt": 1443.0,
+        "ending_balance": 11443.0,
+        "max_drawdown_usdt": 1078.5,
+        "max_drawdown_pct": 0.09773448119619393,
+        "minimum_balance": 9940.0,
+        "longest_losing_streak": 11,
+        "skipped_overlap": 12392,
+        "skipped_daily_limit": 2062,
+        "skipped_insufficient": 0,
+        "raw_opportunities": 16341
+      },
+      "ledger": "adverse-0.5bps-trades.csv",
+      "ledger_sha256": "1e2b9dab27e7602c4d6d83f36264f4fc7de0727ca09b27958b74861ed78a8c88"
+    },
+    {
+      "adverse_entry_bps": 1,
+      "independently_replayed_from_all_raw_opportunities": true,
+      "per_trade_prices_amounts_outcomes_cash_and_risk_match": true,
+      "stats": {
+        "signals": 1887,
+        "wins": 1037,
+        "losses": 850,
+        "refunds": 0,
+        "decisive_trades": 1887,
+        "win_rate": 0.5495495495495496,
+        "net_usdt": 943.5,
+        "ending_balance": 10943.5,
+        "max_drawdown_usdt": 1276.5,
+        "max_drawdown_pct": 0.11567739012233802,
+        "minimum_balance": 9758.5,
+        "longest_losing_streak": 11,
+        "skipped_overlap": 12392,
+        "skipped_daily_limit": 2062,
+        "skipped_insufficient": 0,
+        "raw_opportunities": 16341
+      },
+      "ledger": "adverse-1bps-trades.csv",
+      "ledger_sha256": "7ad9bdac31385ecfe837790bc5bb3aa39be1c9f59d97ba5c0cad60c5d2e6f7d7"
+    },
+    {
+      "adverse_entry_bps": 2,
+      "independently_replayed_from_all_raw_opportunities": true,
+      "per_trade_prices_amounts_outcomes_cash_and_risk_match": true,
+      "stats": {
+        "signals": 1876,
+        "wins": 1006,
+        "losses": 870,
+        "refunds": 0,
+        "decisive_trades": 1876,
+        "win_rate": 0.5362473347547975,
+        "net_usdt": -447.0,
+        "ending_balance": 9553.0,
+        "max_drawdown_usdt": 1899.0,
+        "max_drawdown_pct": 0.1782178217821782,
+        "minimum_balance": 8756.5,
+        "longest_losing_streak": 12,
+        "skipped_overlap": 12323,
+        "skipped_daily_limit": 2142,
+        "skipped_insufficient": 0,
+        "raw_opportunities": 16341
+      },
+      "ledger": "adverse-2bps-trades.csv",
+      "ledger_sha256": "6453df6663aa91209f070d036e620d7fdd3cf6f6632a8500402c4656ccf736bb"
+    }
+  ],
+  "continuous_partition_checks": {
+    "full-years.csv": {
+      "count": 3,
+      "all_statistics_match": true,
+      "continuous_opening_equity_preserved": true
+    },
+    "calendar-years.csv": {
+      "count": 4,
+      "all_statistics_match": true,
+      "continuous_opening_equity_preserved": true
+    },
+    "monthly.csv": {
+      "count": 37,
+      "all_statistics_match": true,
+      "continuous_opening_equity_preserved": true
+    }
+  },
+  "by_symbol_contributions_reconciled": true,
+  "reported_artifact_and_source_hashes_verified": true,
+  "prediction_cache_files_hash_verified": 76,
+  "prediction_rows_causality_checked": 3156296,
+  "prediction_source_population": {
+    "early": 509760,
+    "existing": 2646536
+  },
+  "coverage": {
+    "BTCUSDT": {
+      "first_prediction_utc": "2023-11-12T00:00:00+00:00",
+      "last_prediction_utc": "2026-11-11T23:28:00+00:00",
+      "prediction_rows": 1578148,
+      "missing_minutes_in_three_year_signal_grid": 92,
+      "terminal_31_minutes_without_in_window_execution_labels": 31,
+      "other_unavailable_feature_minutes": 61
+    },
+    "ETHUSDT": {
+      "first_prediction_utc": "2023-11-12T00:00:00+00:00",
+      "last_prediction_utc": "2026-11-11T23:28:00+00:00",
+      "prediction_rows": 1578148,
+      "missing_minutes_in_three_year_signal_grid": 92,
+      "terminal_31_minutes_without_in_window_execution_labels": 31,
+      "other_unavailable_feature_minutes": 61
+    }
+  },
+  "internal_missing_signal_ranges": {
+    "BTCUSDT": [
+      {
+        "start_ms": 1723456980000,
+        "end_exclusive_ms": 1723460640000,
+        "minutes": 61
+      }
+    ],
+    "ETHUSDT": [
+      {
+        "start_ms": 1723456980000,
+        "end_exclusive_ms": 1723460640000,
+        "minutes": 61
+      }
+    ]
+  },
+  "no_gap_at_source_join_or_original_phase_join": true,
+  "independently_recomputed_weekly_bootstrap": {
+    "win_rate_lower_95": 0.5388127247557448,
+    "win_rate_upper_95": 0.5848871387244884,
+    "net_lower_95": -167.09999999999997,
+    "net_upper_95": 4678.575
+  },
+  "review_text_checks": {
+    "sha256": "f4855bee9f8a4297bcf8fb317a49b1dd86eb47723387a63d12bc108422034c36",
+    "aggregate_calendar_stress_and_interval_metrics_match": true,
+    "calendar_2024_loss_disclosed": true,
+    "calendar_and_anniversary_cutoffs_distinguished": true,
+    "early_twelve_asset_folds_and_twenty_four_model_fits_verified": true
+  },
+  "old_cache_modified_by_audit": false,
+  "network_or_training_performed": false,
+  "publish_or_deploy": false,
+  "limitations": [
+    "Verification confirms historical arithmetic and chronology, not forward profitability.",
+    "Earlier strategy selection bias remains; minute index prices remain execution proxies.",
+    "61 historical feature minutes per asset and the final 31 unlabelable signal minutes are excluded explicitly."
+  ]
+}
