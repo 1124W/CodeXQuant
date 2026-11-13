@@ -153,9 +153,13 @@ def _derivative_values(premium,funding,signal_ms):
 
 
 def build_latest_features(spot_by_symbol,premium_by_symbol,funding_by_symbol,signal_ms):
-    """Build one feature row per symbol at an exact closed half-hour boundary."""
-    if isinstance(signal_ms,bool) or int(signal_ms)!=signal_ms or signal_ms%(30*MINUTE_MS):
-        raise ValueError("Signal must be an integer half-hour millisecond boundary")
+    """Build one feature row per symbol after any completed minute.
+
+    Indicator lookbacks are measured in one-minute bars, independently of how
+    frequently the model is evaluated. No unfinished minute enters the vector.
+    """
+    if isinstance(signal_ms,bool) or int(signal_ms)!=signal_ms or signal_ms%MINUTE_MS:
+        raise ValueError("Signal must be an integer minute millisecond boundary")
     signal_ms=int(signal_ms)
     if any(set(mapping)!=set(SYMBOLS) for mapping in (spot_by_symbol,premium_by_symbol,funding_by_symbol)):
         raise ValueError("Exact BTCUSDT/ETHUSDT inputs are required")

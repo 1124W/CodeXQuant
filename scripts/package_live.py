@@ -17,7 +17,8 @@ def build():
            'requirements-live.txt','.env.example','demo/trades.html','demo/quantdinger.html',
            'research/trade-chart-data.json','research/workbuddy-results.json','research/workbuddy-trades.csv',
            'research/event-results.json','research/event-trades.csv','research/results.json',
-           'research/derivative-study-results.json','deploy/install.sh','deploy/README.md','deploy/verify_ready.py']
+           'research/derivative-study-results.json','research/minute-scan-results.json',
+           'deploy/install.sh','deploy/README.md','deploy/verify_ready.py']
     files += [str(p.relative_to(ROOT)).replace('\\','/') for p in (ROOT/'live').glob('*.py')]
     models=ROOT/'research'/'.cache'/'live-model'
     with tarfile.open(path,'w:gz') as archive:

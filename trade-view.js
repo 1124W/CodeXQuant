@@ -87,6 +87,66 @@
     return signal.symbol.slice(0,3) + ' · ' + side + (Number.isFinite(stamp) ? ' · ' + utc(stamp) : '');
   }
 
+  const REASONS = {
+    'model_score_below_0.56':'模型分数未达门槛',
+    model_does_not_oppose_60m_move:'方向不满足反转条件', '60m_move_not_extreme':'近 60 分钟波动未达门槛',
+    short_volatility_expanding:'短期波动正在扩张', paper_position_open:'已有模拟持仓',
+    paper_daily_risk_budget:'当日风险预算已用完', paper_capital_insufficient:'模拟资金不足',
+    duplicate_paper_signal:'该信号已处理', paper_risk_admitted:'已纳入模拟跟踪', signal:'策略条件满足',
+    late_skipped:'预测耗时过长，信号已过期', late_signal_skipped:'预测耗时过长，信号已过期'
+  };
+
+  function decisionText(decision) {
+    if (!decision || !SYMBOLS.includes(decision.symbol)) return '等待本轮扫描';
+    const label = decision.symbol.slice(0,3);
+    const reason = decision.paper_risk_status || decision.reason;
+    const score = Number(decision.confidence_score);
+    return label + ' · ' + (REASONS[reason] || '等待策略判断') +
+      (Number.isFinite(score) && score >= .5 && score <= 1 ? ' · 方向分数 ' + (score*100).toFixed(1) + '%' : '');
+  }
+
+  function notificationText(value) {
+    const n=value || {};
+    if(n.enabled===false)return '未启用推送';
+    if(!n.enabled)return '等待推送配置';
+    const sent=Number(n.last_sent_at || n.last_sent_ms || 0),failed=Number(n.last_error_at || 0);
+    const queued=Number(n.pending_count || 0), exhausted=Number(n.exhausted_count || 0);
+    let status=sent?'已发送 '+Number(n.sent_count || 0)+' 条':'已启用，等待消息';
+    if(queued>0)status+=' · '+queued+' 条待处理';
+    if(n.last_error && (!sent || failed>=sent))status+=' · 最近投递异常';
+    if(exhausted>0)status+=' · '+exhausted+' 条已耗尽重试';
+    if(Number(n.delivery_uncertain_count)>0)status+=' · 存在回执不确定记录';
+    return status;
+  }
+
+  function settlementText(row) {
+    if(!row || !SYMBOLS.includes(row.symbol))return '暂无已结算模拟信号';
+    const outcome={win:'赢',loss:'亏',refund:'持平退回'}[row.outcome];
+    if(!outcome || !Number.isFinite(row.net_usdt))return '等待结算结果';
+    const direction=row.direction===1?'看涨 / 多':'看跌 / 空';
+    const stamp=row.settlement_ms || row.expiry_due_ms;
+    return row.symbol.slice(0,3)+' · '+direction+' · '+outcome+' · '+money(row.net_usdt)+(Number.isFinite(stamp)?' · '+utc(stamp):'');
+  }
+
+  function paperText(paper) {
+    if(!paper || !Number.isFinite(paper.settled))return '等待服务器模拟记录';
+    const rate=Number.isFinite(paper.win_rate)?(paper.win_rate*100).toFixed(2)+'%':'暂无已决胜负';
+    return paper.settled+' 笔已结算 · '+Number(paper.wins || 0)+' 胜 / '+Number(paper.losses || 0)+' 负 / '+Number(paper.refunds || 0)+' 平 · 胜率 '+rate+
+      (Number.isFinite(paper.net_usdt)?' · '+money(paper.net_usdt):'')+' · '+Number(paper.pending || 0)+' 笔待结算';
+  }
+
+  function scanText(scan) {
+    if(!scan || !Number.isFinite(scan.evaluated_slots))return '等待扫描统计';
+    return '近 60 分钟完成 '+scan.evaluated_slots+' 轮 · 满足策略 '+Number(scan.candidates || 0)+' 个 · 风控接纳 '+Number(scan.admitted || 0)+' 个'+
+      (Number(scan.late_slots)>0?' · 超时跳过 '+scan.late_slots+' 轮':'');
+  }
+
+  function monitorText(state,now) {
+    const age=Number.isFinite(state.lastPrediction)?now-state.lastPrediction:Infinity;
+    const active=state.dataHealth==='fresh' && age>=-60000 && age<120000;
+    return (active?'每分钟机会扫描中':'扫描等待或异常')+' · 自动下单关闭';
+  }
+
   function normalizeStatus(payload) {
     const state = payload && payload.data && typeof payload.data === 'object' ? payload.data : payload || {};
     const symbols = state.symbols || state.prices || {};
@@ -100,7 +160,10 @@
     const model = state.model || {};
     return {quotes, mode:state.mode || 'research', modelId:state.model_id || model.id || model.model_id || '等待模型准备',
       signal:state.last_signal || (Array.isArray(state.signals) && state.signals.length ? state.signals[state.signals.length-1] : null),
-      notifications:state.notifications || state.notifier || {}, updatedAt:state.updated_at_ms || null};
+      notifications:state.notifications || state.notifier || {}, updatedAt:state.updated_at_ms || null,
+      lastPrediction:state.last_prediction_ms || null, decisions:Array.isArray(state.last_decisions)?state.last_decisions.filter(row=>row&&SYMBOLS.includes(row.symbol)):[],
+      predictionSchedule:state.prediction_schedule || '', dataHealth:state.data_health || 'unknown', lastError:state.last_error || null,
+      scan:state.scan_stats || {}, paper:state.paper_performance || {}, settlements:Array.isArray(state.recent_settlements)?state.recent_settlements:[]};
   }
 
   async function mount(document) {
@@ -170,7 +233,8 @@
     const mode=document.getElementById('liveMode'),model=document.getElementById('liveModel'),signal=document.getElementById('liveSignal'),notify=document.getElementById('liveNotify'),note=document.getElementById('liveNote');
     if(!mode)return;
     let timer=null,pending=false,stopped=false;
-    function staticMode(){stopped=true;mode.textContent='静态回测，实时预测需要服务端';model.textContent='静态回测';signal.textContent='部署预测服务后显示';notify.textContent='由服务器后台执行';note.textContent='历史图表可正常浏览。实时预测和群推送仅由部署后的后台运行。';}
+    const setText=(id,text)=>{const element=document.getElementById(id);if(element)element.textContent=text;};
+    function staticMode(){stopped=true;mode.textContent='静态回测，实时预测需要服务端';model.textContent='静态回测';signal.textContent='部署预测服务后显示';notify.textContent='由服务器后台执行';note.textContent='历史图表可正常浏览。每分钟扫描、模拟结算和群推送仅由部署后的后台运行。';setText('liveScan','静态页面不执行预测');setText('livePaper','连接服务器后显示模拟统计');}
     if(window.location.hostname.endsWith('github.io')||window.location.protocol==='file:'){staticMode();return;}
     async function poll(){
       if(pending||stopped)return;pending=true;
@@ -179,14 +243,31 @@
         const response=await window.fetch('/api/live/status',{cache:'no-store',signal:controller.signal});
         if(response.status===404){staticMode();return;}
         if(!response.ok)throw Error('unavailable');
-        const state=normalizeStatus(await response.json());mode.textContent='研究信号监测中 · 自动下单关闭';model.textContent=state.modelId;signal.textContent=signalText(state.signal);
+        const state=normalizeStatus(await response.json());mode.textContent=monitorText(state,Date.now());model.textContent=state.modelId;signal.textContent=signalText(state.signal);
         for(const [symbol,prefix]of [['BTCUSDT','Btc'],['ETHUSDT','Eth']]){const quote=state.quotes[symbol];document.getElementById('live'+prefix+'Price').textContent=quote.price===null?'—':quote.price.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});document.getElementById('live'+prefix+'Time').textContent=quote.timestamp?utc(quote.timestamp)+(quote.stale?' · 行情已过期':''):'等待真实行情';}
-        const n=state.notifications;notify.textContent=n.enabled===false?'未启用推送':n.last_error?'最近推送失败，等待后台重试':n.last_sent_at||n.last_sent_ms?'推送已启用 · 有发送记录':n.enabled?'已启用 · 等待下一次信号或整点播报':'等待推送配置';
+        const n=state.notifications;notify.textContent=notificationText(n);
+        setText('liveScan',scanText(state.scan));
+        setText('liveScanTime',state.lastPrediction?'最近成功判断：'+utc(state.lastPrediction):'尚未完成本轮预测');
+        for(const [symbol,prefix]of [['BTCUSDT','Btc'],['ETHUSDT','Eth']])setText('live'+prefix+'Decision',decisionText(state.decisions.find(row=>row.symbol===symbol)));
+        setText('livePaper',paperText(state.paper));
+        setText('liveSettlement',settlementText(state.settlements[0]));
+        const kinds=n.sent_by_kind || {};
+        setText('liveNotifyKinds',n.enabled?'已确认发送：信号 '+Number(kinds.signal || 0)+' · 结算 '+Number(kinds.settlement || 0)+' · 研究播报 '+Number(kinds.research_report || 0)+' · 行情 '+Number(kinds.price || 0):'推送分类统计等待服务端');
+        const rows=document.getElementById('liveSettlementRows');
+        if(rows){
+          rows.replaceChildren();
+          for(const row of state.settlements.filter(row=>SYMBOLS.includes(row.symbol)).slice(0,10)){
+            const tr=document.createElement('tr');
+            const values=[row.symbol.slice(0,3)+' '+(row.direction===1?'多':'空'),Number.isFinite(row.entry_ms)?utc(row.entry_ms):'—',Number.isFinite(row.entry_price)?price(row.entry_price):'—',Number.isFinite(row.settlement_ms)?utc(row.settlement_ms):'—',Number.isFinite(row.exit_price)?price(row.exit_price):'—',Number.isFinite(row.net_usdt)?money(row.net_usdt):'待结算'];
+            for(const value of values){const td=document.createElement('td');td.textContent=value;tr.append(td);}rows.append(tr);
+          }
+        }
+        note.textContent=(state.lastError?'服务提示：'+state.lastError+'。':'')+(state.predictionSchedule||'每分钟使用已收盘数据判断；有信号才提醒，计划入场后持有 30 分钟。')+' 模型方向分数未经胜率校准；当前模拟表现独立于下方 442 笔历史回测。北京时间每小时播报行情与研究汇总。';
       }catch(error){mode.textContent='预测服务暂不可用';note.textContent='历史图表不受影响；正在等待后台恢复，页面每 10 秒重试。';}
       finally{window.clearTimeout(timeout);pending=false;if(!stopped)timer=window.setTimeout(poll,10000);}
     }
     window.addEventListener('pagehide',()=>{stopped=true;window.clearTimeout(timer);});poll();
   }
 
-  return {validateData,cohort,buildTraces,focusRange,normalizeStatus,signalText,mount};
+  return {validateData,cohort,buildTraces,focusRange,normalizeStatus,signalText,decisionText,notificationText,settlementText,paperText,scanText,monitorText,mount};
 });

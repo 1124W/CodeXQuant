@@ -58,7 +58,7 @@ def _event_expiry(event_key,kind):
     try:
         if kind=="signal":
             return int(event_key.split(":")[2])+60_000
-        if kind=="price":
+        if kind in ("price","research_report"):
             return int(event_key.split(":")[1])+120_000
     except (ValueError,IndexError):
         return 0  # malformed legacy queue entries are never replayed as fresh
@@ -131,6 +131,62 @@ def format_price_report(prices, slot_ms):
     return "\n".join(text)
 
 
+def format_settlement(result):
+    """Describe an observed paper outcome, never imply an actual broker fill."""
+    symbol=result.get("symbol")
+    direction=result.get("direction")
+    if symbol not in SYMBOLS or type(direction) is not int or direction not in (-1,1):
+        raise ValueError("Settlement requires BTC/ETH and an explicit direction")
+    signal_ms=_timestamp(result["signal_ms"])
+    entry_ms=_timestamp(result["entry_ms"])
+    expiry_ms=_timestamp(result["settlement_ms"])
+    if entry_ms!=signal_ms+60_000 or expiry_ms!=entry_ms+1_800_000:
+        raise ValueError("Settlement must match a delayed 30-minute event")
+    entry,exit_price=_price(result["entry_price"]),_price(result["exit_price"])
+    change=(exit_price-entry)*direction
+    outcome="win" if change>0 else "loss" if change<0 else "refund"
+    net=4.25 if outcome=="win" else -5. if outcome=="loss" else 0.
+    if result.get("outcome")!=outcome or result.get("net_usdt")!=net:
+        raise ValueError("Settlement outcome must match the observed index prices")
+    label={"win":"盈利","loss":"亏损","refund":"平价退款"}[outcome]
+    side="做多" if direction==1 else "做空"
+    return "\n".join([
+        f"## {symbol[:-4]} 30分钟模拟复盘 · {side} · {label}"+("（延迟补报）" if result.get('delayed_report') else ""),
+        f"信号时间：{_time(signal_ms)}",
+        f"模拟开仓：{_time(entry_ms)} · {entry:,.2f} USDT",
+        f"模拟到期：{_time(expiry_ms)} · {exit_price:,.2f} USDT",
+        f"固定本金：5.00 USDT；净赔付：85%；额外手续费：0",
+        f"本笔模拟盈亏：**{net:+.2f} USDT**",
+        "价格来自币安指数分钟开盘价；这是前向模拟结算，不代表实际下单或成交。"
+    ])
+
+
+def format_research_report(report,slot_ms):
+    slot_ms=_timestamp(slot_ms)
+    if slot_ms%3_600_000:
+        raise ValueError("Research reports require a full-hour slot")
+    scan=report["scan_stats"];paper=report["paper_performance"]
+    reasons={"model_score_below_0.56":"模型方向分数不足", "model_does_not_oppose_60m_move":"未满足反转方向",
+             "60m_move_not_extreme":"60分钟波动不够极端", "short_volatility_expanding":"短期波动扩张",
+             "paper_position_open":"已有模拟持仓", "paper_daily_risk_budget":"达到当日风险预算",
+             "paper_capital_insufficient":"模拟资金不足"}
+    counts={**scan.get("reasons",{}),**scan.get("risk_blocks",{})}
+    skipped=[f"{reasons.get(key,_safe_label(key))} {int(value)}次" for key,value in sorted(counts.items(),key=lambda item:-item[1])[:4] if key!="signal"]
+    rate=paper.get("win_rate")
+    rate_text=f"{rate:.2%}" if rate is not None else "暂无已决样本"
+    text=["## BTC / ETH 每小时研究播报",f"截至：{_time(slot_ms)}",
+          f"过去1小时：完成 {int(scan['evaluated_slots'])} 轮扫描，候选 {int(scan['candidates'])} 个，模拟准入 {int(scan['admitted'])} 笔。",
+          f"延迟跳过：{int(scan['late_slots'])} 轮；每分钟扫描，仅满足条件时提醒。"]
+    if skipped:text.append("未提醒原因："+"；".join(skipped))
+    if not scan['admitted']:text.append("本小时无新准入信号；未人为降低门槛补足信号。")
+    if report.get("prediction_error"):text.append("扫描异常："+_safe_label(report['prediction_error']))
+    text.extend([f"累计前向模拟：{int(paper['settled'])} 笔已结算，{int(paper['pending'])} 笔待结算；"
+                 f"胜 {int(paper['wins'])} / 负 {int(paper['losses'])} / 平 {int(paper['refunds'])}。",
+                 f"已决胜率（不含平价）：{rate_text}；累计模拟盈亏：**{float(paper['net_usdt']):+.2f} USDT**。",
+                 "以上为本程序真实留存的前向模拟记录，不是历史回测胜率；固定每笔5 USDT，85%净赔付，无额外手续费。"])
+    return "\n".join(text)
+
+
 class _NoRedirect(request.HTTPRedirectHandler):
     def redirect_request(self, req, fp, code, msg, headers, newurl):
         return None
@@ -198,6 +254,13 @@ class WeComNotifier:
 
     def send_price_report(self, prices, slot_ms):
         return self._send(f"price:{int(slot_ms)}", "price", format_price_report(prices, slot_ms))
+
+    def send_settlement(self,result):
+        result={**result,'delayed_report':self._now()>result['settlement_ms']+120_000}
+        return self._send(f"settlement:{result['symbol']}:{int(result['signal_ms'])}","settlement",format_settlement(result))
+
+    def send_research_report(self,report,slot_ms):
+        return self._send(f"research_report:{int(slot_ms)}","research_report",format_research_report(report,slot_ms))
 
     def send_status(self, text, key=None):
         if not isinstance(text, str) or not text.strip():
@@ -315,9 +378,11 @@ class WeComNotifier:
             sent=db.execute("SELECT MAX(updated_ms) FROM wecom_events WHERE status='sent'").fetchone()[0]
             failed=db.execute("SELECT last_error,updated_ms FROM wecom_events WHERE last_error IS NOT NULL ORDER BY updated_ms DESC LIMIT 1").fetchone()
             uncertain=db.execute("SELECT COUNT(*) FROM wecom_events WHERE delivery_uncertain=1").fetchone()[0]
+            kinds=db.execute("SELECT kind,COUNT(*),MAX(updated_ms) FROM wecom_events WHERE status='sent' GROUP BY kind").fetchall()
         return {"enabled":self.enabled,"sent_count":counts.get("sent",0),
                 "pending_count":counts.get("pending",0)+counts.get("sending",0),
                 "exhausted_count":counts.get("exhausted",0),"last_sent_at":sent,
                 "expired_count":counts.get("expired",0),
                 "last_error":failed[0] if failed else None,"last_error_at":failed[1] if failed else None,
+                "sent_by_kind":{row[0]:row[1] for row in kinds},"last_sent_by_kind":{row[0]:row[2] for row in kinds},
                 "delivery_uncertain_count":uncertain,"delivery_guarantee":"acknowledged_deduplication; ambiguous failures may duplicate on retry"}

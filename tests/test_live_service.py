@@ -7,6 +7,7 @@ from datetime import datetime,timezone
 from pathlib import Path
 import sqlite3
 import threading
+import time
 from types import SimpleNamespace
 from unittest.mock import Mock,patch
 
@@ -115,6 +116,7 @@ class WorkerAdmissionTests(unittest.TestCase):
             con.execute('CREATE TABLE processed (slot INTEGER PRIMARY KEY,state TEXT NOT NULL)')
             con.execute('CREATE TABLE admissions (symbol TEXT,signal_ms INTEGER,entry_ms INTEGER,settlement_ms INTEGER,direction INTEGER,outcome TEXT,net REAL,PRIMARY KEY(symbol,signal_ms))')
             con.commit()
+        self.worker._ensure_tables()
         self.day=int(datetime(2026,1,2,tzinfo=timezone.utc).timestamp()*1000)
         self.slot=self.day+3*1800000  # half past the hour, away from price-report scheduling
 
@@ -142,7 +144,11 @@ class WorkerAdmissionTests(unittest.TestCase):
         self.worker.market=SimpleNamespace(quotes=Mock(),features_input=Mock(return_value=({}, {}, {})))
         self.worker.predictor=SimpleNamespace(manifest={'model_version':'synthetic','training_cutoff_ms':self.slot-86400000},
                                              predict=Mock(return_value=decisions))
-        self.worker.notifier=SimpleNamespace(send_signal=Mock(return_value={'sent':True}),retry_pending=Mock())
+        self.worker.notifier=SimpleNamespace(send_signal=Mock(return_value={'sent':True}),retry_pending=Mock(),
+                                            send_settlement=Mock(return_value={'state':'sent','sent':True}))
+        # Tick tests exercise maintenance deterministically; its non-blocking
+        # scheduling/guard is tested independently below.
+        self.worker.start_maintenance=self.worker._maintenance_work
         return now
 
     def test_tick_btc_priority_admits_only_one_of_two_same_entry_signals_and_no_replay(self):
@@ -223,6 +229,118 @@ class WorkerAdmissionTests(unittest.TestCase):
         self.assertEqual(self.worker.history.record_features.call_count,2)
         with closing(sqlite3.connect(self.worker.db)) as con:
             self.assertEqual(con.execute('SELECT state FROM processed WHERE slot=?',(self.slot,)).fetchone()[0],'late_skipped')
+
+    def test_non_halfhour_minute_is_evaluated_and_none_reason_is_durable(self):
+        self.slot+=7*60000
+        none={**self.signal(),'side':'NONE','direction':0,'reason':'model_score_below_0.56'}
+        now=self.configure_tick([none,{**none,'symbol':'ETHUSDT'}])
+        with patch('live.features.build_latest_features',return_value={'BTCUSDT':{},'ETHUSDT':{}}),patch('live.app.time.time',return_value=now/1000):
+            self.worker.tick(now)
+        stats=self.worker.scan_stats(now)
+        self.assertEqual(stats['evaluated_slots'],1)
+        self.assertEqual(stats['reasons'],{'model_score_below_0.56':2})
+        self.assertEqual(stats['admitted'],0)
+        self.worker.notifier.send_signal.assert_not_called()
+
+    def test_settlement_outbox_survives_restart_and_is_queued_exactly_once(self):
+        self.worker.admit(self.signal())
+        self.worker.settle_admission('BTCUSDT',self.slot,100,101)
+        restarted=Worker.__new__(Worker);restarted.db=self.worker.db
+        restarted.notifier=SimpleNamespace(send_settlement=Mock(return_value={'state':'pending'}))
+        restarted._flush_settlements()
+        restarted._flush_settlements()
+        restarted.notifier.send_settlement.assert_called_once()
+        result=restarted.notifier.send_settlement.call_args.args[0]
+        self.assertEqual(result['entry_price'],100)
+        self.assertEqual(result['exit_price'],101)
+        self.assertEqual(result['net_usdt'],4.25)
+        self.assertEqual(restarted.paper_performance()['net_usdt'],4.25)
+        self.assertEqual(restarted.paper_performance()['win_rate'],1)
+
+    def test_old_settled_admission_is_backfilled_before_training_labels(self):
+        self.worker.admit(self.signal())
+        with closing(sqlite3.connect(self.worker.db)) as con:
+            con.execute("UPDATE admissions SET outcome='loss',net=-5");con.commit()
+        self.worker.lock=threading.RLock();self.worker.state={}
+        order=[]
+        self.worker.market=SimpleNamespace(index_open=Mock(side_effect=lambda symbol,stamp: order.append(stamp) or (100 if stamp==self.slot+60000 else 99)))
+        self.worker.history=SimpleNamespace(pending_labels=Mock(side_effect=lambda *a,**k: order.append('history') or []))
+        self.worker._settle_due(self.slot+40*60000)
+        self.assertEqual(order,[self.slot+60000,self.slot+31*60000,'history'])
+        self.assertEqual(self.worker.recent_settlements()[0]['net_usdt'],-5)
+
+    def test_conflicting_settlement_cannot_replace_original_prices_or_pnl(self):
+        self.worker.admit(self.signal())
+        self.worker.settle_admission('BTCUSDT',self.slot,100,101)
+        for entry,expiry in ((100,99),(101,102)):
+            with self.assertRaises(ValueError):self.worker.settle_admission('BTCUSDT',self.slot,entry,expiry)
+        self.assertEqual(self.worker.paper_performance()['net_usdt'],4.25)
+
+    def test_disabled_delivery_leaves_durable_settlement_waiting(self):
+        self.worker.admit(self.signal())
+        self.worker.settle_admission('BTCUSDT',self.slot,100,100)
+        self.worker.notifier=SimpleNamespace(send_settlement=Mock(return_value={'state':'disabled'}))
+        self.worker._flush_settlements()
+        with closing(sqlite3.connect(self.worker.db)) as con:
+            self.assertEqual(con.execute('SELECT queued FROM settlement_outbox').fetchone()[0],0)
+
+    def test_slow_maintenance_is_nonblocking_and_only_one_worker_runs(self):
+        entered,release=threading.Event(),threading.Event()
+        calls=[]
+        self.worker.lock=threading.RLock();self.worker.state={}
+        def blocked(now):
+            calls.append(now);entered.set();release.wait(3)
+        self.worker._maintenance_work=blocked
+        started=time.monotonic()
+        self.worker.start_maintenance(self.slot)
+        self.assertLess(time.monotonic()-started,.5)
+        try:
+            self.assertTrue(entered.wait(1))
+            self.worker.start_maintenance(self.slot+60000)
+            self.assertEqual(calls,[self.slot])
+        finally:
+            release.set();self.worker.maintenance_thread.join(3)
+        self.assertIsNone(self.worker.state['maintenance_error'])
+
+    def test_monthly_refresh_starts_even_on_minute_boundary(self):
+        self.worker.predictor=SimpleNamespace(manifest={'training_cutoff_ms':self.slot-31*86400000})
+        self.worker.last_refresh_attempt=0
+        self.worker._refresh_model=Mock()
+        self.worker.maybe_refresh(self.slot)
+        self.worker.refresh_thread.join(3)
+        self.worker._refresh_model.assert_called_once_with(self.slot)
+
+    def test_same_minute_expiry_stays_reserved_until_its_scan_completes(self):
+        self.slot+=10*60000
+        self.worker.admit(self.signal())
+        self.worker.lock=threading.RLock();self.worker.state={};self.worker.last_label_poll=0
+        self.worker.notifier=SimpleNamespace(retry_pending=Mock(),send_settlement=Mock(return_value={'state':'sent'}))
+        self.worker.history=SimpleNamespace(pending_labels=Mock(return_value=[]))
+        self.worker.market=SimpleNamespace(index_open=Mock(side_effect=[100,101]))
+        expiry=self.slot+31*60000
+        self.worker._maintenance_work(expiry+10000)
+        self.assertEqual(self.worker.paper_performance()['pending'],1)
+        self.worker.market.index_open.assert_not_called()
+        # Completing this minute's scan releases its results for the NEXT scan,
+        # without waiting an extra minute and missing its admission opportunity.
+        self.worker._mark(expiry,'evaluated')
+        self.worker._maintenance_work(expiry+15000)
+        self.assertEqual(self.worker.paper_performance()['pending'],0)
+        self.assertEqual(self.worker.paper_performance()['wins'],1)
+        self.worker.notifier.send_settlement.assert_called_once()
+
+    def test_older_maintenance_cutoff_never_settles_a_future_minute(self):
+        self.slot+=10*60000
+        self.worker.admit(self.signal())
+        self.worker.lock=threading.RLock();self.worker.state={};self.worker.last_label_poll=0
+        self.worker.notifier=SimpleNamespace(retry_pending=Mock(),send_settlement=Mock(return_value={'state':'sent'}))
+        self.worker.history=SimpleNamespace(pending_labels=Mock(return_value=[]))
+        self.worker.market=SimpleNamespace(index_open=Mock())
+        expiry=self.slot+31*60000
+        self.worker._mark(expiry-60000,'evaluated')
+        self.worker._maintenance_work(expiry-1000)
+        self.assertEqual(self.worker.paper_performance()['pending'],1)
+        self.worker.market.index_open.assert_not_called()
 
 
 if __name__ == '__main__':

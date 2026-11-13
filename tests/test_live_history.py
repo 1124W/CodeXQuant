@@ -111,7 +111,7 @@ class FeatureHistoryTests(unittest.TestCase):
         self.assertEqual(frame.attrs["features"],FEATURES)
 
     def test_invalid_feature_contract_time_price_or_unknown_label_target_fails(self):
-        cases=[("SOLUSDT",ORIGIN,features()),("BTCUSDT",ORIGIN+MINUTE,features()),
+        cases=[("SOLUSDT",ORIGIN,features()),("BTCUSDT",ORIGIN+1000,features()),
                ("BTCUSDT",ORIGIN,{**features(),"exit":101}),
                ("BTCUSDT",ORIGIN,{**features(),FEATURES[0]:float("nan")})]
         for args in cases:
@@ -123,6 +123,14 @@ class FeatureHistoryTests(unittest.TestCase):
         for value in (-1,0,float("nan"),True):
             with self.assertRaises(ValueError):
                 self.history.update_label("BTCUSDT",ORIGIN,value,100)
+
+    def test_minute_history_is_retained_but_refresh_can_preserve_halfhour_population(self):
+        for offset in (0,1,7,30):
+            self.history.record_features("BTCUSDT",ORIGIN+offset*MINUTE,features())
+            self.history.update_label("BTCUSDT",ORIGIN+offset*MINUTE,100,101)
+        self.assertEqual(len(self.history.training_rows(ORIGIN+DAY)["BTCUSDT"]),4)
+        frame=self.history.training_rows(ORIGIN+DAY,sample_interval_minutes=30)["BTCUSDT"]
+        self.assertEqual(frame.signal_ms.tolist(),[ORIGIN,ORIGIN+30*MINUTE])
 
     def test_seed_import_is_hash_checked_idempotent_across_restart_and_model_loading_forbidden(self):
         bundle,manifest=self.seed()

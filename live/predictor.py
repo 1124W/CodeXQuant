@@ -37,8 +37,8 @@ def decision(p_up,features,signal_ms):
     p_up=float(p_up)
     if not math.isfinite(p_up) or not 0<=p_up<=1:
         raise ValueError("Invalid directional model score")
-    if isinstance(signal_ms,bool) or int(signal_ms)!=signal_ms or signal_ms%(30*MINUTE_MS):
-        raise ValueError("Signal must be an integer half-hour boundary")
+    if isinstance(signal_ms,bool) or int(signal_ms)!=signal_ms or signal_ms%MINUTE_MS:
+        raise ValueError("Signal must be an integer minute boundary")
     ret=float(features["ret_60"]);sigma=float(features["rv_60"]);ratio=float(features["rv_ratio"])
     if not np.isfinite([ret,sigma,ratio]).all() or sigma<0:
         raise ValueError("Invalid gate inputs")
@@ -179,6 +179,11 @@ def train_export(output_dir,end=date(2026,11,12),*,offline=True,cache_dir=None,p
 def retrain_from_rows(output_dir,rows_by_symbol,cutoff_ms,progress=print,*,data_sources=None):
     """Small-memory monthly refresh from seed + every settled live feature row.
 
+    Minute observations may be supplied, but training deliberately retains the
+    original half-hour sampling grid. Mixing a sparse historical seed with
+    dense new minute rows would otherwise change the training distribution.
+    All minute observations can remain in FeatureHistory for later research.
+
     The caller should write a new directory and switch the serving pointer only
     after this function and Predictor verification both succeed. Alert-only rows
     are not a representative training population; collect NONE decisions too.
@@ -208,9 +213,12 @@ def retrain_from_rows(output_dir,rows_by_symbol,cutoff_ms,progress=print,*,data_
             raise ValueError("Missing declared training feature/label columns")
         d=incoming.loc[(incoming.signal_ms>=start_ms)&(incoming.signal_ms<cutoff)
                        &(incoming.settlement_ms<cutoff),columns].copy().sort_values("signal_ms").reset_index(drop=True)
-        if (d.empty or d.signal_ms.duplicated().any() or np.any(d.signal_ms.to_numpy()%(30*MINUTE_MS))
+        if (d.empty or d.signal_ms.duplicated().any() or np.any(d.signal_ms.to_numpy()%MINUTE_MS)
                 or not (d.settlement_ms==d.signal_ms+31*MINUTE_MS).all()):
             raise ValueError("Training event times must be unique delayed 30-minute events")
+        # Preserve the population used by the deployed coefficients and the
+        # paired cadence comparison; dense minute observations are not weights.
+        d=d[d.signal_ms%(30*MINUTE_MS)==0].copy().reset_index(drop=True)
         if (not d.y.isin([0,1]).all() or not d.is_flat.isin([False,True]).all()
                 or not np.isfinite(d[FEATURES].to_numpy(dtype=float)).all()):
             raise ValueError("Invalid training features or settled directional labels")
@@ -248,6 +256,7 @@ def retrain_from_rows(output_dir,rows_by_symbol,cutoff_ms,progress=print,*,data_
               "model_parameters":MODEL_PARAMETERS,"model_version":version,
               "training_start_utc":str(start),"training_cutoff_utc":str(end),"training_cutoff_ms":cutoff,
               "training_days":180,"default_max_model_age_days":35,"sklearn_version":sklearn.__version__,
+              "training_sampling_minutes":30,"supported_inference_sampling_minutes":[1,30],
               "models":models,"source_sha256":source,"data_sha256":identity["data_sha256"],
               "public_data_manifests":data_sources or {},"generated_at_utc":datetime.now(timezone.utc).isoformat(),
               "score_is_calibrated_win_probability":False,"research_only":True,

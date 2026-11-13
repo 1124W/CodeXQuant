@@ -82,6 +82,7 @@ class LiveMarketTests(unittest.TestCase):
         self.assertEqual(frame.timestamp.iloc[-1],signal-60000)
         self.assertIn('taker_buy_base',frame)
         self.assertEqual(frame.taker_buy_base.iloc[-1],6)
+        market=BinanceMarket()
         with patch.object(market,'_get',return_value=rows[:500]):
             with self.assertRaises(MarketDataError):
                 market._spot('BTCUSDT',signal)
@@ -121,9 +122,35 @@ class LiveMarketTests(unittest.TestCase):
         self.assertEqual(params,{'pair':'BTCUSDT','interval':'1m','startTime':stamp,'endTime':stamp+59999,'limit':1})
         for rows in ([],[[stamp-60000,'65000']],[[stamp,'NaN']],[[stamp,'0']]):
             with self.subTest(rows=rows):
+                market=BinanceMarket()
                 with patch.object(market,'_get',return_value=rows):
                     with self.assertRaises(MarketDataError):
                         market.index_open('BTCUSDT',stamp)
+
+    def test_minute_scan_downloads_only_tail_and_rejects_a_missing_minute(self):
+        signal=1794450000000
+        def bar(stamp):
+            return [stamp,'100','101','99','100.5','10',stamp+59999,'1000',20,'6','600','0']
+        rows=[bar(signal-(1000-index)*60000) for index in range(1000)]
+        market=BinanceMarket()
+        with patch.object(market,'_get',return_value=rows):market._spot('BTCUSDT',signal)
+        with patch.object(market,'_get',return_value=[bar(signal-60000),bar(signal)]) as get:
+            result=market._spot('BTCUSDT',signal+60000)
+        self.assertEqual(len(result),1000)
+        self.assertEqual(result.timestamp.iloc[-1],signal)
+        self.assertEqual(get.call_args.args[1]['startTime'],signal-120000)
+        with patch.object(market,'_get',return_value=[bar(signal+120000)]):
+            with self.assertRaises(MarketDataError):market._spot('BTCUSDT',signal+180000)
+        self.assertEqual(market._spot_cache['BTCUSDT'].timestamp.iloc[-1],signal)
+
+    def test_exact_historical_index_open_reused_for_labels_and_admissions(self):
+        market=BinanceMarket();stamp=1794450000000
+        with patch.object(market,'_get',return_value=[[stamp,'65000.125']]) as get:
+            with patch('live.market.time.time',return_value=(stamp+120000)/1000):
+                self.assertEqual(market.index_open('BTCUSDT',stamp),65000.125)
+                self.assertEqual(market.index_open('BTCUSDT',stamp),65000.125)
+        self.assertEqual(get.call_count,1)
+        with self.assertRaises(ValueError):market.index_open('BTCUSDT',stamp+1)
 
 
 if __name__=='__main__':

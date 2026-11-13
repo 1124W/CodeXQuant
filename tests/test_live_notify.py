@@ -8,7 +8,7 @@ import unittest
 from urllib.error import URLError
 
 from live.notify import (WeComNotifier, format_signal, format_price_report,
-                         validate_webhook)
+                         format_settlement,format_research_report,validate_webhook)
 
 
 WEBHOOK="https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=fixture-not-a-real-key"
@@ -59,7 +59,35 @@ def prices():
             "ETHUSDT":{"index_price":1922.1467,"price_time_ms":ORIGIN+1000}}
 
 
+def settlement(**overrides):
+    return {'symbol':'BTCUSDT','signal_ms':ORIGIN,'entry_ms':ORIGIN+60_000,
+            'settlement_ms':ORIGIN+1_860_000,'direction':1,'entry_price':100.,
+            'exit_price':101.,'outcome':'win','net_usdt':4.25,**overrides}
+
+
+def report():
+    return {'scan_stats':{'evaluated_slots':60,'late_slots':0,'candidates':2,'admitted':0,
+                         'reasons':{'model_score_below_0.56':118},'risk_blocks':{'paper_position_open':2}},
+            'paper_performance':{'settled':2,'pending':1,'wins':1,'losses':1,'refunds':0,
+                                 'win_rate':.5,'net_usdt':-.75}}
+
+
 class WeComFormattingTests(unittest.TestCase):
+    def test_settlement_is_price_checked_and_explicit_paper_result(self):
+        text=format_settlement(settlement())
+        for token in ('BTC','做多','100.00','101.00','+4.25','前向模拟结算','85%'):
+            self.assertIn(token,text)
+        with self.assertRaises(ValueError):format_settlement(settlement(net_usdt=5))
+        with self.assertRaises(ValueError):format_settlement(settlement(exit_price=99))
+        with self.assertRaises(ValueError):format_settlement(settlement(direction=True))
+
+    def test_hourly_report_distinguishes_no_signal_and_forward_performance(self):
+        text=format_research_report(report(),ORIGIN)
+        for token in ('60 轮','无新准入信号','已有模拟持仓 2次','50.00%','-0.75','不是历史回测胜率'):
+            self.assertIn(token,text)
+        no_results=report();no_results['paper_performance']['win_rate']=None
+        self.assertIn('暂无已决样本',format_research_report(no_results,ORIGIN))
+
     def test_signal_explicit_asset_side_planned_30m_times_and_uncalibrated_score(self):
         text=format_signal(signal())
         for label in ("BTC", "看涨 / 做多", "2026-11-12 08:00:00", "08:01:00", "08:31:00",
@@ -124,6 +152,28 @@ class WeComQueueTests(unittest.TestCase):
         payload=json.loads(outgoing.data)
         self.assertEqual(payload["msgtype"],"markdown")
         self.assertIn("BTC",payload["markdown"]["content"])
+
+    def test_settlement_retry_survives_signal_deadline_and_deduplicates_restart(self):
+        opener=Opener(URLError('fixture'),{'errcode':0})
+        self.clock.advance(4000)
+        first=self.notifier(opener).send_settlement(settlement())
+        self.assertEqual(first['state'],'pending')
+        self.clock.advance(5)
+        restarted=self.notifier(opener)
+        self.assertTrue(restarted.retry_pending()[0]['sent'])
+        self.assertTrue(restarted.send_settlement(settlement())['duplicate'])
+        self.assertEqual(len(opener.calls),2)
+        payload=json.loads(opener.calls[-1][0].data)
+        self.assertIn('延迟补报',payload['markdown']['content'])
+        self.assertEqual(restarted.status()['sent_by_kind'],{'settlement':1})
+
+    def test_hourly_report_has_persistent_identity_and_short_expiry(self):
+        opener=Opener()
+        self.assertTrue(self.notifier(opener).send_research_report(report(),ORIGIN)['sent'])
+        self.assertTrue(self.notifier(opener).send_research_report(report(),ORIGIN)['duplicate'])
+        self.clock.advance(3720)
+        self.assertEqual(self.notifier(opener).send_research_report(report(),ORIGIN+3_600_000)['state'],'expired')
+        self.assertEqual(len(opener.calls),1)
 
     def test_same_time_other_asset_and_model_have_distinct_event_identity(self):
         opener=Opener()

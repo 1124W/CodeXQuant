@@ -1,6 +1,6 @@
 """Persistent causal feature population and delayed public-index training labels.
 
-Every complete half-hour observation belongs here, including observations whose
+Every complete minute observation belongs here, including observations whose
 model action was NONE. Pending outcomes never enter a training frame. This
 module performs no network requests, loads no serialized model, and places no
 orders.
@@ -38,8 +38,8 @@ def _symbol_signal(symbol,signal_ms):
     if symbol not in SYMBOLS:
         raise ValueError("Feature history only supports BTCUSDT and ETHUSDT")
     stamp=_ms(signal_ms,"signal timestamp")
-    if stamp%(30*MINUTE_MS):
-        raise ValueError("Signal timestamp must be a half-hour boundary")
+    if stamp%MINUTE_MS:
+        raise ValueError("Signal timestamp must be a minute boundary")
     return stamp
 
 
@@ -166,16 +166,18 @@ class FeatureHistory:
             db.commit()
         return True
 
-    def training_rows(self,cutoff_ms,days=180):
+    def training_rows(self,cutoff_ms,days=180,*,sample_interval_minutes=1):
         cutoff=_ms(cutoff_ms,"training cutoff")
         if isinstance(days,bool) or not isinstance(days,int) or not 1<=days<=2000:
             raise ValueError("Training days must be between 1 and 2000")
+        if sample_interval_minutes not in (1,30) or isinstance(sample_interval_minutes,bool):
+            raise ValueError("Training sampling interval must be 1 or 30 minutes")
         output={}
         with self._db() as db:
             for symbol in SYMBOLS:
                 rows=db.execute("""SELECT * FROM feature_history WHERE symbol=? AND signal_ms>=?
-                    AND signal_ms<? AND settlement_ms<? AND y IS NOT NULL
-                    ORDER BY signal_ms""",(symbol,cutoff-days*DAY_MS,cutoff,cutoff)).fetchall()
+                    AND signal_ms<? AND settlement_ms<? AND y IS NOT NULL AND signal_ms % ?=0
+                    ORDER BY signal_ms""",(symbol,cutoff-days*DAY_MS,cutoff,cutoff,sample_interval_minutes*MINUTE_MS)).fetchall()
                 records=[json.loads(row["features_json"])+[row["signal_ms"],row["settlement_ms"],row["y"],bool(row["is_flat"])] for row in rows]
                 frame=pd.DataFrame(records,columns=ROW_COLUMNS)
                 frame=frame.astype({"signal_ms":"int64","settlement_ms":"int64","y":"int8","is_flat":"bool"})

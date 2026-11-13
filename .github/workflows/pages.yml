@@ -37,6 +37,7 @@ jobs:
           cp demo/quantdinger.html _site/demo/
           cp demo/trades.html _site/demo/
           cp research/trade-chart-data.json _site/research/
+          cp research/minute-scan-results.json _site/research/
           cp research/results.json _site/research/
           cp research/event-results.json research/event-trades.csv _site/research/
           cp research/workbuddy-results.json research/workbuddy-trades.csv _site/research/

@@ -93,7 +93,7 @@ class LiveFeatureTests(unittest.TestCase):
 
     def test_bad_symbol_boundary_duplicate_and_short_history_rejected(self):
         spot,premium,funding,signal=market()
-        with self.assertRaises(ValueError):build_latest_features(spot,premium,funding,signal+MINUTE_MS)
+        with self.assertRaises(ValueError):build_latest_features(spot,premium,funding,signal+1)
         with self.assertRaises(ValueError):build_latest_features({'BTCUSDT':spot['BTCUSDT']},premium,funding,signal)
         short={s:d[(d.timestamp<signal)&(d.timestamp>=signal-500*MINUTE_MS)] for s,d in spot.items()}
         with self.assertRaises(ValueError):build_latest_features(short,premium,funding,signal)
@@ -120,6 +120,19 @@ class LiveFeatureTests(unittest.TestCase):
 
 
 class AlertGateTests(unittest.TestCase):
+    def test_minute_opportunities_preserve_closed_inputs_and_30m_expiry(self):
+        spot,premium,funding,signal=market()
+        signal+=7*MINUTE_MS
+        rows=build_latest_features(spot,premium,funding,signal)
+        prefix={s:d[d.timestamp<signal].copy() for s,d in spot.items()}
+        self.assertEqual(rows,build_latest_features(prefix,premium,funding,signal))
+        result=decision(.61,{'ret_60':-30.,'rv_60':1.,'rv_ratio':1.},signal)
+        self.assertEqual(result['side'],'LONG')
+        self.assertEqual(result['feature_close_ms'],signal-MINUTE_MS)
+        self.assertEqual(result['entry_due_ms'],signal+MINUTE_MS)
+        self.assertEqual(result['expiry_due_ms']-result['entry_due_ms'],30*MINUTE_MS)
+        with self.assertRaises(ValueError):decision(.61,rows['BTCUSDT'],signal+1)
+
     def test_gate_has_same_direction_threshold_and_execution_times(self):
         signal=1_800_000*1_000_000
         gate={'ret_60':-30.,'rv_60':1.,'rv_ratio':1.}
@@ -212,6 +225,14 @@ class BundleTests(unittest.TestCase):
                 future=frame.settlement_ms>=cutoff
                 frame.loc[future,FEATURES]=float('nan')
                 frame.loc[future,'y']=1-frame.loc[future,'y']
+            # Minute scans are stored for later research but must not overweight
+            # the sparse historical training population during monthly refresh.
+            for symbol,frame in changed.items():
+                extra=frame.iloc[[100]].copy()
+                extra['signal_ms']+=7*MINUTE_MS
+                extra['settlement_ms']+=7*MINUTE_MS
+                extra[FEATURES]=900.
+                changed[symbol]=pd.concat([frame,extra],ignore_index=True)
             again=retrain_from_rows(folder/'again',changed,cutoff,progress=lambda _:None)
             self.assertEqual(first['model_version'],again['model_version'])
             for symbol in SYMBOLS:
